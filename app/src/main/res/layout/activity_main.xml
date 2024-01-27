@@ -33,47 +33,51 @@
 
 
     <Button
-        android:id="@+id/button1"
+        android:id="@+id/btn_sign_in"
         android:layout_width="325dp"
         android:layout_height="61dp"
-        app:layout_constraintBottom_toBottomOf="@+id/btn_entrance"
+        android:text="@string/_1"
+        app:layout_constraintBottom_toBottomOf="@+id/view_entrance"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/btn_entrance" />
+        app:layout_constraintTop_toTopOf="@+id/view_entrance" />
 
     <View
-        android:id="@+id/btn_entrance"
+        android:id="@+id/view_entrance"
         android:layout_width="327dp"
         android:layout_height="61dp"
-        android:layout_alignTop="@+id/button1"
-        android:layout_alignBottom="@+id/button1"
+        android:layout_alignTop="@+id/btn_sign_in"
+        android:layout_alignBottom="@+id/btn_sign_in"
         android:layout_marginTop="84dp"
         android:background="@drawable/btn_entrance"
-        app:layout_constraintEnd_toEndOf="@+id/button1"
-        app:layout_constraintStart_toStartOf="@+id/button1"
+        app:layout_constraintEnd_toEndOf="@+id/btn_sign_in"
+        app:layout_constraintStart_toStartOf="@+id/btn_sign_in"
         app:layout_constraintTop_toBottomOf="@+id/subtitle" />
 
     <Button
-        android:id="@+id/button2"
-        android:layout_width="327dp"
-        android:layout_height="61dp"
-        app:layout_constraintBottom_toBottomOf="@+id/btn_registration"
-        app:layout_constraintEnd_toEndOf="@+id/btn_registration"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="@+id/btn_registration"
-        app:layout_constraintTop_toBottomOf="@+id/btn_entrance"
-        app:layout_constraintVertical_bias="1.0" />
-
-    <View
         android:id="@+id/btn_registration"
         android:layout_width="327dp"
         android:layout_height="61dp"
-        android:layout_alignTop="@+id/button2"
-        android:layout_alignBottom="@+id/button2"
+        android:visibility="visible"
+        android:text="@string/_1"
+        app:layout_constraintBottom_toBottomOf="@+id/view_registration"
+        app:layout_constraintEnd_toEndOf="@+id/view_registration"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/view_registration"
+        app:layout_constraintTop_toBottomOf="@+id/view_entrance"
+        app:layout_constraintVertical_bias="1.0"
+        tools:ignore="UsingOnClickInXml" />
+
+    <View
+        android:id="@+id/view_registration"
+        android:layout_width="327dp"
+        android:layout_height="61dp"
+        android:layout_alignTop="@+id/btn_registration"
+        android:layout_alignBottom="@+id/btn_registration"
         android:layout_marginTop="36dp"
         android:layout_marginEnd="40dp"
         android:background="@drawable/btn_registration"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_entrance" />
+        app:layout_constraintTop_toBottomOf="@+id/view_entrance" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
