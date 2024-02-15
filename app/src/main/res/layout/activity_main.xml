@@ -75,9 +75,9 @@
         android:layout_alignTop="@+id/btn_registration"
         android:layout_alignBottom="@+id/btn_registration"
         android:layout_marginTop="36dp"
-        android:layout_marginEnd="40dp"
         android:background="@drawable/btn_registration"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/view_entrance" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

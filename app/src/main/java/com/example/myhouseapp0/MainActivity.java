@@ -16,11 +16,14 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         btn_sign_in = findViewById(R.id.btn_sign_in);
-        btn_registration = findViewById(R.id.btn_registration);
 
-        btn_registration.setOnClickListener(v -> {
-            Intent intent = new Intent(".RegistrationActivity");
-            startActivity(intent);
+        Button btn_to_register = (Button) findViewById(R.id.btn_registration);
+        btn_to_register.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), RegistrationActivity.class);
+                startActivity(intent);
+            }
         });
 
 
