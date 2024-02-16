@@ -1,4 +1,11 @@
 <resources>
-    <string name="app_name">MyHouseApp0</string>
+    <string name="app_name">Мой дом</string>
     <string name="_1">1</string>
+    <string name="login">Логин</string>
+    <string name="name">Имя</string>
+    <string name="phone">Телефон</string>
+    <string name="address">Адрес</string>
+    <string name="password0">Придумайте пароль</string>
+    <string name="password1">Повторите пароль</string>
+    <string name="password">Пароль</string>
 </resources>

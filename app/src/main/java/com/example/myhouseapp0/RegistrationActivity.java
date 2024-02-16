@@ -19,6 +19,7 @@ public class RegistrationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
 
+
         Button btn_back = (Button) findViewById(R.id.btn_back);
         btn_back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -27,6 +28,39 @@ public class RegistrationActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        etUser = findViewById(R.id.ET_login);
+        etPwd=findViewById(R.id.ET_password0);
+        etRepwd = findViewById(R.id.ET_password1);
+        btnRegister = findViewById(R.id.btn_to_register);
+        db_helper = new DB_helper(this);
+        btnRegister.setOnClickListener(view -> {
+            String user, pwd, repwd;
+            user = etUser.getText().toString();
+            pwd = etPwd.getText().toString();
+            repwd = etRepwd.getText().toString();
+//                нужно поменять нулл на пустую строку чтоб пустые проблеы нельзя было ставить!
+            if (user.equals("") || pwd.equals("") || repwd.equals("")) {
+                Toast.makeText(RegistrationActivity.this, "Пожалуйста, заполните все поля",Toast.LENGTH_LONG).show();
+            } else {
+                if(pwd.equals(repwd)) {
+                    if(db_helper.checkUsername(user)) {
+                        Toast.makeText(RegistrationActivity.this, "Пользователь с таким логином уже существует", Toast.LENGTH_LONG).show();
+                        return;
+                    }
+                    boolean registeredSuccess = db_helper.insertData(user, pwd);
+                    if(registeredSuccess)
+                        Toast.makeText(RegistrationActivity.this, "Регистрация прошла успешно", Toast.LENGTH_LONG).show();
+                    else {
+                        Toast.makeText(RegistrationActivity.this, "Регистрация не прошла", Toast.LENGTH_LONG).show();
+                    }
+                } else {
+                    Toast.makeText(RegistrationActivity.this, "Пароли не совпадают", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+
+
 
 
     }
