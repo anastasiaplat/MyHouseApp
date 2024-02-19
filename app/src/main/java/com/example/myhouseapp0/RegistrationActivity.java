@@ -21,12 +21,9 @@ public class RegistrationActivity extends AppCompatActivity {
 
 
         Button btn_back = (Button) findViewById(R.id.btn_back);
-        btn_back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                startActivity(intent);
-            }
+        btn_back.setOnClickListener(v -> {
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            startActivity(intent);
         });
 
         etUser = findViewById(R.id.ET_login);
@@ -49,10 +46,14 @@ public class RegistrationActivity extends AppCompatActivity {
                         return;
                     }
                     boolean registeredSuccess = db_helper.insertData(user, pwd);
-                    if(registeredSuccess)
+                    if(registeredSuccess) {
                         Toast.makeText(RegistrationActivity.this, "Регистрация прошла успешно", Toast.LENGTH_LONG).show();
+                        Intent intent = new Intent(getApplicationContext(), EntranceActivity.class);
+                        startActivity(intent);
+                    }
+
                     else {
-                        Toast.makeText(RegistrationActivity.this, "Регистрация не прошла", Toast.LENGTH_LONG).show();
+                        Toast.makeText(RegistrationActivity.this, "Регистрация не прошла, повторите попытку", Toast.LENGTH_LONG).show();
                     }
                 } else {
                     Toast.makeText(RegistrationActivity.this, "Пароли не совпадают", Toast.LENGTH_LONG).show();
