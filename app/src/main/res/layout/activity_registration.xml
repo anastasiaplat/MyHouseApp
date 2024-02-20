@@ -69,29 +69,29 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ET_login" />
 
-    <EditText
-        android:id="@+id/ET_telephone"
-        android:layout_width="313dp"
-        android:layout_height="48dp"
-        android:layout_marginTop="28dp"
-        android:ems="10"
-        android:inputType="phone"
-        android:hint="@string/phone"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ET_name" />
+<!--    <EditText-->
+<!--        android:id="@+id/ET_telephone"-->
+<!--        android:layout_width="313dp"-->
+<!--        android:layout_height="48dp"-->
+<!--        android:layout_marginTop="28dp"-->
+<!--        android:ems="10"-->
+<!--        android:inputType="phone"-->
+<!--        android:hint="@string/phone"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/ET_name" />-->
 
-    <EditText
-        android:id="@+id/ET_address"
-        android:layout_width="313dp"
-        android:layout_height="48dp"
-        android:layout_marginTop="32dp"
-        android:ems="10"
-        android:inputType="text"
-        android:hint="@string/address"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ET_telephone" />
+<!--    <EditText-->
+<!--        android:id="@+id/ET_address"-->
+<!--        android:layout_width="313dp"-->
+<!--        android:layout_height="48dp"-->
+<!--        android:layout_marginTop="32dp"-->
+<!--        android:ems="10"-->
+<!--        android:inputType="text"-->
+<!--        android:hint="@string/address"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/ET_telephone" />-->
 
     <EditText
         android:id="@+id/ET_password0"
@@ -99,12 +99,11 @@
         android:layout_height="48dp"
         android:layout_marginTop="32dp"
         android:ems="10"
-        android:inputType="textPassword"
         android:hint="@string/password0"
+        android:inputType="textPassword"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.51"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ET_address" />
+        app:layout_constraintTop_toBottomOf="@+id/ET_name" />
 
     <EditText
         android:id="@+id/ET_password1"
@@ -118,6 +117,29 @@
         app:layout_constraintHorizontal_bias="0.51"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ET_password0" />
+
+    <View
+        android:id="@+id/view_to_login1"
+        android:layout_width="155dp"
+        android:layout_height="23dp"
+        android:background="@drawable/view_to_login1"
+        app:layout_constraintBottom_toTopOf="@+id/btn_to_register"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ET_password1" />
+
+    <Button
+        android:id="@+id/btn_to_login1"
+        android:layout_width="219dp"
+        android:layout_height="34dp"
+        android:background="@android:color/transparent"
+        android:text="@string/_1"
+        android:visibility="visible"
+        app:layout_constraintBottom_toTopOf="@+id/btn_to_register"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ET_password1"
+        tools:ignore="UsingOnClickInXml"/>
 
     <Button
         android:id="@+id/btn_to_register"

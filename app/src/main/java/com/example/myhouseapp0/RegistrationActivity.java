@@ -11,18 +11,21 @@ import android.widget.Toast;
 
 public class RegistrationActivity extends AppCompatActivity {
     EditText etUser, etPwd, etRepwd;
-    Button btnRegister, btnGoToLogin;
+    Button btnRegister, btnGoToLogin, btn_back;
     DB_helper db_helper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
-
-
-        Button btn_back = (Button) findViewById(R.id.btn_back);
+        btnGoToLogin = findViewById(R.id.btn_to_login1);
+        btn_back = findViewById(R.id.btn_back);
         btn_back.setOnClickListener(v -> {
             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            startActivity(intent);
+        });
+        btnGoToLogin.setOnClickListener(v -> {
+            Intent intent = new Intent(getApplicationContext(), EntranceActivity.class);
             startActivity(intent);
         });
 
