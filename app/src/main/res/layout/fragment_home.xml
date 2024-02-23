@@ -1,15 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".HomeFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="174dp"
-        android:layout_height="50dp"
-        android:layout_gravity="clip_horizontal|center_horizontal"
-        android:background="@drawable/view_major" />
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <View
+            android:id="@+id/view_main"
+            android:layout_width="150dp"
+            android:layout_height="40dp"
+            android:layout_gravity="clip_horizontal|center_horizontal"
+            android:layout_marginTop="32dp"
+            android:background="@drawable/view_major"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.497"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:id="@+id/view_objects"
+            android:layout_width="90dp"
+            android:layout_height="25dp"
+            android:layout_gravity="clip_horizontal|center_horizontal"
+            android:layout_marginTop="40dp"
+            android:background="@drawable/view_objects"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.165"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/view_main" />
+
+        <View
+            android:id="@+id/view_object"
+            android:layout_width="327dp"
+            android:layout_height="61dp"
+            android:layout_gravity="clip_horizontal|center_horizontal"
+            android:layout_marginTop="24dp"
+            android:background="@drawable/view_rectangle_object"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/view_objects" />
+
+        <View
+            android:id="@+id/view_add"
+            android:layout_width="90dp"
+            android:layout_height="23dp"
+            android:layout_gravity="clip_horizontal|center_horizontal"
+            android:background="@drawable/view_add"
+            app:layout_constraintBottom_toBottomOf="@+id/view_object"
+            app:layout_constraintEnd_toEndOf="@+id/view_object"
+            app:layout_constraintHorizontal_bias="0.126"
+            app:layout_constraintStart_toStartOf="@+id/view_object"
+            app:layout_constraintTop_toTopOf="@+id/view_object"
+            app:layout_constraintVertical_bias="0.526" />
+
+        <View
+            android:id="@+id/view_plus"
+            android:layout_width="17dp"
+            android:layout_height="17dp"
+            android:layout_gravity="clip_horizontal|center_horizontal"
+            android:background="@drawable/view_plus"
+            app:layout_constraintBottom_toBottomOf="@+id/view_object"
+            app:layout_constraintEnd_toEndOf="@+id/view_object"
+            app:layout_constraintHorizontal_bias="0.094"
+            app:layout_constraintStart_toEndOf="@+id/view_add"
+            app:layout_constraintTop_toTopOf="@+id/view_object"
+            app:layout_constraintVertical_bias="0.477" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>
