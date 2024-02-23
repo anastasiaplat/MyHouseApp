@@ -21,11 +21,11 @@ public class RegistrationActivity extends AppCompatActivity {
         btnGoToLogin = findViewById(R.id.btn_to_login1);
         btn_back = findViewById(R.id.btn_back);
         btn_back.setOnClickListener(v -> {
-            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            Intent intent = new Intent(RegistrationActivity.this, MainActivity.class);
             startActivity(intent);
         });
         btnGoToLogin.setOnClickListener(v -> {
-            Intent intent = new Intent(getApplicationContext(), EntranceActivity.class);
+            Intent intent = new Intent(RegistrationActivity.this, EntranceActivity.class);
             startActivity(intent);
         });
 
@@ -51,7 +51,7 @@ public class RegistrationActivity extends AppCompatActivity {
                     boolean registeredSuccess = db_helper.insertData(user, pwd);
                     if(registeredSuccess) {
                         Toast.makeText(RegistrationActivity.this, "Регистрация прошла успешно", Toast.LENGTH_LONG).show();
-                        Intent intent = new Intent(getApplicationContext(), EntranceActivity.class);
+                        Intent intent = new Intent(RegistrationActivity.this, EntranceActivity.class);
                         startActivity(intent);
                     }
 

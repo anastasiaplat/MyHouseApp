@@ -19,7 +19,7 @@
         app:layout_constraintVertical_bias="0.065" />
 
     <Button
-        android:id="@+id/btn_back"
+        android:id="@+id/btn_back1"
         android:layout_width="50dp"
         android:layout_height="60dp"
         android:layout_marginStart="32dp"
@@ -32,14 +32,14 @@
         tools:ignore="UsingOnClickInXml" />
 
     <View
-        android:id="@+id/view_back"
+        android:id="@+id/view_back1"
         android:layout_width="25dp"
         android:layout_height="43dp"
         android:background="@drawable/back"
-        app:layout_constraintBottom_toBottomOf="@+id/btn_back"
-        app:layout_constraintEnd_toEndOf="@+id/btn_back"
-        app:layout_constraintStart_toStartOf="@+id/btn_back"
-        app:layout_constraintTop_toTopOf="@+id/btn_back" />
+        app:layout_constraintBottom_toBottomOf="@+id/btn_back1"
+        app:layout_constraintEnd_toEndOf="@+id/btn_back1"
+        app:layout_constraintStart_toStartOf="@+id/btn_back1"
+        app:layout_constraintTop_toTopOf="@+id/btn_back1" />
 
     <EditText
         android:id="@+id/ET_login"
@@ -51,7 +51,8 @@
         android:inputType="text|textFilter"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/entrance" />
+        app:layout_constraintTop_toBottomOf="@+id/entrance"
+        android:importantForAutofill="no" />
 
     <EditText
         android:id="@+id/ET_password"
@@ -63,7 +64,8 @@
         android:inputType="textPassword"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ET_login" />
+        app:layout_constraintTop_toBottomOf="@+id/ET_login"
+        android:importantForAutofill="no" />
 
     <Button
         android:id="@+id/btn_to_login"
