@@ -38,16 +38,13 @@ public class EntranceActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        btn_login.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                boolean isLoggedId = db_helper.checkUserForEntrance(etUsername.getText().toString(), etPwd.getText().toString());
-                if (isLoggedId){
-                    Intent intent = new Intent(EntranceActivity.this, MajorActivity.class);
-                    startActivity(intent);
-                } else
-                    Toast.makeText(EntranceActivity.this, "Пароль неверный", Toast.LENGTH_LONG).show();
-            }
+        btn_login.setOnClickListener(v -> {
+            boolean isLoggedId = db_helper.checkUserForEntrance(etUsername.getText().toString(), etPwd.getText().toString());
+            if (isLoggedId){
+                Intent intent = new Intent(EntranceActivity.this, MajorActivity.class);
+                startActivity(intent);
+            } else
+                Toast.makeText(EntranceActivity.this, "Пароль неверный", Toast.LENGTH_LONG).show();
         });
 
 
