@@ -39,7 +39,23 @@ public class CreateObjectFragment extends Fragment {
     private void init() {
         btAdapter = BluetoothAdapter.getDefaultAdapter();
     }
-
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        switch (item.getItemId()) {
+//            case android.R.id.home:
+//                onBackPressed();
+//                return true;
+//            default:
+//                return super.onOptionsItemSelected(item);
+//        }
+//    }
+//    public void onBackPressed() {
+//        FragmentManager fm = getActivity().getSupportFragmentManager();
+//        if (fm.getBackStackEntryCount() > 0)
+//            fm.popBackStack();
+//        else
+//            finish();
+//    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
