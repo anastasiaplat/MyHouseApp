@@ -2,6 +2,8 @@ package com.example.myhouseapp0;
 
 //import static androidx.core.app.AppOpsManagerCompat.Api23Impl.getSystemService;
 
+import android.annotation.SuppressLint;
+import android.app.LauncherActivity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothManager;
 import android.content.Context;
@@ -24,20 +26,30 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.ListView;
 import android.widget.Switch;
 import android.widget.Toast;
 
+import com.example.myhouseapp0.adapter.BluetoothListItem;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 
 public class CreateObjectFragment extends Fragment {
+
+    private ListView listView;
+    private BluetoothAdapter adapter;
 
     private BluetoothAdapter btAdapter;
     private final int ENABLE_REQUEST = 15;
 
 
     private void init() {
+
         btAdapter = BluetoothAdapter.getDefaultAdapter();
+
     }
 //    @Override
 //    public boolean onOptionsItemSelected(MenuItem item) {
@@ -70,19 +82,32 @@ public class CreateObjectFragment extends Fragment {
         Button btn_back_from_create_object = (Button) view.findViewById(R.id.btn_back_from_create_object);
         btn_back_from_create_object.setOnClickListener(v -> replaceFragment(new HomeFragment()));
 
-        Switch btn_switch_bluetooth = (Switch) view.findViewById(R.id.switch_for_bluetooth);
+        @SuppressLint("UseSwitchCompatOrMaterialCode") Switch btn_switch_bluetooth = (Switch) view.findViewById(R.id.switch_for_bluetooth);
         btn_switch_bluetooth.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    enableAndDisableBluetooth();
+                    enableOrDisableBluetooth();
                 } else {
-                    enableAndDisableBluetooth();
+                    enableOrDisableBluetooth();
                 }
             }
         });
+
+
+//        listView = (ListView) view.findViewById(R.id.listview);
+//        List<BluetoothListItem> list = new ArrayList<>();
+//        BluetoothListItem item = new BluetoothListItem();
+//        item.setBtName("BT-1234");
+//        list.add(item);
+//        list.add(item);
+//        list.add(item);
+//        list.add(item);
+//        adapter = new com.example.myhouseapp0.adapter.BtAdapter(this, R.layout.bt_list_item, list);
+//        listView.setAdapter(adapter);
+
     }
-    private void enableAndDisableBluetooth(){
+    private void enableOrDisableBluetooth(){
         if (!btAdapter.isEnabled()) {
             Intent i = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(i, ENABLE_REQUEST);
@@ -90,7 +115,7 @@ public class CreateObjectFragment extends Fragment {
             if (ActivityCompat.checkSelfPermission(requireContext(), android.Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
                 btAdapter.disable();
                 Toast.makeText(getActivity(), "Выключено", Toast.LENGTH_LONG).show();
-            } else Toast.makeText(getActivity(), "Try again", Toast.LENGTH_LONG).show();
+            } else Toast.makeText(getActivity(), "Что-то пошло не так...", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -101,7 +126,6 @@ public class CreateObjectFragment extends Fragment {
         if(requestCode == ENABLE_REQUEST){
             if(resultCode == -1){
                 Toast.makeText(getActivity(), "Включено", Toast.LENGTH_LONG).show();
-
 
             }
         }

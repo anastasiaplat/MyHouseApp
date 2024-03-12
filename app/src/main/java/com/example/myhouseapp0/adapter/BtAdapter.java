@@ -15,8 +15,8 @@ import com.example.myhouseapp0.R;
 
 import java.util.List;
 
-public class BluetoothAdapter extends ArrayAdapter<BluetoothListItem> {
-    public BluetoothAdapter(@NonNull Context context, int resource, List<BluetoothListItem> btList) {
+public class BtAdapter extends ArrayAdapter<BluetoothListItem> {
+    public BtAdapter(@NonNull Context context, int resource, List<BluetoothListItem> btList) {
         super(context, resource);
     }
 
@@ -40,9 +40,9 @@ public class BluetoothAdapter extends ArrayAdapter<BluetoothListItem> {
         viewHolder.chBtSelected.setChecked(true);
 
 
-        return super.getView(position, convertView, parent);
+        return convertView;
     }
-    class ViewHolder{
+    static class ViewHolder{
         TextView tvBtName;
         CheckBox chBtSelected;
     }
