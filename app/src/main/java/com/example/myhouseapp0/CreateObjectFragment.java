@@ -67,11 +67,11 @@ public class CreateObjectFragment extends Fragment {
     private StringBuilder sb = new StringBuilder();
 
 
-    //    private void init() {
-//
-//        btAdapter = BluetoothAdapter.getDefaultAdapter();
-//
-//    }
+        private void init() {
+
+        btAdapter = BluetoothAdapter.getDefaultAdapter();
+
+    }
 //    @Override
 //    public boolean onOptionsItemSelected(MenuItem item) {
 //        switch (item.getItemId()) {
@@ -93,7 +93,7 @@ public class CreateObjectFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-//        init();
+        init();
         return inflater.inflate(R.layout.fragment_create_object, container, false);
     }
 
@@ -103,7 +103,7 @@ public class CreateObjectFragment extends Fragment {
         Button btn_back_from_create_object = (Button) view.findViewById(R.id.btn_back_from_create_object);
         btn_back_from_create_object.setOnClickListener(v -> replaceFragment(new HomeFragment()));
 
-        bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+//        bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
         @SuppressLint("UseSwitchCompatOrMaterialCode") Switch btn_switch_bluetooth = (Switch) view.findViewById(R.id.switch_for_bluetooth);
         btn_switch_bluetooth.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -124,6 +124,7 @@ public class CreateObjectFragment extends Fragment {
         final String UUID_STRING_WELL_KNOWN_SPP = "00001101-0000-1000-8000-00805F9B34FB";
         listViewPairedDevice = (ListView) view.findViewById(R.id.listview);
         myUUID = UUID.fromString(UUID_STRING_WELL_KNOWN_SPP);
+        setup();
 //        String stInfo = bluetoothAdapter.getName() + " " + bluetoothAdapter.getAddress();
 //        textInfo.setText(String.format("Это устройство: %s", stInfo));
 
