@@ -47,6 +47,57 @@
             app:layout_constraintVertical_bias="0.077" />
 
 
+        <View
+            android:id="@+id/view_rectangle_for_temp"
+            android:layout_width="325dp"
+            android:layout_height="135dp"
+            android:background="@drawable/view_rectangle_for_temp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.495"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.2" />
+
+
+        <View
+            android:id="@+id/view_object"
+            android:layout_width="327dp"
+            android:layout_height="61dp"
+            android:layout_gravity="clip_horizontal|center_horizontal"
+            android:layout_marginTop="44dp"
+            android:background="@drawable/view_rectangle_object"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.511"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/view_rectangle_for_temp" />
+
+        <Switch
+            android:id="@+id/switch2"
+            android:layout_width="82dp"
+            android:layout_height="53dp"
+            android:layout_marginStart="265dp"
+            android:layout_marginTop="304dp"
+            android:layout_marginEnd="58dp"
+            android:text=""
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:id="@+id/view_heating"
+            android:layout_width="80dp"
+            android:layout_height="15dp"
+            android:background="@drawable/view_heating"
+            app:layout_constraintBottom_toBottomOf="@+id/view_object"
+            app:layout_constraintEnd_toStartOf="@+id/switch2"
+            app:layout_constraintHorizontal_bias="0.23"
+            app:layout_constraintStart_toStartOf="@+id/view_object"
+            app:layout_constraintTop_toTopOf="@+id/view_object"
+            app:layout_constraintVertical_bias="0.456" />
+
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>
