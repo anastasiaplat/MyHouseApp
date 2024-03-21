@@ -1,5 +1,6 @@
 package com.example.myhouseapp0;
 
+import android.app.DownloadManager;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -13,36 +14,55 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link HomeFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.w3c.dom.Text;
+
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.Locale;
+
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.http.GET;
+import retrofit2.http.Query;
+
 public class HomeFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
+
     private String mParam1;
     private String mParam2;
 
     public HomeFragment() {
         // Required empty public constructor
     }
+    public String APIKey = "5805dd66a332dedde152edfe026bb26f";
+    private static final String site = "https://api.openweathermap.org/data/2.5/weather?q=Kazan&units=metric&appid=5805dd66a332dedde152edfe026bb26f&lang=ru";
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment HomeFragment.
-     */
-    // TODO: Rename and change types and number of parameters
+    RequestQueue requestQueue;
+    double temp = 0;
+    String city = "";
+
+    final Calendar calendar = GregorianCalendar.getInstance();
+    int year = calendar.get(Calendar.YEAR);
+    String month = calendar.getDisplayName(Calendar.MONTH, Calendar.LONG_FORMAT, new Locale("ru"));
+    int day = calendar.get(Calendar.DAY_OF_MONTH);
+
     public static HomeFragment newInstance(String param1, String param2) {
         HomeFragment fragment = new HomeFragment();
         Bundle args = new Bundle();
@@ -59,6 +79,11 @@ public class HomeFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+
+
+
+
     }
 
     @Override
@@ -67,18 +92,50 @@ public class HomeFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_home, container, false);
     }
 
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         Button btn_to_create_object = (Button) view.findViewById(R.id.btn_object);
-        btn_to_create_object.setOnClickListener(new View.OnClickListener() {
+
+        btn_to_create_object.setOnClickListener(v -> replaceFragment(new HallRoomFragment()));
+
+        TextView temptext = (TextView) view.findViewById(R.id.textview_temp);
+
+        TextView datetext = (TextView) view.findViewById(R.id.textview_date);
+        datetext.setText(day + " " + month + " " + year);
+
+        requestQueue = Volley.newRequestQueue(requireContext());
+
+        final JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, //GET - API-запрос для получение данных
+                site, null, new Response.Listener<JSONObject>() {
             @Override
-            public void onClick(View v) {
-                replaceFragment(new HallRoomFragment());
+            public void onResponse(JSONObject response) {
+                try {
+                    JSONObject weather = response.getJSONObject("main"); //получаем JSON-обьекты main и wind (в фигурных скобках - объекты, в квадратных - массивы (JSONArray).
+                    temp = weather.getDouble("temp");
+                    // присваеваем переменным соответствующие значения из API
+
+                    temptext.setText(temp + "°");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() { // в случае возникновеня ошибки
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
             }
         });
+
+        requestQueue.add(request);
+
+
     }
+
+
+
 
     private void replaceFragment(Fragment fragment){
         FragmentManager fragmentManager = getParentFragmentManager();
@@ -88,3 +145,4 @@ public class HomeFragment extends Fragment {
     }
 
 }
+
