@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,9 +23,13 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import org.w3c.dom.Text;
+
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.UUID;
 
@@ -36,10 +41,14 @@ public class HallRoomFragment extends Fragment {
     private String mParam1;
     private String mParam2;
     private static final String TAG = "bluetooth1";
+    Handler h;
+    final int RECIEVE_MESSAGE = 1; //статус для Hadnler;
     private static final int REQUEST_ENABLE_BT = 1;
     private BluetoothAdapter btAdapter = null;
     private BluetoothSocket btSocket = null;
     private OutputStream outputStream = null;
+    private StringBuilder sb = new StringBuilder();
+    private ConnectedThread mConnectedThread;
 
     private static final UUID my_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
 
@@ -74,12 +83,35 @@ public class HallRoomFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_hall_room, container, false);
     }
 
+    @SuppressLint("HandlerLeak")
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         Button btn_back_from_hallroom = (Button) view.findViewById(R.id.btn_back_from_hallroom);
         btn_back_from_hallroom.setOnClickListener(v -> replaceFragment(new HomeFragment()));
 
+        TextView tv_temp = (TextView) view.findViewById(R.id.tv_temp);
+        TextView tv_humidity = (TextView) view.findViewById(R.id.tv_humidity);
+
+        tv_temp.setText("%%°");
+        h = new Handler() {
+            public void handleMessage(android.os.Message msg) {
+                if (msg.what == RECIEVE_MESSAGE) {                                                   // если приняли сообщение в Handler
+                    byte[] readBuf = (byte[]) msg.obj;
+                    String strIncom = new String(readBuf, 0, msg.arg1);
+                    sb.append(strIncom);                                                // формируем строку
+                    int endOfLineIndex = sb.indexOf("\r\n");                            // определяем символы конца строки
+                    if (endOfLineIndex > 0) {                                            // если встречаем конец строки,
+                        String sbprint = sb.substring(0, endOfLineIndex);               // то извлекаем строку
+                        sb.delete(0, sb.length());                                      // и очищаем sb
+                        tv_temp.setText(sbprint+"°");             // обновляем TextView
+//                            btnOff.setEnabled(true);
+//                            btnOn.setEnabled(true);
+                    }
+                    //Log.d(TAG, "...Строка:"+ sb.toString() +  "Байт:" + msg.arg1 + "...");
+                }
+            };
+        };
 
         @SuppressLint("UseSwitchCompatOrMaterialCode") Switch btn_switch = (Switch) view.findViewById(R.id.switch_for_servo);
         btAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -89,10 +121,10 @@ public class HallRoomFragment extends Fragment {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    sendData("1");
+                    mConnectedThread.write("1");
                     Toast.makeText(getContext(), "Включено", Toast.LENGTH_SHORT).show();
                 } else {
-                    sendData("0");
+                    mConnectedThread.write("0");
                     Toast.makeText(getContext(), "Выключено", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -110,8 +142,6 @@ public class HallRoomFragment extends Fragment {
             if (ActivityCompat.checkSelfPermission(getContext(), android.Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
                 btSocket = device.createRfcommSocketToServiceRecord(my_UUID);
             }
-
-
         }catch (IOException e) {
             errorExit("Error","In onResume() and socket create failed: " + e.getMessage());
         }
@@ -129,28 +159,17 @@ public class HallRoomFragment extends Fragment {
         }
 
         Log.d(TAG, "Создание сокета...");
-        try{
-            outputStream = btSocket.getOutputStream();
-        } catch (IOException e) {
-            errorExit("Error", "In onResume() and outputStream creation failed" + e.getMessage());
-        }
+        mConnectedThread = new ConnectedThread(btSocket);
+        mConnectedThread.start();
     }
     @Override
     public void onPause() {
         super.onPause();
         Log.d(TAG, "In onPause()...");
-        if(outputStream != null) {
-            try{
-                outputStream.flush();
-            }catch (IOException e) {
-                errorExit("Error", "Failed to flush output stream" + e.getMessage());
-            }
-        }
-
         try{
             btSocket.close();
-        } catch (IOException e) {
-            errorExit("Error", "Failed to close socket" + e.getMessage());
+        }catch (IOException e) {
+            errorExit("Error", "Failed to flush output stream" + e.getMessage());
         }
     }
 
@@ -168,6 +187,57 @@ public class HallRoomFragment extends Fragment {
         }
     }
 
+//    private class ConnectedThread extends Thread {
+//        private final BluetoothSocket mmSocket;
+//        private final InputStream mmInStream;
+//        private final OutputStream mmOutStream;
+//
+//        public ConnectedThread(BluetoothSocket socket) {
+//            mmSocket = socket;
+//            InputStream tmpIn = null;
+//            OutputStream tmpOut = null;
+//
+//            // Get the input and output streams, using temp objects because
+//            // member streams are final
+//            try {
+//                tmpIn = socket.getInputStream();
+//                tmpOut = socket.getOutputStream();
+//            } catch (IOException e) { }
+//
+//            mmInStream = tmpIn;
+//            mmOutStream = tmpOut;
+//        }
+//
+//        public void run() {
+//            byte[] buffer = new byte[256];  // buffer store for the stream
+//            int bytes; // bytes returned from read()
+//
+//            // Keep listening to the InputStream until an exception occurs
+//            while (true) {
+//                try {
+//                    // Read from the InputStream
+//                    bytes = mmInStream.read(buffer);        // Получаем кол-во байт и само собщение в байтовый массив "buffer"
+//                    h.obtainMessage(RECIEVE_MESSAGE, bytes, -1, buffer).sendToTarget();     // Отправляем в очередь сообщений Handler
+//                } catch (IOException e) {
+//                    break;
+//                }
+//            }
+//        }
+//        public void write(String message) {
+//            Log.d(TAG, "...Данные для отправки: " + message + "...");
+//            byte[] msgBuffer = message.getBytes();
+//            try {
+//                mmOutStream.write(msgBuffer);
+//            } catch (IOException e) {
+//                Log.d(TAG, "...Ошибка отправки данных: " + e.getMessage() + "...");
+//            }
+//        }
+//        public void cancel() {
+//            try {
+//                mmSocket.close();
+//            } catch (IOException e) { }
+//        }
+//    }
 
     private void checkBtState() {
         if(btAdapter == null) {
