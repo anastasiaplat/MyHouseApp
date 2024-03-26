@@ -91,9 +91,9 @@ public class HallRoomFragment extends Fragment {
         btn_back_from_hallroom.setOnClickListener(v -> replaceFragment(new HomeFragment()));
 
         TextView tv_temp = (TextView) view.findViewById(R.id.tv_temp);
-        TextView tv_humidity = (TextView) view.findViewById(R.id.tv_humidity);
+     //   TextView tv_humidity = (TextView) view.findViewById(R.id.tv_humidity);
 
-        tv_temp.setText("%%°");
+        tv_temp.setText("%%°     %%");
         h = new Handler() {
             public void handleMessage(android.os.Message msg) {
                 if (msg.what == RECIEVE_MESSAGE) {                                                   // если приняли сообщение в Handler
@@ -104,7 +104,7 @@ public class HallRoomFragment extends Fragment {
                     if (endOfLineIndex > 0) {                                            // если встречаем конец строки,
                         String sbprint = sb.substring(0, endOfLineIndex);               // то извлекаем строку
                         sb.delete(0, sb.length());                                      // и очищаем sb
-                        tv_temp.setText(sbprint+"°");             // обновляем TextView
+                        tv_temp.setText(sbprint + "%");             // обновляем TextView
 //                            btnOff.setEnabled(true);
 //                            btnOn.setEnabled(true);
                     }
@@ -187,57 +187,57 @@ public class HallRoomFragment extends Fragment {
         }
     }
 
-//    private class ConnectedThread extends Thread {
-//        private final BluetoothSocket mmSocket;
-//        private final InputStream mmInStream;
-//        private final OutputStream mmOutStream;
-//
-//        public ConnectedThread(BluetoothSocket socket) {
-//            mmSocket = socket;
-//            InputStream tmpIn = null;
-//            OutputStream tmpOut = null;
-//
-//            // Get the input and output streams, using temp objects because
-//            // member streams are final
-//            try {
-//                tmpIn = socket.getInputStream();
-//                tmpOut = socket.getOutputStream();
-//            } catch (IOException e) { }
-//
-//            mmInStream = tmpIn;
-//            mmOutStream = tmpOut;
-//        }
-//
-//        public void run() {
-//            byte[] buffer = new byte[256];  // buffer store for the stream
-//            int bytes; // bytes returned from read()
-//
-//            // Keep listening to the InputStream until an exception occurs
-//            while (true) {
-//                try {
-//                    // Read from the InputStream
-//                    bytes = mmInStream.read(buffer);        // Получаем кол-во байт и само собщение в байтовый массив "buffer"
-//                    h.obtainMessage(RECIEVE_MESSAGE, bytes, -1, buffer).sendToTarget();     // Отправляем в очередь сообщений Handler
-//                } catch (IOException e) {
-//                    break;
-//                }
-//            }
-//        }
-//        public void write(String message) {
-//            Log.d(TAG, "...Данные для отправки: " + message + "...");
-//            byte[] msgBuffer = message.getBytes();
-//            try {
-//                mmOutStream.write(msgBuffer);
-//            } catch (IOException e) {
-//                Log.d(TAG, "...Ошибка отправки данных: " + e.getMessage() + "...");
-//            }
-//        }
-//        public void cancel() {
-//            try {
-//                mmSocket.close();
-//            } catch (IOException e) { }
-//        }
-//    }
+    private class ConnectedThread extends Thread {
+        private final BluetoothSocket mmSocket;
+        private final InputStream mmInStream;
+        private final OutputStream mmOutStream;
+
+        public ConnectedThread(BluetoothSocket socket) {
+            mmSocket = socket;
+            InputStream tmpIn = null;
+            OutputStream tmpOut = null;
+
+            // Get the input and output streams, using temp objects because
+            // member streams are final
+            try {
+                tmpIn = socket.getInputStream();
+                tmpOut = socket.getOutputStream();
+            } catch (IOException e) { }
+
+            mmInStream = tmpIn;
+            mmOutStream = tmpOut;
+        }
+
+        public void run() {
+            byte[] buffer = new byte[256];  // buffer store for the stream
+            int bytes; // bytes returned from read()
+
+            // Keep listening to the InputStream until an exception occurs
+            while (true) {
+                try {
+                    // Read from the InputStream
+                    bytes = mmInStream.read(buffer);        // Получаем кол-во байт и само собщение в байтовый массив "buffer"
+                    h.obtainMessage(RECIEVE_MESSAGE, bytes, -1, buffer).sendToTarget();     // Отправляем в очередь сообщений Handler
+                } catch (IOException e) {
+                    break;
+                }
+            }
+        }
+        public void write(String message) {
+            Log.d(TAG, "...Данные для отправки: " + message + "...");
+            byte[] msgBuffer = message.getBytes();
+            try {
+                mmOutStream.write(msgBuffer);
+            } catch (IOException e) {
+                Log.d(TAG, "...Ошибка отправки данных: " + e.getMessage() + "...");
+            }
+        }
+        public void cancel() {
+            try {
+                mmSocket.close();
+            } catch (IOException e) { }
+        }
+    }
 
     private void checkBtState() {
         if(btAdapter == null) {

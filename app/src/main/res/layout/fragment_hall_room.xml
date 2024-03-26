@@ -59,27 +59,43 @@
             app:layout_constraintTop_toBottomOf="@+id/view_hall_room_head"
             app:layout_constraintVertical_bias="0.062" />
 
-        <TextView
-            android:id="@+id/tv_temp"
-            android:layout_width="79dp"
-            android:layout_height="62dp"
-            app:layout_constraintBottom_toBottomOf="@+id/view_rectangle_for_temp"
-            app:layout_constraintEnd_toEndOf="@+id/view_rectangle_for_temp"
-            app:layout_constraintHorizontal_bias="0.231"
-            app:layout_constraintStart_toStartOf="@+id/view_rectangle_for_temp"
-            app:layout_constraintTop_toTopOf="@+id/view_rectangle_for_temp"
-            app:layout_constraintVertical_bias="0.506" />
 
         <TextView
-            android:id="@+id/tv_humidity"
-            android:layout_width="79dp"
-            android:layout_height="62dp"
+            android:id="@+id/tv_temp"
+            android:layout_width="217dp"
+            android:layout_height="64dp"
+            android:textColor="#073509"
+            android:textSize="50sp"
             app:layout_constraintBottom_toBottomOf="@+id/view_rectangle_for_temp"
             app:layout_constraintEnd_toEndOf="@+id/view_rectangle_for_temp"
-            app:layout_constraintHorizontal_bias="0.752"
+            app:layout_constraintHorizontal_bias="0.62"
             app:layout_constraintStart_toStartOf="@+id/view_rectangle_for_temp"
             app:layout_constraintTop_toTopOf="@+id/view_rectangle_for_temp"
-            app:layout_constraintVertical_bias="0.506" />
+            app:layout_constraintVertical_bias="0.408" />
+
+        <View
+            android:id="@+id/view_temp"
+            android:layout_width="105dp"
+            android:layout_height="17dp"
+            android:background="@drawable/view_temp"
+            app:layout_constraintBottom_toBottomOf="@+id/view_rectangle_for_temp"
+            app:layout_constraintEnd_toEndOf="@+id/view_rectangle_for_temp"
+            app:layout_constraintHorizontal_bias="0.236"
+            app:layout_constraintStart_toStartOf="@+id/view_rectangle_for_temp"
+            app:layout_constraintTop_toBottomOf="@+id/tv_temp"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <View
+            android:id="@+id/view_humidity"
+            android:layout_width="80dp"
+            android:layout_height="15dp"
+            android:background="@drawable/view_humidity"
+            app:layout_constraintBottom_toBottomOf="@+id/view_rectangle_for_temp"
+            app:layout_constraintEnd_toEndOf="@+id/view_rectangle_for_temp"
+            app:layout_constraintHorizontal_bias="0.302"
+            app:layout_constraintStart_toEndOf="@+id/view_temp"
+            app:layout_constraintTop_toBottomOf="@+id/tv_temp"
+            app:layout_constraintVertical_bias="0.0" />
 
         <View
             android:id="@+id/view_object"
