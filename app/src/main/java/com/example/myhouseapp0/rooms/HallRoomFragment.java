@@ -6,6 +6,7 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -16,6 +17,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,61 +28,47 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.myhouseapp0.DB_helper;
 import com.example.myhouseapp0.HomeFragment;
 import com.example.myhouseapp0.R;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Date;
 import java.util.UUID;
 
 public class HallRoomFragment extends Fragment {
+    DB_helper db_helper;
 
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    private String mParam1;
-    private String mParam2;
     private static final String TAG = "bluetooth1";
     Handler h;
     final int RECIEVE_MESSAGE = 1; //статус для Hadnler;
     private static final int REQUEST_ENABLE_BT = 1;
     private BluetoothAdapter btAdapter = null;
     private BluetoothSocket btSocket = null;
-    private OutputStream outputStream = null;
-    private StringBuilder sb = new StringBuilder();
+    private final OutputStream outputStream = null;
+    private final StringBuilder sb = new StringBuilder();
     private ConnectedThread mConnectedThread;
 
     private static final UUID my_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
-
-    private static String macAddress = "00:22:12:01:91:44";
 
     public HallRoomFragment() {
         // Required empty public constructor
     }
 
     public static HallRoomFragment newInstance(String param1, String param2) {
-        HallRoomFragment fragment = new HallRoomFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
+        return new HallRoomFragment();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_hall_room, container, false);
     }
 
@@ -89,14 +77,19 @@ public class HallRoomFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         Button btn_back_from_hallroom = (Button) view.findViewById(R.id.btn_back_from_hallroom);
-        btn_back_from_hallroom.setOnClickListener(v -> replaceFragment(new HomeFragment()));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            btn_back_from_hallroom.setOnClickListener(v -> replaceFragment(new HomeFragment()));
+        }
+
+        db_helper = new DB_helper(getContext());
 
         TextView tv_temp = (TextView) view.findViewById(R.id.tv_temp);
      //   TextView tv_humidity = (TextView) view.findViewById(R.id.tv_humidity);
 
         tv_temp.setText("%%°     %%");
         h = new Handler() {
-            public void handleMessage(android.os.Message msg) {
+            @SuppressLint("SetTextI18n")
+            public void handleMessage(Message msg) {
                 if (msg.what == RECIEVE_MESSAGE) {                                                   // если приняли сообщение в Handler
                     byte[] readBuf = (byte[]) msg.obj;
                     String strIncom = new String(readBuf, 0, msg.arg1);
@@ -106,8 +99,8 @@ public class HallRoomFragment extends Fragment {
                         String sbprint = sb.substring(0, endOfLineIndex);               // то извлекаем строку
                         sb.delete(0, sb.length());                                      // и очищаем sb
                         tv_temp.setText(sbprint + "%");             // обновляем TextView
-//                            btnOff.setEnabled(true);
-//                            btnOn.setEnabled(true);
+
+                        db_helper.insertTempData(new Date(), sbprint);
                     }
                     //Log.d(TAG, "...Строка:"+ sb.toString() +  "Байт:" + msg.arg1 + "...");
                 }
@@ -138,6 +131,7 @@ public class HallRoomFragment extends Fragment {
     public void onResume() {
         super.onResume();
         Log.d(TAG, "Попытка соединения");
+        String macAddress = "00:22:12:01:91:44";
         BluetoothDevice device = btAdapter.getRemoteDevice(macAddress);
         try {
             if (ActivityCompat.checkSelfPermission(getContext(), android.Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
@@ -247,7 +241,7 @@ public class HallRoomFragment extends Fragment {
             if (btAdapter.isEnabled()) {
                 Log.d(TAG, "Bt is on");
             } else {
-                Intent enableBtIntent = new Intent(btAdapter.ACTION_REQUEST_ENABLE);
+                Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
                 startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
             }
 

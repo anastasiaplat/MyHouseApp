@@ -1,5 +1,6 @@
 package com.example.myhouseapp0;
 
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -8,14 +9,17 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import androidx.annotation.Nullable;
 
+import java.util.Date;
+
 public class DB_helper extends SQLiteOpenHelper{
-    public static final String DBName="register.db";
+    public static final String DBName="myhouse.db";
     public DB_helper(@Nullable Context context) {
         super(context, DBName, null, 1);
     }
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase){
         sqLiteDatabase.execSQL("create table Users(username TEXT primary key, password TEXT)");
+        sqLiteDatabase.execSQL("create table TempAndHumidity(date DATE primary key, data TEXT)");
     }
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
@@ -29,9 +33,21 @@ public class DB_helper extends SQLiteOpenHelper{
         long result = myDB.insert("users", null, contentValues);
         return result != -1;
     }
+    public void insertTempData(Date date, String temp_and_humidity){
+        SQLiteDatabase myDB = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("date", date.getTime());
+        contentValues.put("temp_and_humidity", temp_and_humidity);
+        myDB.insert("TempAndHumidity", null, contentValues);
+    }
+    public String getTempData(){
+        SQLiteDatabase myDB = this.getWritableDatabase();
+        @SuppressLint("Recycle") Cursor cursor = myDB.rawQuery("select * from TempAndHumidity ORDER BY id DESC LIMIT 1;", null);
+        return cursor.getString(1);
+    }
     public boolean checkUsername(String username) {
         SQLiteDatabase myDB = this.getWritableDatabase();
-        Cursor cursor = myDB.rawQuery("select * from users where username = ?", new String[]{username});
+        @SuppressLint("Recycle") Cursor cursor = myDB.rawQuery("select * from users where username = ?", new String[]{username});
         if (cursor.getCount() > 0)
             return true;
         else return false;
@@ -39,7 +55,7 @@ public class DB_helper extends SQLiteOpenHelper{
 
     public boolean checkUserForEntrance(String username, String pwd){
         SQLiteDatabase DB = this.getWritableDatabase();
-        Cursor cursor = DB.rawQuery("select * from users where username = ? and password=?", new String[]{username, pwd});
+        @SuppressLint("Recycle") Cursor cursor = DB.rawQuery("select * from users where username = ? and password=?", new String[]{username, pwd});
         if (cursor.getCount() > 0)
             return true;
         else return false;

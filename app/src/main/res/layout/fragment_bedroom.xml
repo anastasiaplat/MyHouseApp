@@ -1,14 +1,148 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".rooms.BedroomFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Bedroom" />
+        android:layout_height="match_parent">
+
+        <View
+            android:id="@+id/view_bedroom_head"
+            android:layout_width="110dp"
+            android:layout_height="28dp"
+            android:layout_gravity="clip_horizontal|center_horizontal"
+            android:layout_marginTop="48dp"
+            android:background="@drawable/view_bedroom_title"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.346"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+        <Button
+            android:id="@+id/btn_back_bedroom"
+            android:layout_width="50dp"
+            android:layout_height="60dp"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="32dp"
+            android:background="@android:color/transparent"
+            android:text="@string/_1"
+            android:visibility="visible"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="UsingOnClickInXml" />
+
+        <View
+            android:id="@+id/view_back_bedroom"
+            android:layout_width="25dp"
+            android:layout_height="43dp"
+            android:background="@drawable/back"
+            app:layout_constraintBottom_toBottomOf="@+id/btn_back_bedroom"
+            app:layout_constraintEnd_toEndOf="@+id/btn_back_bedroom"
+            app:layout_constraintStart_toStartOf="@+id/btn_back_bedroom"
+            app:layout_constraintTop_toTopOf="@+id/btn_back_bedroom" />
+        <View
+            android:id="@+id/view_rectangle_for_temp_bedroom"
+            android:layout_width="325dp"
+            android:layout_height="135dp"
+            android:background="@drawable/view_rectangle_for_temp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.476"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/view_bedroom_head"
+            app:layout_constraintVertical_bias="0.062" />
+
+
+        <TextView
+            android:id="@+id/tv_temp_bedroom"
+            android:layout_width="217dp"
+            android:layout_height="64dp"
+            android:textColor="#073509"
+            android:textSize="50sp"
+            app:layout_constraintBottom_toBottomOf="@+id/view_rectangle_for_temp_bedroom"
+            app:layout_constraintEnd_toEndOf="@+id/view_rectangle_for_temp_bedroom"
+            app:layout_constraintHorizontal_bias="0.62"
+            app:layout_constraintStart_toStartOf="@+id/view_rectangle_for_temp_bedroom"
+            app:layout_constraintTop_toTopOf="@+id/view_rectangle_for_temp_bedroom"
+            app:layout_constraintVertical_bias="0.408" />
+
+        <View
+            android:id="@+id/view_temp_bedroom"
+            android:layout_width="105dp"
+            android:layout_height="17dp"
+            android:background="@drawable/view_temp"
+            app:layout_constraintBottom_toBottomOf="@+id/view_rectangle_for_temp_bedroom"
+            app:layout_constraintEnd_toEndOf="@+id/view_rectangle_for_temp_bedroom"
+            app:layout_constraintHorizontal_bias="0.236"
+            app:layout_constraintStart_toStartOf="@+id/view_rectangle_for_temp_bedroom"
+            app:layout_constraintTop_toBottomOf="@+id/tv_temp_bedroom"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <View
+            android:id="@+id/view_humidity_bedroom"
+            android:layout_width="82dp"
+            android:layout_height="13dp"
+            android:background="@drawable/view_humidity"
+            app:layout_constraintBottom_toBottomOf="@+id/view_rectangle_for_temp_bedroom"
+            app:layout_constraintEnd_toEndOf="@+id/view_rectangle_for_temp_bedroom"
+            app:layout_constraintHorizontal_bias="0.302"
+            app:layout_constraintStart_toEndOf="@+id/view_temp_bedroom"
+            app:layout_constraintTop_toBottomOf="@+id/tv_temp_bedroom"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <View
+            android:id="@+id/view_device_bedroom"
+            android:layout_width="327dp"
+            android:layout_height="61dp"
+            android:layout_gravity="clip_horizontal|center_horizontal"
+            android:layout_marginTop="64dp"
+            android:background="@drawable/view_rectangle_object"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.511"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/view_rectangle_for_temp_bedroom" />
+
+        <Switch
+            android:id="@+id/switch_light_bedroom"
+            android:layout_width="82dp"
+            android:layout_height="53dp"
+            android:text=""
+            app:layout_constraintBottom_toBottomOf="@+id/view_device_bedroom"
+            app:layout_constraintEnd_toEndOf="@+id/view_device_bedroom"
+            app:layout_constraintHorizontal_bias="0.869"
+            app:layout_constraintStart_toStartOf="@+id/view_device_bedroom"
+            app:layout_constraintTop_toTopOf="@+id/view_device_bedroom"
+            app:layout_constraintVertical_bias="0.5" />
+
+        <View
+            android:id="@+id/view_light"
+            android:layout_width="80dp"
+            android:layout_height="15dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/view_heating"
+            app:layout_constraintBottom_toBottomf="@+id/view_device_bedroom"
+            app:layout_constraintEnd_toStartOf="@+id/switch_light_bedroom"
+            app:layout_constraintHorizontal_bias="0.237"
+            app:layout_constraintStart_toStartOf="@+id/view_device_bedroom"
+            app:layout_constraintTop_toTopOf="@+id/view_device_bedroom" />
+
+        <View
+            android:id="@+id/view_devices_bedroom"
+            android:layout_width="90dp"
+            android:layout_height="27dp"
+            android:background="@drawable/view_devices"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.108"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/view_rectangle_for_temp_bedroom"
+            app:layout_constraintVertical_bias="0.045" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>
