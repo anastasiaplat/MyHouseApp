@@ -1,4 +1,4 @@
-package com.example.myhouseapp0;
+package com.example.myhouseapp0.rooms;
 
 import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;
@@ -26,7 +26,8 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.w3c.dom.Text;
+import com.example.myhouseapp0.HomeFragment;
+import com.example.myhouseapp0.R;
 
 import java.io.IOException;
 import java.io.InputStream;

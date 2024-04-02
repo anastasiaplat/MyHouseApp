@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".HallRoomFragment">
+    tools:context=".rooms.HallRoomFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -87,8 +87,8 @@
 
         <View
             android:id="@+id/view_humidity"
-            android:layout_width="80dp"
-            android:layout_height="15dp"
+            android:layout_width="82dp"
+            android:layout_height="13dp"
             android:background="@drawable/view_humidity"
             app:layout_constraintBottom_toBottomOf="@+id/view_rectangle_for_temp"
             app:layout_constraintEnd_toEndOf="@+id/view_rectangle_for_temp"
