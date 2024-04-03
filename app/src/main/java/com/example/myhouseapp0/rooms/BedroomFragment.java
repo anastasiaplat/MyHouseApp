@@ -27,7 +27,7 @@ public class BedroomFragment extends Fragment {
     public BedroomFragment() {
     }
 
-    public static BedroomFragment newInstance(String param1, String param2) {
+    public static BedroomFragment newInstance() {
         return new BedroomFragment();
     }
 
@@ -45,12 +45,13 @@ public class BedroomFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Button btn_back_from_bedroom = (Button) view.findViewById(R.id.btn_back_bedroom);
+        Button btn_back_from_bedroom = view.findViewById(R.id.btn_back_bedroom);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             btn_back_from_bedroom.setOnClickListener(v -> replaceFragment(new HomeFragment()));
         }
-        TextView tv_temp_and_hum_bedroom = (TextView) view.findViewById(R.id.tv_temp_bedroom);
-        tv_temp_and_hum_bedroom.setText(db_helper.getTempData());
+        TextView tv_temp_and_hum_bedroom = view.findViewById(R.id.tv_temp_bedroom);
+        tv_temp_and_hum_bedroom.setText("%%°     %%");
+        //tv_temp_and_hum_bedroom.setText(db_helper.getTempData());
 
 
     }

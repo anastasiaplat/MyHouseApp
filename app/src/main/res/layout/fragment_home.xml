@@ -218,7 +218,7 @@
             android:text="@string/_1"
             app:layout_constraintBottom_toBottomOf="@+id/view_object3"
             app:layout_constraintEnd_toEndOf="@+id/view_object3"
-            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="@+id/view_object3"
             app:layout_constraintTop_toBottomOf="@+id/btn_hallroom"
             app:layout_constraintVertical_bias="1.0" />
@@ -228,7 +228,7 @@
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_gravity="clip_horizontal|center_horizontal"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="5dp"
             android:background="@drawable/view_square"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.138"
@@ -237,23 +237,23 @@
 
         <View
             android:id="@+id/view_kitchen"
-            android:layout_width="51dp"
+            android:layout_width="50dp"
             android:layout_height="17dp"
             android:layout_gravity="clip_horizontal|center_horizontal"
             android:background="@drawable/view_kitchen"
             app:layout_constraintBottom_toBottomOf="@+id/btn_kitchen"
             app:layout_constraintEnd_toEndOf="@+id/btn_kitchen"
-            app:layout_constraintHorizontal_bias="0.488"
+            app:layout_constraintHorizontal_bias="0.48"
             app:layout_constraintStart_toStartOf="@+id/btn_kitchen"
             app:layout_constraintTop_toTopOf="@+id/btn_kitchen"
-            app:layout_constraintVertical_bias="0.506" />
+            app:layout_constraintVertical_bias="0.542" />
 
         <Button
             android:id="@+id/btn_carroom"
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_gravity="clip_horizontal|center_horizontal"
-            android:layout_marginTop="112dp"
+            android:layout_marginTop="107dp"
             android:background="@android:color/transparent"
             android:text="@string/_1"
             app:layout_constraintEnd_toEndOf="parent"
@@ -271,7 +271,8 @@
             app:layout_constraintEnd_toStartOf="@+id/btn_yard"
             app:layout_constraintHorizontal_bias="0.541"
             app:layout_constraintStart_toEndOf="@+id/btn_kitchen"
-            app:layout_constraintTop_toBottomOf="@+id/btn_bedroom" />
+            app:layout_constraintTop_toBottomOf="@+id/btn_bedroom"
+            app:layout_constraintVertical_bias="0.416" />
 
         <View
             android:id="@+id/view_carroom"
@@ -303,7 +304,7 @@
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_gravity="clip_horizontal|center_horizontal"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="5dp"
             android:layout_marginEnd="44dp"
             android:background="@drawable/view_square"
             app:layout_constraintEnd_toEndOf="parent"
@@ -341,7 +342,7 @@
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_gravity="clip_horizontal|center_horizontal"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="5dp"
             android:background="@drawable/view_square"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.138"
@@ -366,7 +367,7 @@
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_gravity="clip_horizontal|center_horizontal"
-            android:layout_marginTop="112dp"
+            android:layout_marginTop="105dp"
             android:layout_marginEnd="156dp"
             android:background="@android:color/transparent"
             android:text="@string/_1"
@@ -390,7 +391,7 @@
 
         <View
             android:id="@+id/view_storeroom"
-            android:layout_width="76dp"
+            android:layout_width="78dp"
             android:layout_height="18dp"
             android:layout_gravity="clip_horizontal|center_horizontal"
             android:layout_marginStart="13dp"

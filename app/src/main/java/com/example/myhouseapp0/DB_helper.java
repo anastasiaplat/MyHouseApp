@@ -33,12 +33,13 @@ public class DB_helper extends SQLiteOpenHelper{
         long result = myDB.insert("users", null, contentValues);
         return result != -1;
     }
-    public void insertTempData(Date date, String temp_and_humidity){
+    public boolean insertTempData(String date, String temp_and_humidity){
         SQLiteDatabase myDB = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
-        contentValues.put("date", date.getTime());
+        contentValues.put("date", date);
         contentValues.put("temp_and_humidity", temp_and_humidity);
-        myDB.insert("TempAndHumidity", null, contentValues);
+        long result = myDB.insert("TempAndHumidity", null, contentValues);
+        return result != -1;
     }
     public String getTempData(){
         SQLiteDatabase myDB = this.getWritableDatabase();

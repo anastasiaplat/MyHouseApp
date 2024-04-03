@@ -24,6 +24,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -71,7 +72,12 @@ public class HallRoomFragment extends Fragment {
                              Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_hall_room, container, false);
     }
+//    private CallBackGetVar callBackGetVar;
+//    public interface CallBackGetVar {
+//        void onCallBack (String var);
+//    }
 
+    public String sbprint;
     @SuppressLint("HandlerLeak")
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -84,9 +90,24 @@ public class HallRoomFragment extends Fragment {
         db_helper = new DB_helper(getContext());
 
         TextView tv_temp = (TextView) view.findViewById(R.id.tv_temp);
-     //   TextView tv_humidity = (TextView) view.findViewById(R.id.tv_humidity);
-
         tv_temp.setText("%%°     %%");
+
+//        EditText et_humidity = (EditText) view.findViewById(R.id.et_humidity);
+//        Button btn_setdata = (Button) view.findViewById(R.id.btn_setdata);
+//        btn_setdata.setOnClickListener(v -> mConnectedThread.write(et_humidity.getText().toString()));
+//
+//        @SuppressLint("UseSwitchCompatOrMaterialCode") Switch btn_switch_for_scenariy = (Switch) view.findViewById(R.id.switch_for_scenariy);
+//        btn_switch_for_scenariy.setOnCheckedChangeListener((buttonView, isChecked) -> {
+//            if (isChecked) {
+//                mConnectedThread.write("2");
+//                Toast.makeText(getContext(), "Сценарий включен", Toast.LENGTH_SHORT).show();
+//            } else {
+//                mConnectedThread.write("3");
+//                Toast.makeText(getContext(), "Сценарий выключен", Toast.LENGTH_SHORT).show();
+//            }
+//        });
+
+
         h = new Handler() {
             @SuppressLint("SetTextI18n")
             public void handleMessage(Message msg) {
@@ -96,11 +117,17 @@ public class HallRoomFragment extends Fragment {
                     sb.append(strIncom);                                                // формируем строку
                     int endOfLineIndex = sb.indexOf("\r\n");                            // определяем символы конца строки
                     if (endOfLineIndex > 0) {                                            // если встречаем конец строки,
-                        String sbprint = sb.substring(0, endOfLineIndex);               // то извлекаем строку
+                        sbprint = sb.substring(0, endOfLineIndex);               // то извлекаем строку
                         sb.delete(0, sb.length());                                      // и очищаем sb
                         tv_temp.setText(sbprint + "%");             // обновляем TextView
 
-                        db_helper.insertTempData(new Date(), sbprint);
+                        boolean success = db_helper.insertTempData(new Date().toString(), sbprint);
+                        if(success) {
+                            String i="";
+                        }
+                       // callBackGetVar.onCallBack(sbprint);
+
+
                     }
                     //Log.d(TAG, "...Строка:"+ sb.toString() +  "Байт:" + msg.arg1 + "...");
                 }
@@ -138,7 +165,7 @@ public class HallRoomFragment extends Fragment {
                 btSocket = device.createRfcommSocketToServiceRecord(my_UUID);
             }
         }catch (IOException e) {
-            errorExit("Error","In onResume() and socket create failed: " + e.getMessage());
+            errorExit("In onResume() and socket create failed: " + e.getMessage());
         }
         btAdapter.cancelDiscovery();
         Log.d(TAG, "Соединение...");
@@ -149,7 +176,7 @@ public class HallRoomFragment extends Fragment {
             try{
                 btSocket.close();
             } catch (IOException e2) {
-                errorExit("Error", "In onResume() and unable to close socket" + e2.getMessage());
+                errorExit("In onResume() and unable to close socket" + e2.getMessage());
             }
         }
 
@@ -164,12 +191,12 @@ public class HallRoomFragment extends Fragment {
         try{
             btSocket.close();
         }catch (IOException e) {
-            errorExit("Error", "Failed to flush output stream" + e.getMessage());
+            errorExit("Failed to flush output stream" + e.getMessage());
         }
     }
 
-    private void errorExit(String title, String message) {
-        Toast.makeText(requireContext(), title + "-" + message, Toast.LENGTH_LONG).show();
+    private void errorExit(String message) {
+        Toast.makeText(requireContext(), "Error" + "-" + message, Toast.LENGTH_LONG).show();
     }
     private void sendData(String message){
         byte[] msgBuffer = message.getBytes();
@@ -236,7 +263,7 @@ public class HallRoomFragment extends Fragment {
 
     private void checkBtState() {
         if(btAdapter == null) {
-            errorExit("Error", "Bt is not supporting");
+            errorExit("Bt is not supporting");
         } else {
             if (btAdapter.isEnabled()) {
                 Log.d(TAG, "Bt is on");

@@ -146,6 +146,42 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.382" />
 
+<!--        <EditText-->
+<!--            android:id="@+id/et_humidity"-->
+<!--            android:layout_width="95dp"-->
+<!--            android:layout_height="53dp"-->
+<!--            android:layout_marginTop="108dp"-->
+<!--            android:text="@string/_1"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintHorizontal_bias="0.202"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toBottomOf="@+id/view_object" />-->
+
+<!--        <Switch-->
+<!--            android:id="@+id/switch_for_scenariy"-->
+<!--            android:layout_width="82dp"-->
+<!--            android:layout_height="53dp"-->
+<!--            android:text=""-->
+<!--            app:layout_constraintBottom_toBottomOf="parent"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintHorizontal_bias="0.552"-->
+<!--            app:layout_constraintStart_toEndOf="@+id/et_humidity"-->
+<!--            app:layout_constraintTop_toBottomOf="@+id/view_object"-->
+<!--            app:layout_constraintVertical_bias="0.105" />-->
+
+<!--        <Button-->
+<!--            android:id="@+id/btn_setdata"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginTop="28dp"-->
+<!--            android:text="Установить"-->
+<!--            app:layout_constraintBottom_toBottomOf="parent"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintHorizontal_bias="0.515"-->
+<!--            app:layout_constraintStart_toEndOf="@+id/et_humidity"-->
+<!--            app:layout_constraintTop_toBottomOf="@+id/switch_for_scenariy"-->
+<!--            app:layout_constraintVertical_bias="0.005" />-->
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
