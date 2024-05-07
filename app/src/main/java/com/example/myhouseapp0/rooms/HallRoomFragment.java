@@ -138,16 +138,13 @@ public class HallRoomFragment extends Fragment {
         btAdapter = BluetoothAdapter.getDefaultAdapter();
         checkBtState();
 
-        btn_switch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    mConnectedThread.write("1");
-                    Toast.makeText(getContext(), "Включено", Toast.LENGTH_SHORT).show();
-                } else {
-                    mConnectedThread.write("0");
-                    Toast.makeText(getContext(), "Выключено", Toast.LENGTH_SHORT).show();
-                }
+        btn_switch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                mConnectedThread.write("1");
+                Toast.makeText(getContext(), "Включено", Toast.LENGTH_SHORT).show();
+            } else {
+                mConnectedThread.write("0");
+                Toast.makeText(getContext(), "Выключено", Toast.LENGTH_SHORT).show();
             }
         });
 
