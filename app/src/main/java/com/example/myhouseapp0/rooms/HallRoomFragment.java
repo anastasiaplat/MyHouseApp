@@ -1,0 +1,287 @@
+package com.example.myhouseapp0.rooms;
+
+import android.annotation.SuppressLint;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothSocket;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
+import android.os.Bundle;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+
+import android.os.Handler;
+import android.os.Message;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.EditText;
+import android.widget.Switch;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.example.myhouseapp0.DB_helper;
+import com.example.myhouseapp0.HomeFragment;
+import com.example.myhouseapp0.R;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.Date;
+import java.util.UUID;
+
+public class HallRoomFragment extends Fragment {
+    DB_helper db_helper;
+
+    private static final String TAG = "bluetooth1";
+    Handler h;
+    final int RECIEVE_MESSAGE = 1; //статус для Hadnler;
+    private static final int REQUEST_ENABLE_BT = 1;
+    private BluetoothAdapter btAdapter = null;
+    private BluetoothSocket btSocket = null;
+    private final OutputStream outputStream = null;
+    private final StringBuilder sb = new StringBuilder();
+    private ConnectedThread mConnectedThread;
+
+    private static final UUID my_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
+
+    public HallRoomFragment() {
+        // Required empty public constructor
+    }
+
+    public static HallRoomFragment newInstance(String param1, String param2) {
+        return new HallRoomFragment();
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_hall_room, container, false);
+    }
+//    private CallBackGetVar callBackGetVar;
+//    public interface CallBackGetVar {
+//        void onCallBack (String var);
+//    }
+
+    public String sbprint;
+    @SuppressLint("HandlerLeak")
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        Button btn_back_from_hallroom = (Button) view.findViewById(R.id.btn_back_from_hallroom);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            btn_back_from_hallroom.setOnClickListener(v -> replaceFragment(new HomeFragment()));
+        }
+
+        db_helper = new DB_helper(getContext());
+
+        TextView tv_temp = (TextView) view.findViewById(R.id.tv_temp);
+        tv_temp.setText("%%°     %%");
+
+//        EditText et_humidity = (EditText) view.findViewById(R.id.et_humidity);
+//        Button btn_setdata = (Button) view.findViewById(R.id.btn_setdata);
+//        btn_setdata.setOnClickListener(v -> mConnectedThread.write(et_humidity.getText().toString()));
+//
+//        @SuppressLint("UseSwitchCompatOrMaterialCode") Switch btn_switch_for_scenariy = (Switch) view.findViewById(R.id.switch_for_scenariy);
+//        btn_switch_for_scenariy.setOnCheckedChangeListener((buttonView, isChecked) -> {
+//            if (isChecked) {
+//                mConnectedThread.write("2");
+//                Toast.makeText(getContext(), "Сценарий включен", Toast.LENGTH_SHORT).show();
+//            } else {
+//                mConnectedThread.write("3");
+//                Toast.makeText(getContext(), "Сценарий выключен", Toast.LENGTH_SHORT).show();
+//            }
+//        });
+
+
+        h = new Handler() {
+            @SuppressLint("SetTextI18n")
+            public void handleMessage(Message msg) {
+                if (msg.what == RECIEVE_MESSAGE) {                                                   // если приняли сообщение в Handler
+                    byte[] readBuf = (byte[]) msg.obj;
+                    String strIncom = new String(readBuf, 0, msg.arg1);
+                    sb.append(strIncom);                                                // формируем строку
+                    int endOfLineIndex = sb.indexOf("\r\n");                            // определяем символы конца строки
+                    if (endOfLineIndex > 0) {                                            // если встречаем конец строки,
+                        sbprint = sb.substring(0, endOfLineIndex);               // то извлекаем строку
+                        sb.delete(0, sb.length());                                      // и очищаем sb
+                        tv_temp.setText(sbprint + "%");             // обновляем TextView
+
+                        boolean success = db_helper.insertTempData(new Date().toString(), sbprint);
+                        if(success) {
+                            String i="";
+                        }
+                       // callBackGetVar.onCallBack(sbprint);
+
+
+                    }
+                    //Log.d(TAG, "...Строка:"+ sb.toString() +  "Байт:" + msg.arg1 + "...");
+                }
+            };
+        };
+
+        @SuppressLint("UseSwitchCompatOrMaterialCode") Switch btn_switch = (Switch) view.findViewById(R.id.switch_for_servo);
+        btAdapter = BluetoothAdapter.getDefaultAdapter();
+        checkBtState();
+
+        btn_switch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                mConnectedThread.write("1");
+                Toast.makeText(getContext(), "Включено", Toast.LENGTH_SHORT).show();
+            } else {
+                mConnectedThread.write("0");
+                Toast.makeText(getContext(), "Выключено", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG, "Попытка соединения");
+        String macAddress = "00:22:12:01:91:44";
+        BluetoothDevice device = btAdapter.getRemoteDevice(macAddress);
+        try {
+            if (ActivityCompat.checkSelfPermission(getContext(), android.Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+                btSocket = device.createRfcommSocketToServiceRecord(my_UUID);
+            }
+        }catch (IOException e) {
+            errorExit("In onResume() and socket create failed: " + e.getMessage());
+        }
+        btAdapter.cancelDiscovery();
+        Log.d(TAG, "Соединение...");
+        try{
+            btSocket.connect();
+            Log.d(TAG, "Соединение установлено");
+        } catch (IOException e) {
+            try{
+                btSocket.close();
+            } catch (IOException e2) {
+                errorExit("In onResume() and unable to close socket" + e2.getMessage());
+            }
+        }
+
+        Log.d(TAG, "Создание сокета...");
+        mConnectedThread = new ConnectedThread(btSocket);
+        mConnectedThread.start();
+    }
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(TAG, "In onPause()...");
+        try{
+            btSocket.close();
+        }catch (IOException e) {
+            errorExit("Failed to flush output stream" + e.getMessage());
+        }
+    }
+
+    private void errorExit(String message) {
+        Toast.makeText(requireContext(), "Error" + "-" + message, Toast.LENGTH_LONG).show();
+    }
+    private void sendData(String message){
+        byte[] msgBuffer = message.getBytes();
+        Log.d(TAG, "Посылаем данные:" + message + "...");
+
+        try{
+            outputStream.write(msgBuffer);
+        } catch (IOException e) {
+            String msg = "An exception occurred during write:" + e.getMessage();
+        }
+    }
+
+    private class ConnectedThread extends Thread {
+        private final BluetoothSocket mmSocket;
+        private final InputStream mmInStream;
+        private final OutputStream mmOutStream;
+
+        public ConnectedThread(BluetoothSocket socket) {
+            mmSocket = socket;
+            InputStream tmpIn = null;
+            OutputStream tmpOut = null;
+
+            // Get the input and output streams, using temp objects because
+            // member streams are final
+            try {
+                tmpIn = socket.getInputStream();
+                tmpOut = socket.getOutputStream();
+            } catch (IOException e) { }
+
+            mmInStream = tmpIn;
+            mmOutStream = tmpOut;
+        }
+
+        public void run() {
+            byte[] buffer = new byte[256];  // buffer store for the stream
+            int bytes; // bytes returned from read()
+
+            // Keep listening to the InputStream until an exception occurs
+            while (true) {
+                try {
+                    // Read from the InputStream
+                    bytes = mmInStream.read(buffer);        // Получаем кол-во байт и само собщение в байтовый массив "buffer"
+                    h.obtainMessage(RECIEVE_MESSAGE, bytes, -1, buffer).sendToTarget();     // Отправляем в очередь сообщений Handler
+                } catch (IOException e) {
+                    break;
+                }
+            }
+        }
+        public void write(String message) {
+            Log.d(TAG, "...Данные для отправки: " + message + "...");
+            byte[] msgBuffer = message.getBytes();
+            try {
+                mmOutStream.write(msgBuffer);
+            } catch (IOException e) {
+                Log.d(TAG, "...Ошибка отправки данных: " + e.getMessage() + "...");
+            }
+        }
+        public void cancel() {
+            try {
+                mmSocket.close();
+            } catch (IOException e) { }
+        }
+    }
+
+    private void checkBtState() {
+        if(btAdapter == null) {
+            errorExit("Bt is not supporting");
+        } else {
+            if (btAdapter.isEnabled()) {
+                Log.d(TAG, "Bt is on");
+            } else {
+                Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+            }
+
+        }
+
+
+    }
+
+
+    private void replaceFragment(Fragment fragment){
+        FragmentManager fragmentManager = getParentFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.frame_layout, fragment);
+        fragmentTransaction.commit();
+    }
+
+
+
+}

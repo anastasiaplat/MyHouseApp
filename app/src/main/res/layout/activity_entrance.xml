@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".EntranceActivity">
+
+    <View
+        android:id="@+id/entrance"
+        android:layout_width="97dp"
+        android:layout_height="43dp"
+        android:background="@drawable/entrance"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.065" />
+
+    <Button
+        android:id="@+id/btn_back1"
+        android:layout_width="50dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="32dp"
+        android:background="@android:color/transparent"
+        android:text="@string/_1"
+        android:visibility="visible"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="UsingOnClickInXml" />
+
+    <View
+        android:id="@+id/view_back1"
+        android:layout_width="25dp"
+        android:layout_height="43dp"
+        android:background="@drawable/back"
+        app:layout_constraintBottom_toBottomOf="@+id/btn_back1"
+        app:layout_constraintEnd_toEndOf="@+id/btn_back1"
+        app:layout_constraintStart_toStartOf="@+id/btn_back1"
+        app:layout_constraintTop_toTopOf="@+id/btn_back1" />
+
+    <EditText
+        android:id="@+id/ET_login"
+        android:layout_width="313dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="52dp"
+        android:ems="10"
+        android:hint="@string/login"
+        android:inputType="text|textFilter"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/entrance"
+        android:importantForAutofill="no" />
+
+    <EditText
+        android:id="@+id/ET_password"
+        android:layout_width="313dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="36dp"
+        android:ems="10"
+        android:hint="@string/password"
+        android:inputType="textPassword"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ET_login"
+        android:importantForAutofill="no" />
+
+    <Button
+        android:id="@+id/btn_to_login"
+        android:layout_width="327dp"
+        android:layout_height="61dp"
+        android:text="@string/_1"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ET_password"
+        app:layout_constraintVertical_bias="0.231"
+        tools:ignore="UsingOnClickInXml" />
+
+    <View
+        android:id="@+id/view_to_login"
+        android:layout_width="327dp"
+        android:layout_height="61dp"
+        android:layout_marginBottom="208dp"
+        android:background="@drawable/view_login"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/btn_to_login"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/btn_to_login"
+        app:layout_constraintTop_toTopOf="@+id/btn_to_login"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <View
+        android:id="@+id/view_to_register0"
+        android:layout_width="122dp"
+        android:layout_height="23dp"
+        android:layout_marginBottom="32dp"
+        android:background="@drawable/view_to_register0"
+        app:layout_constraintBottom_toTopOf="@+id/btn_to_login"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ET_password"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <Button
+        android:id="@+id/btn_to_register0"
+        android:layout_width="170dp"
+        android:layout_height="52dp"
+        android:background="@android:color/transparent"
+        android:text="@string/_1"
+        android:visibility="visible"
+        app:layout_constraintBottom_toTopOf="@+id/btn_to_login"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ET_password"
+        tools:ignore="UsingOnClickInXml" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

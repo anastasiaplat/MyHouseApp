@@ -1,3 +1,18 @@
 <resources>
-    <string name="app_name">MyHouseApp0</string>
+    <string name="app_name">Мой дом</string>
+    <string name="_1">1</string>
+    <string name="login">Логин</string>
+    <string name="name">Имя</string>
+    <string name="phone">Телефон</string>
+    <string name="address">Адрес</string>
+    <string name="password0">Придумайте пароль</string>
+    <string name="password1">Повторите пароль</string>
+    <string name="password">Пароль</string>
+    <string name="home">Главная</string>
+    <string name="bluetooth">Bluetooth</string>
+    <string name="temp">%%</string>
+    <string name="date">21 марта, 2024</string>
+    <string name="city">Казань</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
