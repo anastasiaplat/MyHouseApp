@@ -391,8 +391,8 @@
 
         <View
             android:id="@+id/view_storeroom"
-            android:layout_width="78dp"
-            android:layout_height="18dp"
+            android:layout_width="80dp"
+            android:layout_height="16dp"
             android:layout_gravity="clip_horizontal|center_horizontal"
             android:layout_marginStart="13dp"
             android:background="@drawable/view_storeroom"

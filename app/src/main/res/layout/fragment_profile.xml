@@ -24,6 +24,59 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <View
+            android:id="@+id/view_editing"
+            android:layout_width="150dp"
+            android:layout_height="25dp"
+            android:layout_gravity="clip_horizontal|center_horizontal"
+            android:layout_marginTop="36dp"
+            android:background="@drawable/view_editing"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.191"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/view_profile" />
+
+
+        <EditText
+            android:id="@+id/ET_name_edit"
+            android:layout_width="313dp"
+            android:layout_height="48dp"
+            android:layout_marginTop="24dp"
+            android:ems="10"
+            android:hint="@string/name"
+            android:inputType="textPersonName"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.51"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/view_editing" />
+
+        <Button
+            android:id="@+id/btn_edit_name"
+            android:layout_width="327dp"
+            android:layout_height="61dp"
+            android:layout_marginTop="24dp"
+            android:background="@android:color/transparent"
+            android:text="@string/_1"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.595"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ET_name_edit"
+            tools:ignore="UsingOnClickInXml" />
+
+        <View
+            android:id="@+id/view_edit_name"
+            android:layout_width="327dp"
+            android:layout_height="61dp"
+            android:layout_marginBottom="232dp"
+            android:background="@drawable/view_to_edit"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/btn_edit_name"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/btn_edit_name"
+            app:layout_constraintTop_toTopOf="@+id/btn_edit_name"
+            app:layout_constraintVertical_bias="0.0" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>

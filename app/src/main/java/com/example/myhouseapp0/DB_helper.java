@@ -18,17 +18,18 @@ public class DB_helper extends SQLiteOpenHelper{
     }
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase){
-        sqLiteDatabase.execSQL("create table Users(username TEXT primary key, password TEXT)");
+        sqLiteDatabase.execSQL("create table Users(username TEXT primary key, name TEXT, password TEXT)");
         sqLiteDatabase.execSQL("create table TempAndHumidity(date DATE primary key, data TEXT)");
     }
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
         sqLiteDatabase.execSQL("drop table if exists Users");
     }
-    public boolean insertData(String username, String password){
+    public boolean insertData(String username, String name, String password){
         SQLiteDatabase myDB = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put("username", username);
+        contentValues.put("name", name);
         contentValues.put("password", password);
         long result = myDB.insert("users", null, contentValues);
         return result != -1;
@@ -60,5 +61,14 @@ public class DB_helper extends SQLiteOpenHelper{
         if (cursor.getCount() > 0)
             return true;
         else return false;
+    }
+    public void updateName(String login,String name)
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put("username",login);
+        cv.put("name",name);
+        db.update("users",cv,"Username = ?",new String[] { name });
+        db.close();
     }
 }

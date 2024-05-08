@@ -10,7 +10,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 public class RegistrationActivity extends AppCompatActivity {
-    EditText etUser, etPwd, etRepwd;
+    EditText etUser, etPwd, etRepwd, etName;
     Button btnRegister, btnGoToLogin, btn_back;
     DB_helper db_helper;
 
@@ -28,19 +28,20 @@ public class RegistrationActivity extends AppCompatActivity {
             Intent intent = new Intent(RegistrationActivity.this, EntranceActivity.class);
             startActivity(intent);
         });
-
         etUser = findViewById(R.id.ET_login);
         etPwd=findViewById(R.id.ET_password0);
         etRepwd = findViewById(R.id.ET_password1);
+        etName = findViewById(R.id.ET_name);
         btnRegister = findViewById(R.id.btn_to_register);
         db_helper = new DB_helper(this);
         btnRegister.setOnClickListener(view -> {
-            String user, pwd, repwd;
+            String user, name, pwd, repwd;
             user = etUser.getText().toString();
+            name = etName.getText().toString();
             pwd = etPwd.getText().toString();
             repwd = etRepwd.getText().toString();
 //                нужно поменять нулл на пустую строку чтоб пустые проблеы нельзя было ставить!
-            if (user.equals("") || pwd.equals("") || repwd.equals("")) {
+            if (user.equals("") || name.equals("") || pwd.equals("") || repwd.equals("")) {
                 Toast.makeText(RegistrationActivity.this, "Пожалуйста, заполните все поля",Toast.LENGTH_LONG).show();
             } else {
                 if(pwd.equals(repwd)) {
@@ -48,13 +49,12 @@ public class RegistrationActivity extends AppCompatActivity {
                         Toast.makeText(RegistrationActivity.this, "Пользователь с таким логином уже существует", Toast.LENGTH_LONG).show();
                         return;
                     }
-                    boolean registeredSuccess = db_helper.insertData(user, pwd);
+                    boolean registeredSuccess = db_helper.insertData(user, name, pwd);
                     if(registeredSuccess) {
                         Toast.makeText(RegistrationActivity.this, "Регистрация прошла успешно", Toast.LENGTH_LONG).show();
                         Intent intent = new Intent(RegistrationActivity.this, EntranceActivity.class);
                         startActivity(intent);
                     }
-
                     else {
                         Toast.makeText(RegistrationActivity.this, "Регистрация не прошла, повторите попытку", Toast.LENGTH_LONG).show();
                     }
