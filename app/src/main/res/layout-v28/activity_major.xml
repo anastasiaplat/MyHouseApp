@@ -28,8 +28,7 @@
         app:itemTextColor="@color/navbar"
         android:outlineSpotShadowColor="@color/green"
         android:outlineAmbientShadowColor="@color/white_green"
-        app:menu="@menu/bottom_navigation_bar"
-        tools:targetApi="30" />
+        app:menu="@menu/bottom_navigation_bar" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
