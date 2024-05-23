@@ -238,7 +238,7 @@
         <View
             android:id="@+id/view_kitchen"
             android:layout_width="50dp"
-            android:layout_height="17dp"
+            android:layout_height="18dp"
             android:layout_gravity="clip_horizontal|center_horizontal"
             android:background="@drawable/view_kitchen"
             app:layout_constraintBottom_toBottomOf="@+id/btn_kitchen"
@@ -320,10 +320,10 @@
             android:background="@drawable/view_yard"
             app:layout_constraintBottom_toBottomOf="@+id/btn_yard"
             app:layout_constraintEnd_toEndOf="@+id/btn_yard"
-            app:layout_constraintHorizontal_bias="0.44"
+            app:layout_constraintHorizontal_bias="0.472"
             app:layout_constraintStart_toStartOf="@+id/btn_yard"
             app:layout_constraintTop_toTopOf="@+id/view_object5"
-            app:layout_constraintVertical_bias="0.487" />
+            app:layout_constraintVertical_bias="0.548" />
 
         <Button
             android:id="@+id/btn_greenhouse"
@@ -391,8 +391,8 @@
 
         <View
             android:id="@+id/view_storeroom"
-            android:layout_width="80dp"
-            android:layout_height="16dp"
+            android:layout_width="78dp"
+            android:layout_height="17dp"
             android:layout_gravity="clip_horizontal|center_horizontal"
             android:layout_marginStart="13dp"
             android:background="@drawable/view_storeroom"

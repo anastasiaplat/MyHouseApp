@@ -92,6 +92,7 @@ public class HallRoomFragment extends Fragment {
         TextView tv_temp = (TextView) view.findViewById(R.id.tv_temp);
         tv_temp.setText("%%°     %%");
 
+
 //        EditText et_humidity = (EditText) view.findViewById(R.id.et_humidity);
 //        Button btn_setdata = (Button) view.findViewById(R.id.btn_setdata);
 //        btn_setdata.setOnClickListener(v -> mConnectedThread.write(et_humidity.getText().toString()));
@@ -126,18 +127,15 @@ public class HallRoomFragment extends Fragment {
                             String i="";
                         }
                        // callBackGetVar.onCallBack(sbprint);
-
-
                     }
                     //Log.d(TAG, "...Строка:"+ sb.toString() +  "Байт:" + msg.arg1 + "...");
                 }
             };
         };
 
-        @SuppressLint("UseSwitchCompatOrMaterialCode") Switch btn_switch = (Switch) view.findViewById(R.id.switch_for_servo);
+        @SuppressLint("UseSwitchCompatOrMaterialCode") Switch btn_switch = view.findViewById(R.id.switch_for_servo);
         btAdapter = BluetoothAdapter.getDefaultAdapter();
         checkBtState();
-
         btn_switch.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
                 mConnectedThread.write("1");
@@ -148,6 +146,18 @@ public class HallRoomFragment extends Fragment {
             }
         });
 
+        @SuppressLint("UseSwitchCompatOrMaterialCode") Switch btn_switch2_hallroom = view.findViewById(R.id.switch2_hallroom);
+        btn_switch2_hallroom.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                Toast.makeText(getContext(), "Подключите устройство", Toast.LENGTH_SHORT).show();
+            }
+        });
+        @SuppressLint("UseSwitchCompatOrMaterialCode") Switch btn_switch3_hallroom = view.findViewById(R.id.switch3_hallroom);
+        btn_switch3_hallroom.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                Toast.makeText(getContext(), "Подключите устройство", Toast.LENGTH_SHORT).show();
+            }
+        });
 
     }
 

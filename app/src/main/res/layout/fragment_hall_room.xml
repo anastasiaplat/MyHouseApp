@@ -105,7 +105,6 @@
             android:layout_marginTop="64dp"
             android:background="@drawable/view_rectangle_object"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.511"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/view_rectangle_for_temp" />
 
@@ -182,6 +181,77 @@
 <!--            app:layout_constraintTop_toBottomOf="@+id/switch_for_scenariy"-->
 <!--            app:layout_constraintVertical_bias="0.005" />-->
 
+        <View
+            android:id="@+id/view_object2_hallroom"
+            android:layout_width="327dp"
+            android:layout_height="61dp"
+            android:layout_gravity="clip_horizontal|center_horizontal"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/view_rectangle_object"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.488"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/view_object" />
+
+        <Switch
+            android:id="@+id/switch2_hallroom"
+            android:layout_width="82dp"
+            android:layout_height="53dp"
+            android:layout_marginEnd="32dp"
+
+            android:text=""
+            app:layout_constraintBottom_toBottomOf="@+id/view_object2_hallroom"
+            app:layout_constraintEnd_toEndOf="@+id/view_object2_hallroom"
+            app:layout_constraintTop_toTopOf="@+id/view_object2_hallroom"
+            app:layout_constraintVertical_bias="1.0" />
+
+        <View
+            android:id="@+id/view_hallroom2"
+            android:layout_width="38dp"
+            android:layout_height="13dp"
+            android:background="@drawable/view_light"
+            app:layout_constraintBottom_toBottomOf="@+id/view_object2_hallroom"
+            app:layout_constraintEnd_toStartOf="@+id/switch2_hallroom"
+            app:layout_constraintHorizontal_bias="0.205"
+            app:layout_constraintStart_toStartOf="@+id/view_object2_hallroom"
+            app:layout_constraintTop_toTopOf="@+id/view_object2_hallroom"
+            app:layout_constraintVertical_bias="0.52" />
+
+        <View
+            android:id="@+id/view_object3_hallroom"
+            android:layout_width="327dp"
+            android:layout_height="61dp"
+            android:layout_gravity="clip_horizontal|center_horizontal"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/view_rectangle_object"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.464"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/view_object2_hallroom" />
+
+        <Switch
+            android:id="@+id/switch3_hallroom"
+            android:layout_width="82dp"
+            android:layout_height="53dp"
+
+            android:layout_marginEnd="32dp"
+            android:text=""
+            app:layout_constraintBottom_toBottomOf="@+id/view_object3_hallroom"
+            app:layout_constraintEnd_toEndOf="@+id/view_object3_hallroom"
+            app:layout_constraintTop_toTopOf="@+id/view_object3_hallroom"
+            app:layout_constraintVertical_bias="1.0" />
+
+        <View
+            android:id="@+id/view_hallroom3"
+            android:layout_width="100dp"
+            android:layout_height="17dp"
+            android:background="@drawable/view_condik"
+            app:layout_constraintBottom_toBottomOf="@+id/view_object3_hallroom"
+            app:layout_constraintEnd_toStartOf="@+id/switch3_hallroom"
+            app:layout_constraintHorizontal_bias="0.27"
+            app:layout_constraintStart_toStartOf="@+id/view_object3_hallroom"
+            app:layout_constraintTop_toTopOf="@+id/view_object3_hallroom"
+            app:layout_constraintVertical_bias="0.521" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

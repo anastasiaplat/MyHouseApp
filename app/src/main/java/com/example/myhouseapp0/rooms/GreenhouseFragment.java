@@ -55,14 +55,20 @@ public class GreenhouseFragment extends Fragment {
         TextView tv_temp_and_hum_greenhouse = view.findViewById(R.id.tv_temp_greenhouse);
         tv_temp_and_hum_greenhouse.setText("%%°    %%");
 
-        @SuppressLint("UseSwitchCompatOrMaterialCode") Switch btn_switch_greenhouse = (Switch) view.findViewById(R.id.switch_light_greenhouse);
+        @SuppressLint("UseSwitchCompatOrMaterialCode") Switch btn_switch_greenhouse = view.findViewById(R.id.switch_light_greenhouse);
         btn_switch_greenhouse.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
                 Toast.makeText(getContext(), "Подключите устройство", Toast.LENGTH_SHORT).show();
             }
         });
-        @SuppressLint("UseSwitchCompatOrMaterialCode") Switch btn_switch1_greenhouse = (Switch) view.findViewById(R.id.switch_watering_greenhouse);
+        @SuppressLint("UseSwitchCompatOrMaterialCode") Switch btn_switch1_greenhouse = view.findViewById(R.id.switch_watering_greenhouse);
         btn_switch1_greenhouse.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                Toast.makeText(getContext(), "Подключите устройство", Toast.LENGTH_SHORT).show();
+            }
+        });
+        @SuppressLint("UseSwitchCompatOrMaterialCode") Switch btn_switch2_greenhouse = view.findViewById(R.id.switch_winding_greenhouse);
+        btn_switch2_greenhouse.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
                 Toast.makeText(getContext(), "Подключите устройство", Toast.LENGTH_SHORT).show();
             }
