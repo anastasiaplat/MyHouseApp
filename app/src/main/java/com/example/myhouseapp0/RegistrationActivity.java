@@ -31,17 +31,17 @@ public class RegistrationActivity extends AppCompatActivity {
         etUser = findViewById(R.id.ET_login);
         etPwd=findViewById(R.id.ET_password0);
         etRepwd = findViewById(R.id.ET_password1);
-        etName = findViewById(R.id.ET_name);
+        //etName = findViewById(R.id.ET_name);
         btnRegister = findViewById(R.id.btn_to_register);
         db_helper = new DB_helper(this);
         btnRegister.setOnClickListener(view -> {
-            String user, name, pwd, repwd;
+            String user, pwd, repwd;
             user = etUser.getText().toString();
-            name = etName.getText().toString();
+            //name = etName.getText().toString();
             pwd = etPwd.getText().toString();
             repwd = etRepwd.getText().toString();
 //                нужно поменять нулл на пустую строку чтоб пустые проблеы нельзя было ставить!
-            if (user.equals("") || name.equals("") || pwd.equals("") || repwd.equals("")) {
+            if (user.equals("") || pwd.equals("") || repwd.equals("")) {
                 Toast.makeText(RegistrationActivity.this, "Пожалуйста, заполните все поля",Toast.LENGTH_LONG).show();
             } else {
                 if(pwd.equals(repwd)) {
@@ -49,7 +49,7 @@ public class RegistrationActivity extends AppCompatActivity {
                         Toast.makeText(RegistrationActivity.this, "Пользователь с таким логином уже существует", Toast.LENGTH_LONG).show();
                         return;
                     }
-                    boolean registeredSuccess = db_helper.insertData(user, name, pwd);
+                    boolean registeredSuccess = db_helper.insertData(user, pwd);
                     if(registeredSuccess) {
                         Toast.makeText(RegistrationActivity.this, "Регистрация прошла успешно", Toast.LENGTH_LONG).show();
                         Intent intent = new Intent(RegistrationActivity.this, EntranceActivity.class);

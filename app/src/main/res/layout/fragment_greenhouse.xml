@@ -127,6 +127,7 @@
             android:layout_width="40dp"
             android:layout_height="15dp"
             android:layout_marginStart="8dp"
+            android:textColor="#073509"
             android:background="@drawable/view_light"
             app:layout_constraintBottom_toBottomOf="@+id/view_device_greenhouse"
             app:layout_constraintEnd_toStartOf="@+id/switch_light_greenhouse"
@@ -176,6 +177,7 @@
             android:layout_width="55dp"
             android:layout_height="15dp"
             android:layout_marginStart="8dp"
+            android:textColor="#073509"
             android:background="@drawable/view_watering"
             app:layout_constraintBottom_toBottomOf="@+id/view_device1_greenhouse"
             app:layout_constraintEnd_toStartOf="@+id/switch_watering_greenhouse"
@@ -212,8 +214,9 @@
 
         <View
             android:id="@+id/view_winding_greenhouse"
-            android:layout_width="127dp"
+            android:layout_width="128dp"
             android:layout_height="19dp"
+            android:textColor="#073509"
             android:background="@drawable/view_winding"
             app:layout_constraintBottom_toBottomOf="@+id/view_device2_greenhouse"
             app:layout_constraintEnd_toStartOf="@+id/switch_winding_greenhouse"
