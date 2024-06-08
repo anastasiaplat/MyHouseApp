@@ -24,6 +24,117 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <View
+            android:id="@+id/view_electricity"
+            android:layout_width="133dp"
+            android:layout_height="25dp"
+            android:layout_gravity="clip_horizontal|center_horizontal"
+            android:layout_marginTop="28dp"
+            android:background="@drawable/view_electricity"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.158"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/view_history" />
+
+        <View
+            android:id="@+id/view_rectangle1_for_stat"
+            android:layout_width="316dp"
+            android:layout_height="134dp"
+            android:layout_gravity="clip_horizontal|center_horizontal"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/view_rectangle_for_temp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.463"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/view_electricity" />
+
+        <View
+            android:id="@+id/view_info1"
+            android:layout_width="86dp"
+            android:layout_height="17dp"
+            android:layout_gravity="clip_horizontal|center_horizontal"
+            android:background="@drawable/view_no_data"
+            app:layout_constraintBottom_toBottomOf="@+id/view_rectangle1_for_stat"
+            app:layout_constraintEnd_toEndOf="@+id/view_rectangle1_for_stat"
+            app:layout_constraintHorizontal_bias="0.467"
+            app:layout_constraintStart_toStartOf="@+id/view_rectangle1_for_stat"
+            app:layout_constraintTop_toTopOf="@+id/view_rectangle1_for_stat" />
+
+        <View
+            android:id="@+id/view_heating_for_stat"
+            android:layout_width="98dp"
+            android:layout_height="20dp"
+            android:layout_gravity="clip_horizontal|center_horizontal"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/view_heating_for_stat"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.146"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/view_rectangle1_for_stat" />
+
+        <View
+            android:id="@+id/view_rectangle2_for_stat"
+            android:layout_width="316dp"
+            android:layout_height="134dp"
+            android:layout_gravity="clip_horizontal|center_horizontal"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/view_rectangle_for_temp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.463"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/view_heating_for_stat" />
+
+        <View
+            android:id="@+id/view_info2"
+            android:layout_width="86dp"
+            android:layout_height="17dp"
+            android:layout_gravity="clip_horizontal|center_horizontal"
+            android:background="@drawable/view_no_data"
+            app:layout_constraintBottom_toBottomOf="@+id/view_rectangle2_for_stat"
+            app:layout_constraintEnd_toEndOf="@+id/view_rectangle2_for_stat"
+            app:layout_constraintHorizontal_bias="0.467"
+            app:layout_constraintStart_toStartOf="@+id/view_rectangle2_for_stat"
+            app:layout_constraintTop_toTopOf="@+id/view_rectangle2_for_stat" />
+
+        <View
+            android:id="@+id/view_water_stat"
+            android:layout_width="43dp"
+            android:layout_height="22dp"
+            android:layout_gravity="clip_horizontal|center_horizontal"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/view_water"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.119"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/view_rectangle2_for_stat" />
+
+        <View
+            android:id="@+id/view_rectangle3_for_stat"
+            android:layout_width="316dp"
+            android:layout_height="134dp"
+            android:layout_gravity="clip_horizontal|center_horizontal"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/view_rectangle_for_temp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.463"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/view_water_stat"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <View
+            android:id="@+id/view_info3"
+            android:layout_width="86dp"
+            android:layout_height="17dp"
+            android:layout_gravity="clip_horizontal|center_horizontal"
+            android:background="@drawable/view_no_data"
+            app:layout_constraintBottom_toBottomOf="@+id/view_rectangle3_for_stat"
+            app:layout_constraintEnd_toEndOf="@+id/view_rectangle3_for_stat"
+            app:layout_constraintHorizontal_bias="0.469"
+            app:layout_constraintStart_toStartOf="@+id/view_rectangle3_for_stat"
+            app:layout_constraintTop_toTopOf="@+id/view_rectangle3_for_stat"
+            app:layout_constraintVertical_bias="0.547" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>

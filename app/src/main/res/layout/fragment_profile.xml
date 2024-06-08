@@ -66,8 +66,8 @@
 
         <View
             android:id="@+id/view_edit_name"
-            android:layout_width="327dp"
-            android:layout_height="61dp"
+            android:layout_width="314dp"
+            android:layout_height="66dp"
             android:layout_marginBottom="232dp"
             android:background="@drawable/view_to_edit"
             app:layout_constraintBottom_toBottomOf="parent"
