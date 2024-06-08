@@ -86,9 +86,7 @@ public class HallRoomFragment extends Fragment {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             btn_back_from_hallroom.setOnClickListener(v -> replaceFragment(new HomeFragment()));
         }
-
         db_helper = new DB_helper(getContext());
-
         TextView tv_temp = (TextView) view.findViewById(R.id.tv_temp);
         tv_temp.setText("%%°     %%");
 
@@ -107,11 +105,10 @@ public class HallRoomFragment extends Fragment {
 //            }
 //        });
 
-
         h = new Handler() {
             @SuppressLint("SetTextI18n")
             public void handleMessage(Message msg) {
-                if (msg.what == RECIEVE_MESSAGE) {                                                   // если приняли сообщение в Handler
+                if (msg.what == RECIEVE_MESSAGE) {        // если приняли сообщение в Handler
                     byte[] readBuf = (byte[]) msg.obj;
                     String strIncom = new String(readBuf, 0, msg.arg1);
                     sb.append(strIncom);                                                // формируем строку
@@ -121,23 +118,18 @@ public class HallRoomFragment extends Fragment {
                         sb.delete(0, sb.length());                                      // и очищаем sb
                         tv_temp.setText(sbprint + "%");             // обновляем TextView
 
-                        boolean success = db_helper.insertTempData(new Date().toString(), sbprint);
-                        if(success) {
-                            String i="";
-                        }
+                        db_helper.insertTempData(new Date().toString(), sbprint);
+
                        // callBackGetVar.onCallBack(sbprint);
-
-
                     }
                     //Log.d(TAG, "...Строка:"+ sb.toString() +  "Байт:" + msg.arg1 + "...");
                 }
             };
         };
 
-        @SuppressLint("UseSwitchCompatOrMaterialCode") Switch btn_switch = (Switch) view.findViewById(R.id.switch_for_servo);
+        @SuppressLint("UseSwitchCompatOrMaterialCode") Switch btn_switch = view.findViewById(R.id.switch_for_servo);
         btAdapter = BluetoothAdapter.getDefaultAdapter();
         checkBtState();
-
         btn_switch.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
                 mConnectedThread.write("1");
@@ -148,9 +140,20 @@ public class HallRoomFragment extends Fragment {
             }
         });
 
+        @SuppressLint("UseSwitchCompatOrMaterialCode") Switch btn_switch2_hallroom = view.findViewById(R.id.switch2_hallroom);
+        btn_switch2_hallroom.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                Toast.makeText(getContext(), "Подключите устройство", Toast.LENGTH_SHORT).show();
+            }
+        });
+        @SuppressLint("UseSwitchCompatOrMaterialCode") Switch btn_switch3_hallroom = view.findViewById(R.id.switch3_hallroom);
+        btn_switch3_hallroom.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                Toast.makeText(getContext(), "Подключите устройство", Toast.LENGTH_SHORT).show();
+            }
+        });
 
     }
-
     @Override
     public void onResume() {
         super.onResume();
@@ -215,7 +218,6 @@ public class HallRoomFragment extends Fragment {
             mmSocket = socket;
             InputStream tmpIn = null;
             OutputStream tmpOut = null;
-
             // Get the input and output streams, using temp objects because
             // member streams are final
             try {
@@ -236,6 +238,7 @@ public class HallRoomFragment extends Fragment {
                 try {
                     // Read from the InputStream
                     bytes = mmInStream.read(buffer);        // Получаем кол-во байт и само собщение в байтовый массив "buffer"
+                    db_helper.insertTempData(new Date().toString(), buffer.toString());
                     h.obtainMessage(RECIEVE_MESSAGE, bytes, -1, buffer).sendToTarget();     // Отправляем в очередь сообщений Handler
                 } catch (IOException e) {
                     break;

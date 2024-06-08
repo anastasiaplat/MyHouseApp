@@ -29,6 +29,7 @@ public class DB_helper extends SQLiteOpenHelper{
         SQLiteDatabase myDB = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put("username", username);
+       // contentValues.put("name", name);
         contentValues.put("password", password);
         long result = myDB.insert("users", null, contentValues);
         return result != -1;
@@ -61,4 +62,13 @@ public class DB_helper extends SQLiteOpenHelper{
             return true;
         else return false;
     }
+//    public void updateName(String login,String name)
+//    {
+//        SQLiteDatabase db = this.getWritableDatabase();
+//        ContentValues cv = new ContentValues();
+//        cv.put("username",login);
+//        cv.put("name",name);
+//        db.update("users",cv,"Username = ?",new String[] { name });
+//        db.close();
+//    }
 }

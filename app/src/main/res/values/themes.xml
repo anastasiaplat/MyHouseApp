@@ -3,6 +3,8 @@
     <style name="Base.Theme.MyHouseApp0" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="android:statusBarColor">@color/navbar</item>
+
     </style>
 
     <style name="Theme.MyHouseApp0" parent="Base.Theme.MyHouseApp0" />

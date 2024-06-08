@@ -57,17 +57,17 @@
         app:layout_constraintStart_toStartOf="@+id/btn_back"
         app:layout_constraintTop_toTopOf="@+id/btn_back" />
 
-    <EditText
-        android:id="@+id/ET_name"
-        android:layout_width="313dp"
-        android:layout_height="48dp"
-        android:layout_marginTop="28dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:hint="@string/name"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ET_login" />
+<!--    <EditText-->
+<!--        android:id="@+id/ET_name"-->
+<!--        android:layout_width="313dp"-->
+<!--        android:layout_height="48dp"-->
+<!--        android:layout_marginTop="28dp"-->
+<!--        android:ems="10"-->
+<!--        android:inputType="textPersonName"-->
+<!--        android:hint="@string/name"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/ET_login" />-->
 
 <!--    <EditText-->
 <!--        android:id="@+id/ET_telephone"-->
@@ -102,8 +102,9 @@
         android:hint="@string/password0"
         android:inputType="textPassword"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.51"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ET_name" />
+        app:layout_constraintTop_toBottomOf="@+id/ET_login" />
 
     <EditText
         android:id="@+id/ET_password1"
@@ -130,8 +131,8 @@
 
     <Button
         android:id="@+id/btn_to_login1"
-        android:layout_width="219dp"
-        android:layout_height="34dp"
+        android:layout_width="220dp"
+        android:layout_height="35dp"
         android:background="@android:color/transparent"
         android:text="@string/_1"
         android:visibility="visible"
@@ -139,7 +140,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ET_password1"
-        tools:ignore="UsingOnClickInXml"/>
+        tools:ignore="UsingOnClickInXml" />
 
     <Button
         android:id="@+id/btn_to_register"

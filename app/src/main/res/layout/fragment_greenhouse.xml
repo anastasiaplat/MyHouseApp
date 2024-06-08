@@ -127,10 +127,11 @@
             android:layout_width="40dp"
             android:layout_height="15dp"
             android:layout_marginStart="8dp"
+            android:textColor="#073509"
             android:background="@drawable/view_light"
             app:layout_constraintBottom_toBottomOf="@+id/view_device_greenhouse"
             app:layout_constraintEnd_toStartOf="@+id/switch_light_greenhouse"
-            app:layout_constraintHorizontal_bias="0.237"
+            app:layout_constraintHorizontal_bias="0.212"
             app:layout_constraintStart_toStartOf="@+id/view_device_greenhouse"
             app:layout_constraintTop_toTopOf="@+id/view_device_greenhouse" />
 
@@ -176,6 +177,7 @@
             android:layout_width="55dp"
             android:layout_height="15dp"
             android:layout_marginStart="8dp"
+            android:textColor="#073509"
             android:background="@drawable/view_watering"
             app:layout_constraintBottom_toBottomOf="@+id/view_device1_greenhouse"
             app:layout_constraintEnd_toStartOf="@+id/switch_watering_greenhouse"
@@ -184,6 +186,44 @@
             app:layout_constraintTop_toTopOf="@+id/view_device1_greenhouse"
             app:layout_constraintVertical_bias="0.488" />
 
+        <View
+            android:id="@+id/view_device2_greenhouse"
+            android:layout_width="327dp"
+            android:layout_height="61dp"
+            android:layout_gravity="clip_horizontal|center_horizontal"
+            android:background="@drawable/view_rectangle_object"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.488"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/view_device1_greenhouse"
+            app:layout_constraintVertical_bias="0.065" />
+
+        <Switch
+            android:id="@+id/switch_winding_greenhouse"
+            android:layout_width="82dp"
+            android:layout_height="53dp"
+            android:text=""
+            app:layout_constraintBottom_toBottomOf="@+id/view_device2_greenhouse"
+            app:layout_constraintEnd_toEndOf="@+id/view_device2_greenhouse"
+            app:layout_constraintHorizontal_bias="0.869"
+            app:layout_constraintStart_toStartOf="@+id/view_device2_greenhouse"
+            app:layout_constraintTop_toTopOf="@+id/view_device2_greenhouse"
+            app:layout_constraintVertical_bias="1.0"
+            tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+        <View
+            android:id="@+id/view_winding_greenhouse"
+            android:layout_width="128dp"
+            android:layout_height="19dp"
+            android:textColor="#073509"
+            android:background="@drawable/view_winding"
+            app:layout_constraintBottom_toBottomOf="@+id/view_device2_greenhouse"
+            app:layout_constraintEnd_toStartOf="@+id/switch_winding_greenhouse"
+            app:layout_constraintHorizontal_bias="0.477"
+            app:layout_constraintStart_toStartOf="@+id/view_device2_greenhouse"
+            app:layout_constraintTop_toTopOf="@+id/view_device2_greenhouse"
+            app:layout_constraintVertical_bias="0.512" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

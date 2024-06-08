@@ -126,6 +126,7 @@
             android:layout_width="40dp"
             android:layout_height="15dp"
             android:layout_marginStart="8dp"
+            android:textColor="#073509"
             android:background="@drawable/view_light"
             app:layout_constraintBottom_toBottomOf="@+id/view_device_car_room"
             app:layout_constraintEnd_toStartOf="@+id/switch_light_car_room"
