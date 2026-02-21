@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.ViewFlipper;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -99,6 +100,9 @@ public class HomeFragment extends Fragment {
 
         Button btn_to_storeroom = view.findViewById(R.id.btn_storeroom);
         btn_to_storeroom.setOnClickListener(v -> replaceFragment(new StoreroomFragment()));
+
+
+       // ViewFlipper viewFlipper = (ViewFlipper) findViewById(R.id.)
 
         TextView temptext = view.findViewById(R.id.textview_temp);
         TextView datetext = view.findViewById(R.id.textview_date);

@@ -24,12 +24,6 @@
             android:name=".MajorActivity"
             android:exported="false" />
         <activity
-            android:name=".EntranceActivity"
-            android:exported="false" />
-        <activity
-            android:name=".RegistrationActivity"
-            android:exported="false" />
-        <activity
             android:name=".MainActivity"
             android:exported="true" >
             <intent-filter>
