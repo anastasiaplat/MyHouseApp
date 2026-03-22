@@ -6,14 +6,12 @@
     android:layout_height="match_parent"
     tools:context=".HomeFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-
+        <!--главная-->
         <View
             android:id="@+id/view_main"
             android:layout_width="150dp"
@@ -26,6 +24,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <!--панель АПИ-->
         <View
             android:id="@+id/view_rectangle_for_weather"
             android:layout_width="325dp"
@@ -37,6 +36,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/view_main" />
 
+        <!--        температура-->
         <TextView
             android:id="@+id/textview_temp"
             android:layout_width="117dp"
@@ -50,6 +50,7 @@
             app:layout_constraintStart_toStartOf="@+id/view_rectangle_for_weather"
             app:layout_constraintTop_toTopOf="@+id/view_rectangle_for_weather" />
 
+        <!--        дата в формате "ДД месяц, год"-->
         <TextView
             android:id="@+id/textview_date"
             android:layout_width="148dp"
@@ -65,6 +66,7 @@
             app:layout_constraintTop_toTopOf="@+id/view_rectangle_for_weather"
             app:layout_constraintVertical_bias="0.265" />
 
+        <!--        местоположение (город)-->
         <TextView
             android:id="@+id/textview_city"
             android:layout_width="148dp"
@@ -79,324 +81,363 @@
             app:layout_constraintTop_toTopOf="@+id/view_rectangle_for_weather"
             app:layout_constraintVertical_bias="0.65" />
 
-
-        <Button
-            android:id="@+id/btn_hallroom"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+<!--        переключатели-->
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/switch_mode"
+            android:layout_width="300dp"
+            android:layout_height="50dp"
             android:layout_gravity="clip_horizontal|center_horizontal"
-            android:layout_marginTop="72dp"
-            android:background="@android:color/transparent"
-            android:text="@string/_1"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.16"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/view_rectangle_for_weather" />
+            app:layout_constraintTop_toBottomOf="@+id/view_rectangle_for_weather"
+            tools:ignore="MissingConstraints">
 
-        <View
-            android:id="@+id/view_object"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_gravity="clip_horizontal|center_horizontal"
-            android:layout_marginTop="68dp"
-            android:background="@drawable/view_square"
+            <com.google.android.material.tabs.TabItem
+                android:layout_width="368dp"
+                android:layout_height="wrap_content"
+                android:text="tab1"
+                tools:layout_editor_absoluteX="34dp"
+                tools:layout_editor_absoluteY="301dp" />
+
+            <com.google.android.material.tabs.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="tab2"
+                tools:layout_editor_absoluteX="212dp"
+                tools:layout_editor_absoluteY="295dp" />
+        </com.google.android.material.tabs.TabLayout>
+
+<!--переключаемая область-->
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/view_mode"
+            android:layout_width="300dp"
+            android:layout_height="400dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.138"
+            app:layout_constraintHorizontal_bias="0.495"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/view_rectangle_for_weather" />
+            app:layout_constraintTop_toBottomOf="@+id/switch_mode"
+            app:layout_constraintVertical_bias="0.3"
+            tools:ignore="MissingConstraints" />
 
-        <View
-            android:id="@+id/view_add"
-            android:layout_width="80dp"
-            android:layout_height="15dp"
-            android:layout_gravity="clip_horizontal|center_horizontal"
-            android:background="@drawable/view_room_hall"
-            android:textColor="#073509"
-            app:layout_constraintBottom_toBottomOf="@+id/view_object"
-            app:layout_constraintEnd_toEndOf="@+id/view_object"
-            app:layout_constraintHorizontal_bias="0.636"
-            app:layout_constraintStart_toStartOf="@+id/view_object"
-            app:layout_constraintTop_toTopOf="@+id/view_object"
-            app:layout_constraintVertical_bias="0.485" />
 
-        <Button
-            android:id="@+id/btn_bedroom"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_gravity="clip_horizontal|center_horizontal"
-            android:layout_marginTop="68dp"
-            android:background="@android:color/transparent"
-            android:text="@string/_1"
-            app:layout_constraintEnd_toStartOf="@+id/view_object2"
-            app:layout_constraintHorizontal_bias="0.529"
-            app:layout_constraintStart_toEndOf="@+id/btn_hallroom"
-            app:layout_constraintTop_toBottomOf="@+id/view_rectangle_for_weather" />
+        <!--        <Button-->
+        <!--            android:id="@+id/btn_hallroom"-->
+        <!--            android:layout_width="100dp"-->
+        <!--            android:layout_height="100dp"-->
+        <!--            android:layout_gravity="clip_horizontal|center_horizontal"-->
+        <!--            android:layout_marginTop="72dp"-->
+        <!--            android:background="@android:color/transparent"-->
+        <!--            android:text="@string/_1"-->
+        <!--            app:layout_constraintEnd_toEndOf="parent"-->
+        <!--            app:layout_constraintHorizontal_bias="0.16"-->
+        <!--            app:layout_constraintStart_toStartOf="parent"-->
+        <!--            app:layout_constraintTop_toBottomOf="@+id/view_rectangle_for_weather" />-->
 
-        <View
-            android:id="@+id/view_object1"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_gravity="clip_horizontal|center_horizontal"
-            android:layout_marginTop="68dp"
-            android:background="@drawable/view_square"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/btn_bedroom"
-            app:layout_constraintTop_toBottomOf="@+id/view_rectangle_for_weather" />
+        <!--        <View-->
+        <!--            android:id="@+id/view_object"-->
+        <!--            android:layout_width="100dp"-->
+        <!--            android:layout_height="100dp"-->
+        <!--            android:layout_gravity="clip_horizontal|center_horizontal"-->
+        <!--            android:layout_marginTop="68dp"-->
+        <!--            android:background="@drawable/view_square"-->
+        <!--            app:layout_constraintEnd_toEndOf="parent"-->
+        <!--            app:layout_constraintHorizontal_bias="0.138"-->
+        <!--            app:layout_constraintStart_toStartOf="parent"-->
+        <!--            app:layout_constraintTop_toBottomOf="@+id/view_rectangle_for_weather" />-->
 
-        <View
-            android:id="@+id/view_bedroom"
-            android:layout_width="75dp"
-            android:layout_height="15dp"
-            android:layout_gravity="clip_horizontal|center_horizontal"
-            android:background="@drawable/view_bedroom"
-            android:textColor="#073509"
-            app:layout_constraintBottom_toBottomOf="@+id/btn_bedroom"
-            app:layout_constraintEnd_toEndOf="@+id/btn_bedroom"
-            app:layout_constraintHorizontal_bias="0.466"
-            app:layout_constraintStart_toStartOf="@+id/btn_bedroom"
-            app:layout_constraintTop_toTopOf="@+id/btn_bedroom"
-            app:layout_constraintVertical_bias="0.494" />
+        <!--        <View-->
+        <!--            android:id="@+id/view_add"-->
+        <!--            android:layout_width="80dp"-->
+        <!--            android:layout_height="15dp"-->
+        <!--            android:layout_gravity="clip_horizontal|center_horizontal"-->
+        <!--            android:background="@drawable/view_room_hall"-->
+        <!--            android:textColor="#073509"-->
+        <!--            app:layout_constraintBottom_toBottomOf="@+id/view_object"-->
+        <!--            app:layout_constraintEnd_toEndOf="@+id/view_object"-->
+        <!--            app:layout_constraintHorizontal_bias="0.636"-->
+        <!--            app:layout_constraintStart_toStartOf="@+id/view_object"-->
+        <!--            app:layout_constraintTop_toTopOf="@+id/view_object"-->
+        <!--            app:layout_constraintVertical_bias="0.485" />-->
 
-        <Button
-            android:id="@+id/btn_bathroom"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_gravity="clip_horizontal|center_horizontal"
-            android:layout_marginTop="72dp"
-            android:background="@android:color/transparent"
-            android:text="@string/_1"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/view_object2"
-            app:layout_constraintTop_toBottomOf="@+id/view_rectangle_for_weather" />
+        <!--        <Button-->
+        <!--            android:id="@+id/btn_bedroom"-->
+        <!--            android:layout_width="100dp"-->
+        <!--            android:layout_height="100dp"-->
+        <!--            android:layout_gravity="clip_horizontal|center_horizontal"-->
+        <!--            android:layout_marginTop="68dp"-->
+        <!--            android:background="@android:color/transparent"-->
+        <!--            android:text="@string/_1"-->
+        <!--            app:layout_constraintEnd_toStartOf="@+id/view_object2"-->
+        <!--            app:layout_constraintHorizontal_bias="0.529"-->
+        <!--            app:layout_constraintStart_toEndOf="@+id/btn_hallroom"-->
+        <!--            app:layout_constraintTop_toBottomOf="@+id/view_rectangle_for_weather" />-->
 
-        <View
-            android:id="@+id/view_object2"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_gravity="clip_horizontal|center_horizontal"
-            android:background="@drawable/view_square"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.858"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/btn_bathroom" />
+        <!--        <View-->
+        <!--            android:id="@+id/view_object1"-->
+        <!--            android:layout_width="100dp"-->
+        <!--            android:layout_height="100dp"-->
+        <!--            android:layout_gravity="clip_horizontal|center_horizontal"-->
+        <!--            android:layout_marginTop="68dp"-->
+        <!--            android:background="@drawable/view_square"-->
+        <!--            app:layout_constraintEnd_toEndOf="parent"-->
+        <!--            app:layout_constraintHorizontal_bias="0.0"-->
+        <!--            app:layout_constraintStart_toStartOf="@+id/btn_bedroom"-->
+        <!--            app:layout_constraintTop_toBottomOf="@+id/view_rectangle_for_weather" />-->
 
-        <View
-            android:id="@+id/view_bathroom"
-            android:layout_width="63dp"
-            android:layout_height="15dp"
-            android:layout_gravity="clip_horizontal|center_horizontal"
-            android:layout_marginStart="18dp"
-            android:layout_marginTop="40dp"
-            android:background="@drawable/view_bathroom"
-            android:textColor="#073509"
-            app:layout_constraintBottom_toBottomOf="@+id/btn_bathroom"
-            app:layout_constraintEnd_toEndOf="@+id/btn_bathroom"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/btn_bathroom"
-            app:layout_constraintTop_toTopOf="@+id/btn_bathroom"
-            app:layout_constraintVertical_bias="0.044" />
+        <!--        <View-->
+        <!--            android:id="@+id/view_bedroom"-->
+        <!--            android:layout_width="75dp"-->
+        <!--            android:layout_height="15dp"-->
+        <!--            android:layout_gravity="clip_horizontal|center_horizontal"-->
+        <!--            android:background="@drawable/view_bedroom"-->
+        <!--            android:textColor="#073509"-->
+        <!--            app:layout_constraintBottom_toBottomOf="@+id/btn_bedroom"-->
+        <!--            app:layout_constraintEnd_toEndOf="@+id/btn_bedroom"-->
+        <!--            app:layout_constraintHorizontal_bias="0.466"-->
+        <!--            app:layout_constraintStart_toStartOf="@+id/btn_bedroom"-->
+        <!--            app:layout_constraintTop_toTopOf="@+id/btn_bedroom"-->
+        <!--            app:layout_constraintVertical_bias="0.494" />-->
 
-        <Button
-            android:id="@+id/btn_kitchen"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_gravity="clip_horizontal|center_horizontal"
-            android:layout_marginTop="32dp"
-            android:background="@android:color/transparent"
-            android:text="@string/_1"
-            app:layout_constraintBottom_toBottomOf="@+id/view_object3"
-            app:layout_constraintEnd_toEndOf="@+id/view_object3"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toStartOf="@+id/view_object3"
-            app:layout_constraintTop_toBottomOf="@+id/btn_hallroom"
-            app:layout_constraintVertical_bias="1.0" />
+        <!--        <Button-->
+        <!--            android:id="@+id/btn_bathroom"-->
+        <!--            android:layout_width="100dp"-->
+        <!--            android:layout_height="100dp"-->
+        <!--            android:layout_gravity="clip_horizontal|center_horizontal"-->
+        <!--            android:layout_marginTop="72dp"-->
+        <!--            android:background="@android:color/transparent"-->
+        <!--            android:text="@string/_1"-->
+        <!--            app:layout_constraintEnd_toEndOf="parent"-->
+        <!--            app:layout_constraintHorizontal_bias="0.0"-->
+        <!--            app:layout_constraintStart_toStartOf="@+id/view_object2"-->
+        <!--            app:layout_constraintTop_toBottomOf="@+id/view_rectangle_for_weather" />-->
 
-        <View
-            android:id="@+id/view_object3"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_gravity="clip_horizontal|center_horizontal"
-            android:layout_marginTop="5dp"
-            android:background="@drawable/view_square"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.138"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btn_hallroom" />
+        <!--        <View-->
+        <!--            android:id="@+id/view_object2"-->
+        <!--            android:layout_width="100dp"-->
+        <!--            android:layout_height="100dp"-->
+        <!--            android:layout_gravity="clip_horizontal|center_horizontal"-->
+        <!--            android:background="@drawable/view_square"-->
+        <!--            app:layout_constraintEnd_toEndOf="parent"-->
+        <!--            app:layout_constraintHorizontal_bias="0.858"-->
+        <!--            app:layout_constraintStart_toStartOf="parent"-->
+        <!--            app:layout_constraintTop_toTopOf="@+id/btn_bathroom" />-->
 
-        <View
-            android:id="@+id/view_kitchen"
-            android:layout_width="50dp"
-            android:layout_height="18dp"
-            android:layout_gravity="clip_horizontal|center_horizontal"
-            android:background="@drawable/view_kitchen"
-            android:textColor="#073509"
-            app:layout_constraintBottom_toBottomOf="@+id/btn_kitchen"
-            app:layout_constraintEnd_toEndOf="@+id/btn_kitchen"
-            app:layout_constraintHorizontal_bias="0.48"
-            app:layout_constraintStart_toStartOf="@+id/btn_kitchen"
-            app:layout_constraintTop_toTopOf="@+id/btn_kitchen"
-            app:layout_constraintVertical_bias="0.542" />
+        <!--        <View-->
+        <!--            android:id="@+id/view_bathroom"-->
+        <!--            android:layout_width="63dp"-->
+        <!--            android:layout_height="15dp"-->
+        <!--            android:layout_gravity="clip_horizontal|center_horizontal"-->
+        <!--            android:layout_marginStart="18dp"-->
+        <!--            android:layout_marginTop="40dp"-->
+        <!--            android:background="@drawable/view_bathroom"-->
+        <!--            android:textColor="#073509"-->
+        <!--            app:layout_constraintBottom_toBottomOf="@+id/btn_bathroom"-->
+        <!--            app:layout_constraintEnd_toEndOf="@+id/btn_bathroom"-->
+        <!--            app:layout_constraintHorizontal_bias="0.0"-->
+        <!--            app:layout_constraintStart_toStartOf="@+id/btn_bathroom"-->
+        <!--            app:layout_constraintTop_toTopOf="@+id/btn_bathroom"-->
+        <!--            app:layout_constraintVertical_bias="0.044" />-->
 
-        <Button
-            android:id="@+id/btn_carroom"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_gravity="clip_horizontal|center_horizontal"
-            android:layout_marginTop="107dp"
-            android:background="@android:color/transparent"
-            android:text="@string/_1"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.077"
-            app:layout_constraintStart_toEndOf="@+id/btn_kitchen"
-            app:layout_constraintTop_toTopOf="@+id/btn_bedroom" />
+        <!--        <Button-->
+        <!--            android:id="@+id/btn_kitchen"-->
+        <!--            android:layout_width="100dp"-->
+        <!--            android:layout_height="100dp"-->
+        <!--            android:layout_gravity="clip_horizontal|center_horizontal"-->
+        <!--            android:layout_marginTop="32dp"-->
+        <!--            android:background="@android:color/transparent"-->
+        <!--            android:text="@string/_1"-->
+        <!--            app:layout_constraintBottom_toBottomOf="@+id/view_object3"-->
+        <!--            app:layout_constraintEnd_toEndOf="@+id/view_object3"-->
+        <!--            app:layout_constraintHorizontal_bias="1.0"-->
+        <!--            app:layout_constraintStart_toStartOf="@+id/view_object3"-->
+        <!--            app:layout_constraintTop_toBottomOf="@+id/btn_hallroom"-->
+        <!--            app:layout_constraintVertical_bias="1.0" />-->
 
-        <View
-            android:id="@+id/view_object4"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_gravity="clip_horizontal|center_horizontal"
-            android:background="@drawable/view_square"
-            app:layout_constraintBottom_toTopOf="@+id/btn_storeroom"
-            app:layout_constraintEnd_toStartOf="@+id/btn_yard"
-            app:layout_constraintHorizontal_bias="0.541"
-            app:layout_constraintStart_toEndOf="@+id/btn_kitchen"
-            app:layout_constraintTop_toBottomOf="@+id/btn_bedroom"
-            app:layout_constraintVertical_bias="0.416" />
+        <!--        <View-->
+        <!--            android:id="@+id/view_object3"-->
+        <!--            android:layout_width="100dp"-->
+        <!--            android:layout_height="100dp"-->
+        <!--            android:layout_gravity="clip_horizontal|center_horizontal"-->
+        <!--            android:layout_marginTop="5dp"-->
+        <!--            android:background="@drawable/view_square"-->
+        <!--            app:layout_constraintEnd_toEndOf="parent"-->
+        <!--            app:layout_constraintHorizontal_bias="0.138"-->
+        <!--            app:layout_constraintStart_toStartOf="parent"-->
+        <!--            app:layout_constraintTop_toBottomOf="@+id/btn_hallroom" />-->
 
-        <View
-            android:id="@+id/view_carroom"
-            android:layout_width="53dp"
-            android:layout_height="18dp"
-            android:layout_gravity="clip_horizontal|center_horizontal"
-            android:background="@drawable/view_carroom"
-            android:textColor="#073509"
-            app:layout_constraintBottom_toBottomOf="@+id/btn_carroom"
-            app:layout_constraintEnd_toEndOf="@+id/btn_carroom"
-            app:layout_constraintHorizontal_bias="0.404"
-            app:layout_constraintStart_toStartOf="@+id/btn_carroom"
-            app:layout_constraintTop_toTopOf="@+id/btn_carroom"
-            app:layout_constraintVertical_bias="0.524" />
+        <!--        <View-->
+        <!--            android:id="@+id/view_kitchen"-->
+        <!--            android:layout_width="50dp"-->
+        <!--            android:layout_height="18dp"-->
+        <!--            android:layout_gravity="clip_horizontal|center_horizontal"-->
+        <!--            android:background="@drawable/view_kitchen"-->
+        <!--            android:textColor="#073509"-->
+        <!--            app:layout_constraintBottom_toBottomOf="@+id/btn_kitchen"-->
+        <!--            app:layout_constraintEnd_toEndOf="@+id/btn_kitchen"-->
+        <!--            app:layout_constraintHorizontal_bias="0.48"-->
+        <!--            app:layout_constraintStart_toStartOf="@+id/btn_kitchen"-->
+        <!--            app:layout_constraintTop_toTopOf="@+id/btn_kitchen"-->
+        <!--            app:layout_constraintVertical_bias="0.542" />-->
 
-        <Button
-            android:id="@+id/btn_yard"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_gravity="clip_horizontal|center_horizontal"
-            android:background="@android:color/transparent"
-            android:text="@string/_1"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/view_object5"
-            app:layout_constraintTop_toTopOf="@+id/view_object5" />
+        <!--        <Button-->
+        <!--            android:id="@+id/btn_carroom"-->
+        <!--            android:layout_width="100dp"-->
+        <!--            android:layout_height="100dp"-->
+        <!--            android:layout_gravity="clip_horizontal|center_horizontal"-->
+        <!--            android:layout_marginTop="107dp"-->
+        <!--            android:background="@android:color/transparent"-->
+        <!--            android:text="@string/_1"-->
+        <!--            app:layout_constraintEnd_toEndOf="parent"-->
+        <!--            app:layout_constraintHorizontal_bias="0.077"-->
+        <!--            app:layout_constraintStart_toEndOf="@+id/btn_kitchen"-->
+        <!--            app:layout_constraintTop_toTopOf="@+id/btn_bedroom" />-->
 
-        <View
-            android:id="@+id/view_object5"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_gravity="clip_horizontal|center_horizontal"
-            android:layout_marginTop="5dp"
-            android:layout_marginEnd="44dp"
-            android:background="@drawable/view_square"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toEndOf="@+id/btn_carroom"
-            app:layout_constraintTop_toBottomOf="@+id/btn_bathroom" />
+        <!--        <View-->
+        <!--            android:id="@+id/view_object4"-->
+        <!--            android:layout_width="100dp"-->
+        <!--            android:layout_height="100dp"-->
+        <!--            android:layout_gravity="clip_horizontal|center_horizontal"-->
+        <!--            android:background="@drawable/view_square"-->
+        <!--            app:layout_constraintBottom_toTopOf="@+id/btn_storeroom"-->
+        <!--            app:layout_constraintEnd_toStartOf="@+id/btn_yard"-->
+        <!--            app:layout_constraintHorizontal_bias="0.541"-->
+        <!--            app:layout_constraintStart_toEndOf="@+id/btn_kitchen"-->
+        <!--            app:layout_constraintTop_toBottomOf="@+id/btn_bedroom"-->
+        <!--            app:layout_constraintVertical_bias="0.416" />-->
 
-        <View
-            android:id="@+id/view_yard"
-            android:layout_width="45dp"
-            android:layout_height="18dp"
-            android:layout_gravity="clip_horizontal|center_horizontal"
-            android:background="@drawable/view_yard"
-            android:textColor="#073509"
-            app:layout_constraintBottom_toBottomOf="@+id/btn_yard"
-            app:layout_constraintEnd_toEndOf="@+id/btn_yard"
-            app:layout_constraintHorizontal_bias="0.472"
-            app:layout_constraintStart_toStartOf="@+id/btn_yard"
-            app:layout_constraintTop_toTopOf="@+id/view_object5"
-            app:layout_constraintVertical_bias="0.548" />
+        <!--        <View-->
+        <!--            android:id="@+id/view_carroom"-->
+        <!--            android:layout_width="53dp"-->
+        <!--            android:layout_height="18dp"-->
+        <!--            android:layout_gravity="clip_horizontal|center_horizontal"-->
+        <!--            android:background="@drawable/view_carroom"-->
+        <!--            android:textColor="#073509"-->
+        <!--            app:layout_constraintBottom_toBottomOf="@+id/btn_carroom"-->
+        <!--            app:layout_constraintEnd_toEndOf="@+id/btn_carroom"-->
+        <!--            app:layout_constraintHorizontal_bias="0.404"-->
+        <!--            app:layout_constraintStart_toStartOf="@+id/btn_carroom"-->
+        <!--            app:layout_constraintTop_toTopOf="@+id/btn_carroom"-->
+        <!--            app:layout_constraintVertical_bias="0.524" />-->
 
-        <Button
-            android:id="@+id/btn_greenhouse"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_gravity="clip_horizontal|center_horizontal"
-            android:background="@android:color/transparent"
-            android:text="@string/_1"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/view_object6"
-            app:layout_constraintTop_toTopOf="@+id/view_object6" />
+        <!--        <Button-->
+        <!--            android:id="@+id/btn_yard"-->
+        <!--            android:layout_width="100dp"-->
+        <!--            android:layout_height="100dp"-->
+        <!--            android:layout_gravity="clip_horizontal|center_horizontal"-->
+        <!--            android:background="@android:color/transparent"-->
+        <!--            android:text="@string/_1"-->
+        <!--            app:layout_constraintEnd_toEndOf="parent"-->
+        <!--            app:layout_constraintHorizontal_bias="0.0"-->
+        <!--            app:layout_constraintStart_toStartOf="@+id/view_object5"-->
+        <!--            app:layout_constraintTop_toTopOf="@+id/view_object5" />-->
 
-        <View
-            android:id="@+id/view_object6"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_gravity="clip_horizontal|center_horizontal"
-            android:layout_marginTop="5dp"
-            android:background="@drawable/view_square"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.138"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btn_kitchen" />
+        <!--        <View-->
+        <!--            android:id="@+id/view_object5"-->
+        <!--            android:layout_width="100dp"-->
+        <!--            android:layout_height="100dp"-->
+        <!--            android:layout_gravity="clip_horizontal|center_horizontal"-->
+        <!--            android:layout_marginTop="5dp"-->
+        <!--            android:layout_marginEnd="44dp"-->
+        <!--            android:background="@drawable/view_square"-->
+        <!--            app:layout_constraintEnd_toEndOf="parent"-->
+        <!--            app:layout_constraintHorizontal_bias="1.0"-->
+        <!--            app:layout_constraintStart_toEndOf="@+id/btn_carroom"-->
+        <!--            app:layout_constraintTop_toBottomOf="@+id/btn_bathroom" />-->
 
-        <View
-            android:id="@+id/view_greenhouse"
-            android:layout_width="72dp"
-            android:layout_height="19dp"
-            android:layout_gravity="clip_horizontal|center_horizontal"
-            android:background="@drawable/view_greenhouse"
-            android:textColor="#073509"
-            app:layout_constraintBottom_toBottomOf="@+id/btn_greenhouse"
-            app:layout_constraintEnd_toEndOf="@+id/btn_greenhouse"
-            app:layout_constraintHorizontal_bias="0.566"
-            app:layout_constraintStart_toStartOf="@+id/btn_greenhouse"
-            app:layout_constraintTop_toTopOf="@+id/btn_greenhouse"
-            app:layout_constraintVertical_bias="0.482" />
+        <!--        <View-->
+        <!--            android:id="@+id/view_yard"-->
+        <!--            android:layout_width="45dp"-->
+        <!--            android:layout_height="18dp"-->
+        <!--            android:layout_gravity="clip_horizontal|center_horizontal"-->
+        <!--            android:background="@drawable/view_yard"-->
+        <!--            android:textColor="#073509"-->
+        <!--            app:layout_constraintBottom_toBottomOf="@+id/btn_yard"-->
+        <!--            app:layout_constraintEnd_toEndOf="@+id/btn_yard"-->
+        <!--            app:layout_constraintHorizontal_bias="0.472"-->
+        <!--            app:layout_constraintStart_toStartOf="@+id/btn_yard"-->
+        <!--            app:layout_constraintTop_toTopOf="@+id/view_object5"-->
+        <!--            app:layout_constraintVertical_bias="0.548" />-->
 
-        <Button
-            android:id="@+id/btn_storeroom"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_gravity="clip_horizontal|center_horizontal"
-            android:layout_marginTop="105dp"
-            android:layout_marginEnd="156dp"
-            android:background="@android:color/transparent"
-            android:text="@string/_1"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toEndOf="@+id/btn_greenhouse"
-            app:layout_constraintTop_toTopOf="@+id/btn_carroom" />
+        <!--        <Button-->
+        <!--            android:id="@+id/btn_greenhouse"-->
+        <!--            android:layout_width="100dp"-->
+        <!--            android:layout_height="100dp"-->
+        <!--            android:layout_gravity="clip_horizontal|center_horizontal"-->
+        <!--            android:background="@android:color/transparent"-->
+        <!--            android:text="@string/_1"-->
+        <!--            app:layout_constraintEnd_toEndOf="parent"-->
+        <!--            app:layout_constraintHorizontal_bias="0.0"-->
+        <!--            app:layout_constraintStart_toStartOf="@+id/view_object6"-->
+        <!--            app:layout_constraintTop_toTopOf="@+id/view_object6" />-->
 
-        <View
-            android:id="@+id/view_object7"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_gravity="clip_horizontal|center_horizontal"
-            android:background="@drawable/view_square"
-            app:layout_constraintBottom_toBottomOf="@+id/btn_storeroom"
-            app:layout_constraintEnd_toEndOf="@+id/btn_carroom"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/btn_greenhouse"
-            app:layout_constraintTop_toTopOf="@+id/btn_storeroom"
-            app:layout_constraintVertical_bias="1.0" />
+        <!--        <View-->
+        <!--            android:id="@+id/view_object6"-->
+        <!--            android:layout_width="100dp"-->
+        <!--            android:layout_height="100dp"-->
+        <!--            android:layout_gravity="clip_horizontal|center_horizontal"-->
+        <!--            android:layout_marginTop="5dp"-->
+        <!--            android:background="@drawable/view_square"-->
+        <!--            app:layout_constraintEnd_toEndOf="parent"-->
+        <!--            app:layout_constraintHorizontal_bias="0.138"-->
+        <!--            app:layout_constraintStart_toStartOf="parent"-->
+        <!--            app:layout_constraintTop_toBottomOf="@+id/btn_kitchen" />-->
 
-        <View
-            android:id="@+id/view_storeroom"
-            android:layout_width="78dp"
-            android:layout_height="17dp"
-            android:layout_gravity="clip_horizontal|center_horizontal"
-            android:layout_marginStart="13dp"
-            android:background="@drawable/view_storeroom"
-            android:textColor="#073509"
-            app:layout_constraintBottom_toBottomOf="@+id/btn_storeroom"
-            app:layout_constraintEnd_toEndOf="@+id/btn_storeroom"
-            app:layout_constraintHorizontal_bias="0.636"
-            app:layout_constraintStart_toStartOf="@+id/btn_storeroom"
-            app:layout_constraintTop_toTopOf="@+id/btn_storeroom"
-            app:layout_constraintVertical_bias="0.487" />
+        <!--        <View-->
+        <!--            android:id="@+id/view_greenhouse"-->
+        <!--            android:layout_width="72dp"-->
+        <!--            android:layout_height="19dp"-->
+        <!--            android:layout_gravity="clip_horizontal|center_horizontal"-->
+        <!--            android:background="@drawable/view_greenhouse"-->
+        <!--            android:textColor="#073509"-->
+        <!--            app:layout_constraintBottom_toBottomOf="@+id/btn_greenhouse"-->
+        <!--            app:layout_constraintEnd_toEndOf="@+id/btn_greenhouse"-->
+        <!--            app:layout_constraintHorizontal_bias="0.566"-->
+        <!--            app:layout_constraintStart_toStartOf="@+id/btn_greenhouse"-->
+        <!--            app:layout_constraintTop_toTopOf="@+id/btn_greenhouse"-->
+        <!--            app:layout_constraintVertical_bias="0.482" />-->
+
+        <!--        <Button-->
+        <!--            android:id="@+id/btn_storeroom"-->
+        <!--            android:layout_width="100dp"-->
+        <!--            android:layout_height="100dp"-->
+        <!--            android:layout_gravity="clip_horizontal|center_horizontal"-->
+        <!--            android:layout_marginTop="105dp"-->
+        <!--            android:layout_marginEnd="156dp"-->
+        <!--            android:background="@android:color/transparent"-->
+        <!--            android:text="@string/_1"-->
+        <!--            app:layout_constraintEnd_toEndOf="parent"-->
+        <!--            app:layout_constraintHorizontal_bias="1.0"-->
+        <!--            app:layout_constraintStart_toEndOf="@+id/btn_greenhouse"-->
+        <!--            app:layout_constraintTop_toTopOf="@+id/btn_carroom" />-->
+
+        <!--        <View-->
+        <!--            android:id="@+id/view_object7"-->
+        <!--            android:layout_width="100dp"-->
+        <!--            android:layout_height="100dp"-->
+        <!--            android:layout_gravity="clip_horizontal|center_horizontal"-->
+        <!--            android:background="@drawable/view_square"-->
+        <!--            app:layout_constraintBottom_toBottomOf="@+id/btn_storeroom"-->
+        <!--            app:layout_constraintEnd_toEndOf="@+id/btn_carroom"-->
+        <!--            app:layout_constraintHorizontal_bias="0.5"-->
+        <!--            app:layout_constraintStart_toEndOf="@+id/btn_greenhouse"-->
+        <!--            app:layout_constraintTop_toTopOf="@+id/btn_storeroom"-->
+        <!--            app:layout_constraintVertical_bias="1.0" />-->
+
+        <!--        <View-->
+        <!--            android:id="@+id/view_storeroom"-->
+        <!--            android:layout_width="78dp"-->
+        <!--            android:layout_height="17dp"-->
+        <!--            android:layout_gravity="clip_horizontal|center_horizontal"-->
+        <!--            android:layout_marginStart="13dp"-->
+        <!--            android:background="@drawable/view_storeroom"-->
+        <!--            android:textColor="#073509"-->
+        <!--            app:layout_constraintBottom_toBottomOf="@+id/btn_storeroom"-->
+        <!--            app:layout_constraintEnd_toEndOf="@+id/btn_storeroom"-->
+        <!--            app:layout_constraintHorizontal_bias="0.636"-->
+        <!--            app:layout_constraintStart_toStartOf="@+id/btn_storeroom"-->
+        <!--            app:layout_constraintTop_toTopOf="@+id/btn_storeroom"-->
+        <!--            app:layout_constraintVertical_bias="0.487" />-->
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
