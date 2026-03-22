@@ -10,6 +10,7 @@ import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.viewpager2.widget.ViewPager2;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,6 +30,7 @@ import com.example.myhouseapp0.rooms.HallRoomFragment;
 import com.example.myhouseapp0.rooms.KitchenFragment;
 import com.example.myhouseapp0.rooms.StoreroomFragment;
 import com.example.myhouseapp0.rooms.YardFragment;
+import com.google.android.material.tabs.TabLayout;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -44,12 +46,16 @@ public class HomeFragment extends Fragment {
     public HomeFragment() {
         // Required empty public constructor
     }
+
+    TabLayout tabLayout;
+    ViewPager2 viewPager2;
+    ViewPagerAdapter viewPagerAdapter;
+
     public String APIKey = "5805dd66a332dedde152edfe026bb26f";
     private static final String site = "https://api.openweathermap.org/data/2.5/weather?q=Kazan&units=metric&appid=5805dd66a332dedde152edfe026bb26f&lang=ru";
 
     RequestQueue requestQueue;
     double temp = 0;
-    String city = "";
 
     final Calendar calendar = GregorianCalendar.getInstance();
     int year = calendar.get(Calendar.YEAR);
@@ -61,6 +67,7 @@ public class HomeFragment extends Fragment {
     }
     @Override
     public void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
     }
 
@@ -74,6 +81,35 @@ public class HomeFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        tabLayout = view.findViewById(R.id.switch_mode);
+        viewPager2 = view.findViewById(R.id.view_mode);
+        viewPagerAdapter = new ViewPagerAdapter(this);
+        viewPager2.setAdapter(viewPagerAdapter);
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                viewPager2.setCurrentItem(tab.getPosition());
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+
+        viewPager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageSelected(int position) {
+                super.onPageSelected(position);
+                tabLayout.getTabAt(position).select();
+            }
+        });
 
         Button btn_to_hallroom = view.findViewById(R.id.btn_hallroom);
         btn_to_hallroom.setOnClickListener(v -> replaceFragment(new HallRoomFragment()));
