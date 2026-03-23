@@ -111,30 +111,6 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        Button btn_to_hallroom = view.findViewById(R.id.btn_hallroom);
-        btn_to_hallroom.setOnClickListener(v -> replaceFragment(new HallRoomFragment()));
-
-        Button btn_to_bedroom = view.findViewById(R.id.btn_bedroom);
-        btn_to_bedroom.setOnClickListener(v -> replaceFragment(new BedroomFragment()));
-
-        Button btn_to_bathroom = view.findViewById(R.id.btn_bathroom);
-        btn_to_bathroom.setOnClickListener(v -> replaceFragment(new BathroomFragment()));
-
-        Button btn_to_kitchen = view.findViewById(R.id.btn_kitchen);
-        btn_to_kitchen.setOnClickListener(v -> replaceFragment(new KitchenFragment()));
-
-        Button btn_to_carroom = view.findViewById(R.id.btn_carroom);
-        btn_to_carroom.setOnClickListener(v -> replaceFragment(new CarRoomFragment()));
-
-        Button btn_to_yard = view.findViewById(R.id.btn_yard);
-        btn_to_yard.setOnClickListener(v -> replaceFragment(new YardFragment()));
-
-        Button btn_to_greenhouse = view.findViewById(R.id.btn_greenhouse);
-        btn_to_greenhouse.setOnClickListener(v -> replaceFragment(new GreenhouseFragment()));
-
-        Button btn_to_storeroom = view.findViewById(R.id.btn_storeroom);
-        btn_to_storeroom.setOnClickListener(v -> replaceFragment(new StoreroomFragment()));
-
 
        // ViewFlipper viewFlipper = (ViewFlipper) findViewById(R.id.)
 
@@ -160,13 +136,7 @@ public class HomeFragment extends Fragment {
         requestQueue.add(request);
     }
 
-    private void replaceFragment(Fragment fragment){
-        FragmentManager fragmentManager = getParentFragmentManager();
-        FragmentTransaction fragmentTransaction=fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.frame_layout, fragment);
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit();
-    }
+
 
 }
 
