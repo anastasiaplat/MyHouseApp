@@ -18,7 +18,6 @@
             android:layout_height="100dp"
             android:layout_gravity="clip_horizontal|center_horizontal"
             android:background="@drawable/view_square"
-            android:backgroundTint="@color/white_green"
             android:padding="0dp"
             android:text="Гостиная"
             android:textColor="@color/navbar"
