@@ -50,6 +50,8 @@ public class HomeFragment extends Fragment {
     TabLayout tabLayout;
     ViewPager2 viewPager2;
     ViewPagerAdapter viewPagerAdapter;
+    Button btn_add, btn_edit;
+
 
     public String APIKey = "5805dd66a332dedde152edfe026bb26f";
     private static final String site = "https://api.openweathermap.org/data/2.5/weather?q=Kazan&units=metric&appid=5805dd66a332dedde152edfe026bb26f&lang=ru";
@@ -112,6 +114,9 @@ public class HomeFragment extends Fragment {
         });
 
 
+
+
+
        // ViewFlipper viewFlipper = (ViewFlipper) findViewById(R.id.)
 
         TextView temptext = view.findViewById(R.id.textview_temp);
@@ -134,6 +139,9 @@ public class HomeFragment extends Fragment {
                     }
                 }, Throwable::printStackTrace);
         requestQueue.add(request);
+
+
+
     }
 
 

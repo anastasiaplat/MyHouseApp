@@ -97,6 +97,7 @@
                 android:layout_height="wrap_content"
                 android:backgroundTint="@color/navbar"
                 android:foregroundTint="@color/navbar"
+                android:contentDescription="Список"
 
                 android:icon="@drawable/icon_lis_of_blocks"
                 tools:layout_editor_absoluteX="34dp"
@@ -107,6 +108,7 @@
                 android:layout_height="wrap_content"
                 android:backgroundTint="@color/navbar"
                 android:foregroundTint="@color/navbar"
+                android:contentDescription="Карта"
                 android:icon="@drawable/icon_map"
                 tools:layout_editor_absoluteX="212dp"
                 tools:layout_editor_absoluteY="295dp" />
@@ -115,18 +117,56 @@
 <!--переключаемая область-->
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/view_mode"
-            android:layout_width="300dp"
-            android:layout_height="400dp"
+            android:layout_width="285dp"
+            android:layout_height="353dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.495"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/switch_mode"
-            app:layout_constraintVertical_bias="0.3"
+            app:layout_constraintVertical_bias="0.0"
             tools:ignore="MissingConstraints" />
 
+        <Button
+            android:id="@+id/btn_add"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_gravity="clip_horizontal|center_horizontal"
+            android:background="@drawable/view_ellipse"
+            android:backgroundTint="@color/white_green"
+            app:icon="@drawable/icon_plus"
+            app:iconTint="@color/navbar"
+            android:contentDescription="Добавить"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.825"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/view_mode"
+            app:layout_constraintVertical_bias="0.192"
+            tools:ignore="MissingConstraints" />
 
-
+        <Button
+            android:id="@+id/btn_edit"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_gravity="clip_horizontal|center_horizontal"
+            android:background="@drawable/view_ellipse"
+            android:backgroundTint="@color/white_green"
+            android:contentDescription="Редактировать"
+            android:ellipsize="start"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            app:icon="@drawable/icon_edit"
+            app:iconGravity="textEnd"
+            app:iconSize="28dp"
+            app:iconTint="@color/navbar"
+            app:iconTintMode="multiply"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.626"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/view_mode"
+            app:layout_constraintVertical_bias="0.191"
+            tools:ignore="MissingConstraints" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
