@@ -9,21 +9,58 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import androidx.annotation.Nullable;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class DB_helper extends SQLiteOpenHelper{
     public static final String DBName="myhouse.db";
+    public static final String TABLE_DEVICES = "devices";
+    public static final String COLUMN_ID = "_id";
+    public static final String COLUMN_NAME = "name";
     public DB_helper(@Nullable Context context) {
         super(context, DBName, null, 1);
     }
+    private static final String CREATE_TABLE_DEVICES =
+            "CREATE TABLE " + TABLE_DEVICES + "(" +
+                    COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    COLUMN_NAME + " TEXT NOT NULL);";
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase){
         sqLiteDatabase.execSQL("create table Users(username TEXT primary key, password TEXT)");
         sqLiteDatabase.execSQL("create table TempAndHumidity(date DATE primary key, data TEXT)");
+        sqLiteDatabase.execSQL(CREATE_TABLE_DEVICES);
+        // Добавляем тестовые устройства
+        sqLiteDatabase.execSQL("INSERT INTO " + TABLE_DEVICES + " (" + COLUMN_NAME + ") VALUES ('Датчик температуры'), ('Датчик влажности'), ('Отопление')");
     }
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
         sqLiteDatabase.execSQL("drop table if exists Users");
+        sqLiteDatabase.execSQL("drop table if exists " + TABLE_DEVICES);
+        onCreate(sqLiteDatabase);
+    }
+
+
+    public List<String> getDevices() {
+        List<String> devices = new ArrayList<>();
+        SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
+        Cursor cursor = sqLiteDatabase.query(TABLE_DEVICES, new String[]{COLUMN_NAME},
+                null, null, null, null, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                devices.add(cursor.getString(0));
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return devices;
+
+
+
+
+
+
+
     }
     public boolean insertData(String username, String password){
         SQLiteDatabase myDB = this.getWritableDatabase();
