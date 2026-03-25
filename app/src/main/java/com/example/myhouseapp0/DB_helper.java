@@ -15,28 +15,64 @@ import java.util.List;
 
 public class DB_helper extends SQLiteOpenHelper{
     public static final String DBName="myhouse.db";
-    public static final String TABLE_DEVICES = "devices";
-    public static final String COLUMN_ID = "_id";
+
+    public static final String TABLE_OBJECTS = "Objects";
+    public static final String TABLE_DEVICES = "Devices";
+
+    // Поля таблицы Objects
+    public static final String COLUMN_ID = "id";
     public static final String COLUMN_NAME = "name";
+    public static final String COLUMN_SIZEX = "sizeX";
+    public static final String COLUMN_SIZEY = "sizeY";
+
+    // Поля таблицы Devices
+    public static final String COLUMN_DEVICE_ID = "id";
+    public static final String COLUMN_DEVICE_NAME = "name";
+
+
     public DB_helper(@Nullable Context context) {
         super(context, DBName, null, 1);
     }
-    private static final String CREATE_TABLE_DEVICES =
-            "CREATE TABLE " + TABLE_DEVICES + "(" +
-                    COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                    COLUMN_NAME + " TEXT NOT NULL);";
+
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase){
-        sqLiteDatabase.execSQL("create table Users(username TEXT primary key, password TEXT)");
-        sqLiteDatabase.execSQL("create table TempAndHumidity(date DATE primary key, data TEXT)");
-        sqLiteDatabase.execSQL(CREATE_TABLE_DEVICES);
+
+        String createObjectsTable = "CREATE TABLE " + TABLE_OBJECTS + " (" +
+                COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                COLUMN_NAME + " TEXT UNIQUE NOT NULL, " +
+                COLUMN_SIZEX + " REAL, " +
+                COLUMN_SIZEY + " REAL" +
+                ")";
+
+        // Создание таблицы Devices
+        String createDevicesTable = "CREATE TABLE " + TABLE_DEVICES + " (" +
+                COLUMN_DEVICE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                COLUMN_DEVICE_NAME + " TEXT NOT NULL" +
+                ")";
+
+        sqLiteDatabase.execSQL(createObjectsTable);
+        sqLiteDatabase.execSQL(createDevicesTable);
+
         // Добавляем тестовые устройства
-        sqLiteDatabase.execSQL("INSERT INTO " + TABLE_DEVICES + " (" + COLUMN_NAME + ") VALUES ('Датчик температуры'), ('Датчик влажности'), ('Отопление')");
+        insertTestDevices(sqLiteDatabase);
+    }
+    private void insertTestDevices(SQLiteDatabase db) {
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_DEVICE_NAME, "Устройство 1");
+        db.insert(TABLE_DEVICES, null, values);
+
+        values.clear();
+        values.put(COLUMN_DEVICE_NAME, "Устройство 2");
+        db.insert(TABLE_DEVICES, null, values);
+
+        values.clear();
+        values.put(COLUMN_DEVICE_NAME, "Устройство 3");
+        db.insert(TABLE_DEVICES, null, values);
     }
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-        sqLiteDatabase.execSQL("drop table if exists Users");
-        sqLiteDatabase.execSQL("drop table if exists " + TABLE_DEVICES);
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_OBJECTS);
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_DEVICES);
         onCreate(sqLiteDatabase);
     }
 
