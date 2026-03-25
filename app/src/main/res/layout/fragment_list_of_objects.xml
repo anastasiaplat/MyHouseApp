@@ -18,17 +18,17 @@
             android:layout_height="65dp"
             android:background="@drawable/btn_rectangle"
             android:drawableEnd="@drawable/icon_move"
-            android:paddingLeft="-150dp"
-            android:text="Гостиная"
+            android:paddingStart="-150dp"
+            android:text="@string/hallroom"
             android:textColor="@color/navbar"
-            android:textSize="18dp"
+            android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.456"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.086"
-            tools:ignore="MissingConstraints" />
+            tools:ignore="MissingConstraints,RtlSymmetry" />
 
         <Button
             android:id="@+id/btn_bedroom"
@@ -36,17 +36,17 @@
             android:layout_height="65dp"
             android:background="@drawable/btn_rectangle"
             android:drawableEnd="@drawable/icon_move"
-            android:paddingLeft="-150dp"
-            android:text="Спальня"
+            android:paddingStart="-150dp"
+            android:text="@string/bedroom"
             android:textColor="@color/navbar"
-            android:textSize="18dp"
+            android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.456"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/btn_hallroom"
             app:layout_constraintVertical_bias="0.044"
-            tools:ignore="MissingConstraints" />
+            tools:ignore="MissingConstraints,RtlSymmetry" />
 
         <Button
             android:id="@+id/btn_bathroom"
@@ -54,17 +54,17 @@
             android:layout_height="65dp"
             android:background="@drawable/btn_rectangle"
             android:drawableEnd="@drawable/icon_move"
-            android:paddingLeft="-150dp"
-            android:text="Ванная"
+            android:paddingStart="-150dp"
+            android:text="@string/bathroom"
             android:textColor="@color/navbar"
-            android:textSize="18dp"
+            android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.456"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/btn_bedroom"
             app:layout_constraintVertical_bias="0.056"
-            tools:ignore="MissingConstraints" />
+            tools:ignore="MissingConstraints,RtlSymmetry" />
 
         <Button
             android:id="@+id/btn_kitchen"
@@ -73,16 +73,16 @@
             android:layout_marginTop="24dp"
             android:background="@drawable/btn_rectangle"
             android:drawableEnd="@drawable/icon_move"
-            android:paddingLeft="-150dp"
-            android:text="Кухня"
+            android:paddingStart="-150dp"
+            android:text="@string/kitchen"
             android:textColor="@color/navbar"
-            android:textSize="18dp"
+            android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.456"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/btn_bathroom"
             app:layout_constraintVertical_bias="0.06"
-            tools:ignore="MissingConstraints" />
+            tools:ignore="MissingConstraints,RtlSymmetry" />
 
         <Button
             android:id="@+id/btn_carroom"
@@ -91,15 +91,15 @@
             android:layout_marginTop="20dp"
             android:background="@drawable/btn_rectangle"
             android:drawableEnd="@drawable/icon_move"
-            android:paddingLeft="-150dp"
-            android:text="Гараж"
+            android:paddingStart="-150dp"
+            android:text="@string/garage"
             android:textColor="@color/navbar"
-            android:textSize="18dp"
+            android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.456"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/btn_kitchen"
-            tools:ignore="MissingConstraints" />
+            tools:ignore="MissingConstraints,RtlSymmetry" />
 
         <Button
             android:id="@+id/btn_greenhouse"
@@ -108,15 +108,15 @@
             android:layout_marginTop="20dp"
             android:background="@drawable/btn_rectangle"
             android:drawableEnd="@drawable/icon_move"
-            android:paddingLeft="-150dp"
-            android:text="Теплица"
+            android:paddingStart="-150dp"
+            android:text="@string/greenhouse"
             android:textColor="@color/navbar"
-            android:textSize="18dp"
+            android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.456"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/btn_carroom"
-            tools:ignore="MissingConstraints" />
+            tools:ignore="MissingConstraints,RtlSymmetry" />
 
         <Button
             android:id="@+id/btn_storeroom"
@@ -125,15 +125,15 @@
             android:layout_marginTop="16dp"
             android:background="@drawable/btn_rectangle"
             android:drawableEnd="@drawable/icon_move"
-            android:paddingLeft="-150dp"
-            android:text="Кладовая"
+            android:paddingStart="-150dp"
+            android:text="@string/storeroom"
             android:textColor="@color/navbar"
-            android:textSize="18dp"
+            android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.456"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/btn_greenhouse"
-            tools:ignore="MissingConstraints" />
+            tools:ignore="MissingConstraints,RtlSymmetry" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
