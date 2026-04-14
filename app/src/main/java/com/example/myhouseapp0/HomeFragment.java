@@ -86,6 +86,7 @@ public class HomeFragment extends Fragment {
 
         tabLayout = view.findViewById(R.id.switch_mode);
         viewPager2 = view.findViewById(R.id.view_mode);
+        viewPager2.setUserInputEnabled(false);
         viewPagerAdapter = new ViewPagerAdapter(this);
         viewPager2.setAdapter(viewPagerAdapter);
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -112,7 +113,6 @@ public class HomeFragment extends Fragment {
                 tabLayout.getTabAt(position).select();
             }
         });
-
 
 
 

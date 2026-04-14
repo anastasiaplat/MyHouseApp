@@ -13,12 +13,10 @@ public class ViewPagerAdapter extends FragmentStateAdapter {
     @NonNull
     @Override
     public Fragment createFragment(int position) {
-        switch (position){
-            case 0: return new ListOfObjectsFragment();
-            case 1: return new InteractiveMapFragment();
-            default: return new ListOfObjectsFragment();
-
+        if (position == 1) {
+            return new InteractiveMapFragment();
         }
+        return new ListOfObjectsFragment();
     }
 
     @Override

@@ -52,9 +52,6 @@ public class ListOfObjectsFragment extends Fragment {
         Button btn_to_carroom = view.findViewById(R.id.btn_carroom);
         btn_to_carroom.setOnClickListener(v -> replaceFragment(new CarRoomFragment()));
 
-        Button btn_to_yard = view.findViewById(R.id.btn_yard);
-        btn_to_yard.setOnClickListener(v -> replaceFragment(new YardFragment()));
-
         Button btn_to_greenhouse = view.findViewById(R.id.btn_greenhouse);
         btn_to_greenhouse.setOnClickListener(v -> replaceFragment(new GreenhouseFragment()));
 
