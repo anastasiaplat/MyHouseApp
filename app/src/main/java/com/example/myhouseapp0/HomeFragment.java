@@ -1,21 +1,27 @@
 package com.example.myhouseapp0;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager2.widget.ViewPager2;
 
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -51,6 +57,10 @@ public class HomeFragment extends Fragment {
     ViewPager2 viewPager2;
     ViewPagerAdapter viewPagerAdapter;
     Button btn_add, btn_edit;
+    private boolean isWaitingForPosition = false;
+    private ConstraintLayout container;
+    private static final String TAG = "MainFragment";
+    Button newButton;
 
 
     public String APIKey = "5805dd66a332dedde152edfe026bb26f";
@@ -117,6 +127,28 @@ public class HomeFragment extends Fragment {
 
 
 
+        // Инициализируем контейнер
+        container = view.findViewById(R.id.view_mode);
+        if (container == null) {
+            Log.e(TAG, "Container not found in layout!");
+            return;
+        }
+
+        btn_add = view.findViewById(R.id.btn_add);
+        btn_add.setOnClickListener(v -> showAddButtonDialog());
+
+        view.setOnTouchListener((v, event) -> {
+            if (isWaitingForPosition && event.getAction() == MotionEvent.ACTION_DOWN) {
+                placeButtonAtPosition(event.getX(), event.getY());
+                isWaitingForPosition = false;
+                return true;
+            }
+            return false;
+        });
+
+
+        // ___________________________
+
        // ViewFlipper viewFlipper = (ViewFlipper) findViewById(R.id.)
 
         TextView temptext = view.findViewById(R.id.textview_temp);
@@ -144,7 +176,65 @@ public class HomeFragment extends Fragment {
 
     }
 
+    private void showAddButtonDialog() {
+        Dialog dialog = new Dialog(requireContext());
+        dialog.setContentView(R.layout.dialog_add_object);
 
+        EditText editName = dialog.findViewById(R.id.etObjectName);
+        EditText editDevices = dialog.findViewById(R.id.spinnerDevices);
+        EditText editSize = dialog.findViewById(R.id.etWidth);
+        Button btnSave = dialog.findViewById(R.id.btnConfirm);
+        Button btnCancel = dialog.findViewById(R.id.btnCancel);
+
+        btnSave.setOnClickListener(v -> {
+            String name = editName.getText().toString();
+            String devices = editDevices.getText().toString();
+            String sizeStr = editSize.getText().toString();
+
+            if (!name.isEmpty() && !sizeStr.isEmpty()) {
+                createNewButton(name, sizeStr);
+                isWaitingForPosition = true;
+                dialog.dismiss();
+            }
+        });
+
+        btnCancel.setOnClickListener(v -> dialog.dismiss());
+        dialog.show();
+    }
+
+    private void createNewButton(String name, String sizeStr) {
+        Button newButton = new Button(getActivity());
+        newButton.setText(name);
+
+        // Парсим размеры из строки "100x50"
+        try {
+            String[] sizes = sizeStr.split("x");
+            int width = Integer.parseInt(sizes[0]);
+            int height = Integer.parseInt(sizes[1]);
+            newButton.setLayoutParams(new FrameLayout.LayoutParams(width, height));
+        } catch (Exception e) {
+            // Если парсинг не удался, используем стандартные размеры
+            newButton.setLayoutParams(new FrameLayout.LayoutParams(
+                    FrameLayout.LayoutParams.WRAP_CONTENT,
+                    FrameLayout.LayoutParams.WRAP_CONTENT
+            ));
+        }
+    }
+
+    private void placeButtonAtPosition(float x, float y) {
+        // Проверяем, что контейнер инициализирован
+        if (container == null) {
+            return;
+        }
+
+        if (newButton != null) {
+            FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) newButton.getLayoutParams();
+            params.leftMargin = (int) x;
+            params.topMargin = (int) y;
+            container.addView(newButton);
+            newButton = null;
+        }
+    }
 
 }
 
