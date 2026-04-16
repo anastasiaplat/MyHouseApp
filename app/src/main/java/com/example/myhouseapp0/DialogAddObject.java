@@ -25,11 +25,11 @@ public class DialogAddObject extends DialogFragment {
     private OnObjectAddedListener listener;
     private DB_helper dbHelper;
     private Spinner devicesSpinner;
-    private EditText editTextName, editTextSizeX, editTextSizeY;
+    private EditText etName, etSizeX, etSizeY;
     private Button btn_Confirm, btn_Cancel;
 
     public interface OnObjectAddedListener {
-        void onObjectAdded(MapObject object);
+        void onObjectAdded(String name, int sizeX, int sizeY);
     }
 
     public void setOnObjectAddedListener(OnObjectAddedListener listener) {
@@ -38,57 +38,88 @@ public class DialogAddObject extends DialogFragment {
 
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = requireActivity().getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.dialog_add_object, null);
 
+        builder.setView(dialogView);
         dbHelper = new DB_helper(requireContext());
 
-        initViews(dialogView);
-        loadDevicesToSpinner();
 
-        builder.setView(dialogView)
-                .setTitle("Добавить объект");
+//        initViews(dialogView);
+//        loadDevicesToSpinner();
+
+        etName = dialogView.findViewById(R.id.etObjectName);
+
+        etSizeX = dialogView.findViewById(R.id.etWidth);
+        etSizeX = dialogView.findViewById(R.id.etLength);
+        btn_Confirm = dialogView.findViewById(R.id.btnConfirm);
+        btn_Cancel = dialogView.findViewById(R.id.btnCancel);
+
+        btn_Cancel.setOnClickListener(v -> dismiss());
+
+        btn_Confirm.setOnClickListener(v -> {
+            String name = etName.getText().toString();
+            String sizeXStr = etSizeX.getText().toString();
+            String sizeYStr = etSizeY.getText().toString();
+
+            if (name.isEmpty() || sizeXStr.isEmpty() || sizeYStr.isEmpty()) {
+                Toast.makeText(requireContext(), "Заполните все поля", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            try {
+                int sizeX = Integer.parseInt(sizeXStr);
+                int sizeY = Integer.parseInt(sizeYStr);
+
+                if (listener != null) {
+                    listener.onObjectAdded(name, sizeX, sizeY);
+                }
+                dismiss();
+            } catch (NumberFormatException e) {
+                Toast.makeText(requireContext(), "Введите корректные числа для размеров", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         return builder.create();
     }
 
-    private void initViews(View view) {
-        editTextName = view.findViewById(R.id.etObjectName);
-        editTextSizeX = view.findViewById(R.id.etWidth);
-        editTextSizeY = view.findViewById(R.id.etLength);
-        devicesSpinner = view.findViewById(R.id.spinnerDevices);
-        btn_Confirm = view.findViewById(R.id.btnConfirm);
-        btn_Cancel = view.findViewById(R.id.btnCancel);
-
-        btn_Confirm.setOnClickListener(v -> saveObject());
-        btn_Cancel.setOnClickListener(v -> dismiss());
-    }
-    private void loadDevicesToSpinner() {
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
-        Cursor cursor = db.query(dbHelper.TABLE_DEVICES,
-                new String[]{dbHelper.COLUMN_DEVICE_ID, dbHelper.COLUMN_DEVICE_NAME},
-                null, null, null, null, null);
-
-        List<String> deviceNames = new ArrayList<>();
-        if (cursor.moveToFirst()) {
-            do {
-                deviceNames.add(cursor.getString(1));
-            } while (cursor.moveToNext());
-        }
-        cursor.close();
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(
-                requireContext(),
-                android.R.layout.simple_spinner_item,
-                deviceNames
-        );
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        devicesSpinner.setAdapter(adapter);
-    }
-    private void saveObject() {
-        String name = editTextName.getText().toString().trim();
-        String sizeXStr = editTextSizeX.getText().toString();
-        String sizeYStr = editTextSizeY.getText().toString();}
+//    private void initViews(View view) {
+//        editTextName = view.findViewById(R.id.etObjectName);
+//        editTextSizeX = view.findViewById(R.id.etWidth);
+//        editTextSizeY = view.findViewById(R.id.etLength);
+//        devicesSpinner = view.findViewById(R.id.spinnerDevices);
+//        btn_Confirm = view.findViewById(R.id.btnConfirm);
+//        btn_Cancel = view.findViewById(R.id.btnCancel);
+//
+//        btn_Confirm.setOnClickListener(v -> saveObject());
+//        btn_Cancel.setOnClickListener(v -> dismiss());
+//    }
+//    private void loadDevicesToSpinner() {
+//        SQLiteDatabase db = dbHelper.getReadableDatabase();
+//        Cursor cursor = db.query(dbHelper.TABLE_DEVICES,
+//                new String[]{dbHelper.COLUMN_DEVICE_ID, dbHelper.COLUMN_DEVICE_NAME},
+//                null, null, null, null, null);
+//
+//        List<String> deviceNames = new ArrayList<>();
+//        if (cursor.moveToFirst()) {
+//            do {
+//                deviceNames.add(cursor.getString(1));
+//            } while (cursor.moveToNext());
+//        }
+//        cursor.close();
+//
+//        ArrayAdapter<String> adapter = new ArrayAdapter<>(
+//                requireContext(),
+//                android.R.layout.simple_spinner_item,
+//                deviceNames
+//        );
+//        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//        devicesSpinner.setAdapter(adapter);
+//    }
+//    private void saveObject() {
+//        String name = editTextName.getText().toString().trim();
+//        String sizeXStr = editTextSizeX.getText().toString();
+//        String sizeYStr = editTextSizeY.getText().toString();}
 }
 

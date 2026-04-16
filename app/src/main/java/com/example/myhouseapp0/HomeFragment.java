@@ -63,6 +63,7 @@ public class HomeFragment extends Fragment {
     Button newButton;
 
 
+
     public String APIKey = "5805dd66a332dedde152edfe026bb26f";
     private static final String site = "https://api.openweathermap.org/data/2.5/weather?q=Kazan&units=metric&appid=5805dd66a332dedde152edfe026bb26f&lang=ru";
 
@@ -89,7 +90,7 @@ public class HomeFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_home, container, false);
     }
 
-    @SuppressLint("SetTextI18n")
+    @SuppressLint({"SetTextI18n", "CutPasteId"})
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -126,25 +127,9 @@ public class HomeFragment extends Fragment {
 
 
 
-
-        // Инициализируем контейнер
-        container = view.findViewById(R.id.view_mode);
-        if (container == null) {
-            Log.e(TAG, "Container not found in layout!");
-            return;
-        }
-
         btn_add = view.findViewById(R.id.btn_add);
         btn_add.setOnClickListener(v -> showAddButtonDialog());
 
-        view.setOnTouchListener((v, event) -> {
-            if (isWaitingForPosition && event.getAction() == MotionEvent.ACTION_DOWN) {
-                placeButtonAtPosition(event.getX(), event.getY());
-                isWaitingForPosition = false;
-                return true;
-            }
-            return false;
-        });
 
 
         // ___________________________
@@ -176,30 +161,46 @@ public class HomeFragment extends Fragment {
 
     }
 
+    public void addButton(String name, String size) {
+        // Здесь вы можете добавить логику для добавления кнопки в ваш ViewPager
+        // Например, передать данные во ViewPagerAdapter и обновить адаптер
+    }
     private void showAddButtonDialog() {
-        Dialog dialog = new Dialog(requireContext());
-        dialog.setContentView(R.layout.dialog_add_object);
+//        Dialog dialog = new Dialog(requireContext());
+//        dialog.setContentView(R.layout.dialog_add_object);
+//
+//        EditText editName = dialog.findViewById(R.id.etObjectName);
+//        EditText editDevices = dialog.findViewById(R.id.spinnerDevices);
+//        EditText editSize = dialog.findViewById(R.id.etWidth);
+//        Button btnSave = dialog.findViewById(R.id.btnConfirm);
+//        Button btnCancel = dialog.findViewById(R.id.btnCancel);
+//
+//        btnSave.setOnClickListener(v -> {
+//            String name = editName.getText().toString();
+//            String devices = editDevices.getText().toString();
+//            String sizeStr = editSize.getText().toString();
+//
+//            if (!name.isEmpty() && !sizeStr.isEmpty()) {
+//                createNewButton(name, sizeStr);
+//                isWaitingForPosition = true;
+//                dialog.dismiss();
+//            }
+//        });
+//
+//        btnCancel.setOnClickListener(v -> dialog.dismiss());
+//        dialog.show();
 
-        EditText editName = dialog.findViewById(R.id.etObjectName);
-        EditText editDevices = dialog.findViewById(R.id.spinnerDevices);
-        EditText editSize = dialog.findViewById(R.id.etWidth);
-        Button btnSave = dialog.findViewById(R.id.btnConfirm);
-        Button btnCancel = dialog.findViewById(R.id.btnCancel);
 
-        btnSave.setOnClickListener(v -> {
-            String name = editName.getText().toString();
-            String devices = editDevices.getText().toString();
-            String sizeStr = editSize.getText().toString();
-
-            if (!name.isEmpty() && !sizeStr.isEmpty()) {
-                createNewButton(name, sizeStr);
-                isWaitingForPosition = true;
-                dialog.dismiss();
+        DialogAddObject dialog = new DialogAddObject();
+        dialog.setOnObjectAddedListener((name, sizeX, sizeY) -> {
+            // Передаём данные в первый фрагмент (позиция 0)
+            Fragment firstFragment = pagerAdapter.getFragment(0);
+            if (firstFragment instanceof FirstModeFragment) {
+                ((FirstModeFragment) firstFragment).addButton(name, sizeX, sizeY);
             }
         });
+        dialog.show(getParentFragmentManager(), "AddObjectDialog");
 
-        btnCancel.setOnClickListener(v -> dialog.dismiss());
-        dialog.show();
     }
 
     private void createNewButton(String name, String sizeStr) {
