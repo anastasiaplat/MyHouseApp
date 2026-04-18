@@ -58,10 +58,7 @@ public class HomeFragment extends Fragment {
     ViewPager2 viewPager2;
     ViewPagerAdapter viewPagerAdapter;
     Button btnAdd, btn_edit;
-    private boolean isWaitingForPosition = false;
-    private ConstraintLayout container;
     private static final String TAG = "MainFragment";
-    Button newButton;
 
 
 
@@ -88,17 +85,7 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_home, container, false);
-
-        viewPager2 = view.findViewById(R.id.view_mode);
-        btnAdd = view.findViewById(R.id.btn_add);
-
-        viewPagerAdapter = new ViewPagerAdapter(this);
-        viewPager2.setAdapter(viewPagerAdapter);
-
-        btnAdd.setOnClickListener(v -> addButtonToCurrentTab());
-
-        return view;
+        return inflater.inflate(R.layout.fragment_home, container, false);
     }
 
     @SuppressLint({"SetTextI18n", "CutPasteId"})
@@ -139,6 +126,7 @@ public class HomeFragment extends Fragment {
 
 
 
+        btnAdd  = view.findViewById(R.id.btn_add);
 
 
         // ___________________________
@@ -241,20 +229,20 @@ public class HomeFragment extends Fragment {
         }
     }
 
-    private void placeButtonAtPosition(float x, float y) {
-        // Проверяем, что контейнер инициализирован
-        if (container == null) {
-            return;
-        }
-
-        if (newButton != null) {
-            FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) newButton.getLayoutParams();
-            params.leftMargin = (int) x;
-            params.topMargin = (int) y;
-            container.addView(newButton);
-            newButton = null;
-        }
-    }
+//    private void placeButtonAtPosition(float x, float y) {
+//        // Проверяем, что контейнер инициализирован
+//        if (container == null) {
+//            return;
+//        }
+//
+//        if (newButton != null) {
+//            FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) newButton.getLayoutParams();
+//            params.leftMargin = (int) x;
+//            params.topMargin = (int) y;
+//            container.addView(newButton);
+//            newButton = null;
+//        }
+//    }
 
 }
 

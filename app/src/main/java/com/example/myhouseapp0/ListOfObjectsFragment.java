@@ -1,5 +1,6 @@
 package com.example.myhouseapp0;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -17,6 +18,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
+import com.example.myhouseapp0.databinding.FragmentListOfObjectsBinding;
 import com.example.myhouseapp0.rooms.BathroomFragment;
 import com.example.myhouseapp0.rooms.BedroomFragment;
 import com.example.myhouseapp0.rooms.CarRoomFragment;
@@ -30,41 +32,32 @@ import com.example.myhouseapp0.rooms.YardFragment;
 public class ListOfObjectsFragment extends Fragment {
 
 
-    private int pageNumber;
     private ConstraintLayout constraintLayout;
-    private int buttonCounter = 1;
+    private FragmentListOfObjectsBinding binding;
+    private int buttonCounter = 0;
     private Button createButton;
     private int lastButtonId = -1; // ID последней созданной кнопки
-    public static ListOfObjectsFragment newInstance(int pageNumber) {
-        ListOfObjectsFragment fragment = new ListOfObjectsFragment();
-        Bundle args = new Bundle();
-        args.putInt("page_number", pageNumber);
-        fragment.setArguments(args);
-        return fragment;
-    }
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            pageNumber = getArguments().getInt("page_number");
-        }
-    }
+//    public static ListOfObjectsFragment newInstance(int tabNumber) {
+//        ListOfObjectsFragment fragment = new ListOfObjectsFragment();
+//        Bundle args = new Bundle();
+//        args.putInt("tabNumber", tabNumber);
+//        fragment.setArguments(args);
+//        return fragment;
+//    }
+//    @Override
+//    public void onCreate(@Nullable Bundle savedInstanceState) {
+//        super.onCreate(savedInstanceState);
+//        if (getArguments() != null) {
+//            pageNumber = getArguments().getInt("page_number");
+//        }
+//    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
 
-        int tabNumber = getArguments().getInt("tab_number");
-        int layoutResId = tabNumber == 1 ? R.layout.fragment_list_of_objects : R.layout.fragment_interactive_map;
-
-        View view = inflater.inflate(layoutResId, container, false);
-        constraintLayout = view.findViewById(R.id.constraint_layout);
-
-        // Сохраняем ID корневого элемента как отправную точку
-        lastButtonId = constraintLayout.getId();
-
-        return view;
-
+        binding = FragmentListOfObjectsBinding.inflate(inflater, container, false);
+        return binding.getRoot();
 
     }
     @Override
@@ -104,59 +97,47 @@ public class ListOfObjectsFragment extends Fragment {
     }
 
     // Метод для создания новой кнопки в ConstraintLayout
+    @SuppressLint("SetTextI18n")
     public void createNewButton() {
-        Button newButton = new Button(getActivity());
-        int currentTab = getArguments().getInt("tab_number");
-        newButton.setText("Кнопка на Tab" + currentTab + " #" + buttonCounter);
-
-        int newButtonId = View.generateViewId();
-        newButton.setId(newButtonId);
-
-        ConstraintLayout.LayoutParams params = new ConstraintLayout.LayoutParams(
-                ConstraintLayout.LayoutParams.WRAP_CONTENT,
-                ConstraintLayout.LayoutParams.WRAP_CONTENT
-        );
-        params.setMargins(16, 16, 16, 16);
-        newButton.setLayoutParams(params);
-
-        constraintLayout.addView(newButton);
-
-        // Позиционируем новую кнопку
-        ConstraintSet constraintSet = new ConstraintSet();
-        constraintSet.clone(constraintLayout);
-
-        if (buttonCounter == 1) {
-            // Первая кнопка — позиционируем от верха контейнера
-            constraintSet.connect(
-                    newButtonId, ConstraintSet.TOP,
-                    ConstraintSet.PARENT_ID, ConstraintSet.TOP,
-                    16
-            );
-        } else {
-            // Последующие кнопки — под предыдущей
-            constraintSet.connect(
-                    newButtonId, ConstraintSet.TOP,
-                    lastButtonId, ConstraintSet.BOTTOM,
-                    16
-            );
-        }
-
-        // Центрируем по горизонтали
-        constraintSet.connect(
-                newButtonId, ConstraintSet.START,
-                ConstraintSet.PARENT_ID, ConstraintSet.START,
-                16
-        );
-        constraintSet.connect(
-                newButtonId, ConstraintSet.END,
-                ConstraintSet.PARENT_ID, ConstraintSet.END,
-                16
-        );
-
-        constraintSet.applyTo(constraintLayout);
-
-        lastButtonId = newButtonId;
         buttonCounter++;
+
+        Button newButton = new Button(requireContext());
+        newButton.setText("Новая кнопка " + buttonCounter);
+        newButton.setId(View.generateViewId());
+
+        // Добавляем кнопку в контейнер
+        binding.constraintLayout.addView(newButton);
+
+        // Настраиваем ограничения через ConstraintSet
+        ConstraintSet constraintSet = new ConstraintSet();
+        constraintSet.clone(binding.constraintLayout);
+
+        int margin = 24; // Отступ в dp
+
+        // Подключаем к верху и левому краю родителя
+        constraintSet.connect(
+                newButton.getId(),
+                ConstraintSet.TOP,
+                ConstraintSet.PARENT_ID,
+                ConstraintSet.TOP,
+                margin
+        );
+        constraintSet.connect(
+                newButton.getId(),
+                ConstraintSet.START,
+                ConstraintSet.PARENT_ID,
+                ConstraintSet.START,
+                margin
+        );
+
+        // Применяем ограничения
+        constraintSet.applyTo(binding.constraintLayout);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
     }
 
 }
