@@ -43,6 +43,7 @@ import org.json.JSONObject;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.Locale;
 
 @RequiresApi(api = Build.VERSION_CODES.O)
@@ -56,7 +57,7 @@ public class HomeFragment extends Fragment {
     TabLayout tabLayout;
     ViewPager2 viewPager2;
     ViewPagerAdapter viewPagerAdapter;
-    Button btn_add, btn_edit;
+    Button btnAdd, btn_edit;
     private boolean isWaitingForPosition = false;
     private ConstraintLayout container;
     private static final String TAG = "MainFragment";
@@ -87,7 +88,17 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_home, container, false);
+        View view = inflater.inflate(R.layout.fragment_home, container, false);
+
+        viewPager2 = view.findViewById(R.id.view_mode);
+        btnAdd = view.findViewById(R.id.btn_add);
+
+        viewPagerAdapter = new ViewPagerAdapter(this);
+        viewPager2.setAdapter(viewPagerAdapter);
+
+        btnAdd.setOnClickListener(v -> addButtonToCurrentTab());
+
+        return view;
     }
 
     @SuppressLint({"SetTextI18n", "CutPasteId"})
@@ -127,8 +138,6 @@ public class HomeFragment extends Fragment {
 
 
 
-        btn_add = view.findViewById(R.id.btn_add);
-        btn_add.setOnClickListener(v -> showAddButtonDialog());
 
 
 
@@ -161,6 +170,16 @@ public class HomeFragment extends Fragment {
 
     }
 
+
+    private void addButtonToCurrentTab() {
+        int currentPosition = viewPager2.getCurrentItem();
+        Fragment currentFragment = viewPagerAdapter.createFragment(currentPosition);
+
+        if (currentFragment instanceof ListOfObjectsFragment) {
+            ((ListOfObjectsFragment) currentFragment).createNewButton();
+        }
+    }
+
     public void addButton(String name, String size) {
         // Здесь вы можете добавить логику для добавления кнопки в ваш ViewPager
         // Например, передать данные во ViewPagerAdapter и обновить адаптер
@@ -191,15 +210,15 @@ public class HomeFragment extends Fragment {
 //        dialog.show();
 
 
-        DialogAddObject dialog = new DialogAddObject();
-        dialog.setOnObjectAddedListener((name, sizeX, sizeY) -> {
-            // Передаём данные в первый фрагмент (позиция 0)
-            Fragment firstFragment = pagerAdapter.getFragment(0);
-            if (firstFragment instanceof FirstModeFragment) {
-                ((FirstModeFragment) firstFragment).addButton(name, sizeX, sizeY);
-            }
-        });
-        dialog.show(getParentFragmentManager(), "AddObjectDialog");
+//        DialogAddObject dialog = new DialogAddObject();
+//        dialog.setOnObjectAddedListener((name, sizeX, sizeY) -> {
+//            // Передаём данные в первый фрагмент (позиция 0)
+//            Fragment firstFragment = pagerAdapter.getFragment(0);
+//            if (firstFragment instanceof FirstModeFragment) {
+//                ((FirstModeFragment) firstFragment).addButton(name, sizeX, sizeY);
+//            }
+//        });
+//        dialog.show(getParentFragmentManager(), "AddObjectDialog");
 
     }
 
