@@ -57,8 +57,9 @@ public class HomeFragment extends Fragment {
     TabLayout tabLayout;
     ViewPager2 viewPager2;
     ViewPagerAdapter viewPagerAdapter;
-    Button btnAdd, btn_edit;
-    private static final String TAG = "MainFragment";
+    Button btnAdd;
+//    , btn_edit;
+//    private static final String TAG = "MainFragment";
 
 
 
@@ -128,6 +129,7 @@ public class HomeFragment extends Fragment {
 
         btnAdd  = view.findViewById(R.id.btn_add);
 
+        btnAdd.setOnClickListener(v -> showAddButtonDialog());
 
         // ___________________________
 
@@ -136,9 +138,7 @@ public class HomeFragment extends Fragment {
         TextView temptext = view.findViewById(R.id.textview_temp);
         TextView datetext = view.findViewById(R.id.textview_date);
         datetext.setText(day + " " + month + " " + year);
-
         requestQueue = Volley.newRequestQueue(requireContext());
-
         // в случае возникновеня ошибки
         final JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, //GET - API-запрос для получение данных
                 site, null, response -> {
@@ -146,56 +146,59 @@ public class HomeFragment extends Fragment {
                         JSONObject weather = response.getJSONObject("main"); //получаем JSON-обьекты main и wind (в фигурных скобках - объекты, в квадратных - массивы (JSONArray).
                         temp = weather.getDouble("temp");
                         // присваеваем переменным соответствующие значения из API
-
                         temptext.setText(temp + "°");
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
                 }, Throwable::printStackTrace);
         requestQueue.add(request);
-
-
-
     }
 
+//    private void addButtonToCurrentTab() {
+//        int currentPosition = viewPager2.getCurrentItem();
+//        Fragment currentFragment = viewPagerAdapter.createFragment(currentPosition);
+//
+//        if (currentFragment instanceof ListOfObjectsFragment) {
+//            ((ListOfObjectsFragment) currentFragment).createNewButton();
+//        }
+//    }
 
-    private void addButtonToCurrentTab() {
-        int currentPosition = viewPager2.getCurrentItem();
-        Fragment currentFragment = viewPagerAdapter.createFragment(currentPosition);
-
-        if (currentFragment instanceof ListOfObjectsFragment) {
-            ((ListOfObjectsFragment) currentFragment).createNewButton();
-        }
-    }
-
-    public void addButton(String name, String size) {
-        // Здесь вы можете добавить логику для добавления кнопки в ваш ViewPager
-        // Например, передать данные во ViewPagerAdapter и обновить адаптер
-    }
+//    public void addButton(String name, String size) {
+//        // Здесь вы можете добавить логику для добавления кнопки в ваш ViewPager
+//        // Например, передать данные во ViewPagerAdapter и обновить адаптер
+//    }
     private void showAddButtonDialog() {
-//        Dialog dialog = new Dialog(requireContext());
-//        dialog.setContentView(R.layout.dialog_add_object);
-//
-//        EditText editName = dialog.findViewById(R.id.etObjectName);
-//        EditText editDevices = dialog.findViewById(R.id.spinnerDevices);
-//        EditText editSize = dialog.findViewById(R.id.etWidth);
-//        Button btnSave = dialog.findViewById(R.id.btnConfirm);
-//        Button btnCancel = dialog.findViewById(R.id.btnCancel);
-//
-//        btnSave.setOnClickListener(v -> {
-//            String name = editName.getText().toString();
-//            String devices = editDevices.getText().toString();
-//            String sizeStr = editSize.getText().toString();
-//
+        Dialog dialog = new Dialog(requireContext());
+        dialog.setContentView(R.layout.dialog_add_object);
+        dialog.setTitle("Добавление объекта");
+
+        EditText editName = dialog.findViewById(R.id.etObjectName);
+        EditText editDevices = dialog.findViewById(R.id.spinnerDevices);
+        EditText editWidth = dialog.findViewById(R.id.etWidth);
+        EditText editLength = dialog.findViewById(R.id.etLength);
+        Button btnSave = dialog.findViewById(R.id.btnConfirm);
+        Button btnCancel = dialog.findViewById(R.id.btnCancel);
+
+        btnSave.setOnClickListener(v -> {
+            String name = editName.getText().toString();
+            String devices = editDevices.getText().toString();
+            Integer sizeX = Integer.parseInt(String.valueOf(editWidth.getText()));
+            Integer sizeY = Integer.parseInt(String.valueOf(editLength.getText()));
+
 //            if (!name.isEmpty() && !sizeStr.isEmpty()) {
 //                createNewButton(name, sizeStr);
 //                isWaitingForPosition = true;
 //                dialog.dismiss();
 //            }
-//        });
-//
-//        btnCancel.setOnClickListener(v -> dialog.dismiss());
-//        dialog.show();
+            if (!name.isEmpty() && !(sizeX == null) && !(sizeY == null)) {
+                // Передаём имя во фрагменты
+                passNameToCurrentFragment(name, sizeX, sizeY);
+                dialog.dismiss();
+            }
+        });
+
+        btnCancel.setOnClickListener(v -> dialog.dismiss());
+        dialog.show();
 
 
 //        DialogAddObject dialog = new DialogAddObject();
@@ -210,24 +213,33 @@ public class HomeFragment extends Fragment {
 
     }
 
-    private void createNewButton(String name, String sizeStr) {
-        Button newButton = new Button(getActivity());
-        newButton.setText(name);
+    private void passNameToCurrentFragment(String name, int sizeX, int sizeY) {
+        int currentPosition = viewPager2.getCurrentItem();
+        Fragment currentFragment = getChildFragmentManager().findFragmentByTag(
+                "android:switcher:" + viewPager2.getId() + ":" + currentPosition);
 
-        // Парсим размеры из строки "100x50"
-        try {
-            String[] sizes = sizeStr.split("x");
-            int width = Integer.parseInt(sizes[0]);
-            int height = Integer.parseInt(sizes[1]);
-            newButton.setLayoutParams(new FrameLayout.LayoutParams(width, height));
-        } catch (Exception e) {
-            // Если парсинг не удался, используем стандартные размеры
-            newButton.setLayoutParams(new FrameLayout.LayoutParams(
-                    FrameLayout.LayoutParams.WRAP_CONTENT,
-                    FrameLayout.LayoutParams.WRAP_CONTENT
-            ));
+        if (currentFragment instanceof DialogAddObject.OnObjectAddedListener) {
+            ((DialogAddObject.OnObjectAddedListener) currentFragment).onObjectAdded(name, sizeX, sizeY);
         }
     }
+//    private void createNewButton(String name, String sizeStr) {
+//        Button newButton = new Button(getActivity());
+//        newButton.setText(name);
+//
+//        // Парсим размеры из строки "100x50"
+//        try {
+//            String[] sizes = sizeStr.split("x");
+//            int width = Integer.parseInt(sizes[0]);
+//            int height = Integer.parseInt(sizes[1]);
+//            newButton.setLayoutParams(new FrameLayout.LayoutParams(width, height));
+//        } catch (Exception e) {
+//            // Если парсинг не удался, используем стандартные размеры
+//            newButton.setLayoutParams(new FrameLayout.LayoutParams(
+//                    FrameLayout.LayoutParams.WRAP_CONTENT,
+//                    FrameLayout.LayoutParams.WRAP_CONTENT
+//            ));
+//        }
+//    }
 
 //    private void placeButtonAtPosition(float x, float y) {
 //        // Проверяем, что контейнер инициализирован

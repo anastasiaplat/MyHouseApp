@@ -29,14 +29,14 @@ import com.example.myhouseapp0.rooms.StoreroomFragment;
 import com.example.myhouseapp0.rooms.YardFragment;
 
 
-public class ListOfObjectsFragment extends Fragment {
+public class ListOfObjectsFragment extends Fragment implements OnObjectAddedListener {
 
 
     private ConstraintLayout constraintLayout;
-    private FragmentListOfObjectsBinding binding;
-    private int buttonCounter = 0;
-    private Button createButton;
-    private int lastButtonId = -1; // ID последней созданной кнопки
+//    private FragmentListOfObjectsBinding binding;
+//    private int buttonCounter = 0;
+//    private Button createButton;
+//    private int lastButtonId = -1; // ID последней созданной кнопки
 //    public static ListOfObjectsFragment newInstance(int tabNumber) {
 //        ListOfObjectsFragment fragment = new ListOfObjectsFragment();
 //        Bundle args = new Bundle();
@@ -56,9 +56,22 @@ public class ListOfObjectsFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
 
-        binding = FragmentListOfObjectsBinding.inflate(inflater, container, false);
-        return binding.getRoot();
+        View view = inflater.inflate(R.layout.fragment_list_of_objects, container, false);
+        constraintLayout = view.findViewById(R.id.constraint_layout);
+        return view;
 
+    }
+    public void onObjectAdded(String objectName, Integer sizeX, Integer sizeY) {
+        addButtonToList(objectName);
+    }
+    private void addButtonToList(String name) {
+        Button newButton = new Button(requireContext());
+        newButton.setText(name);
+        newButton.setLayoutParams(new ConstraintLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+        ));
+        constraintLayout.addView(newButton);
     }
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -97,47 +110,47 @@ public class ListOfObjectsFragment extends Fragment {
     }
 
     // Метод для создания новой кнопки в ConstraintLayout
-    @SuppressLint("SetTextI18n")
-    public void createNewButton() {
-        buttonCounter++;
-
-        Button newButton = new Button(requireContext());
-        newButton.setText("Новая кнопка " + buttonCounter);
-        newButton.setId(View.generateViewId());
-
-        // Добавляем кнопку в контейнер
-        binding.constraintLayout.addView(newButton);
-
-        // Настраиваем ограничения через ConstraintSet
-        ConstraintSet constraintSet = new ConstraintSet();
-        constraintSet.clone(binding.constraintLayout);
-
-        int margin = 24; // Отступ в dp
-
-        // Подключаем к верху и левому краю родителя
-        constraintSet.connect(
-                newButton.getId(),
-                ConstraintSet.TOP,
-                ConstraintSet.PARENT_ID,
-                ConstraintSet.TOP,
-                margin
-        );
-        constraintSet.connect(
-                newButton.getId(),
-                ConstraintSet.START,
-                ConstraintSet.PARENT_ID,
-                ConstraintSet.START,
-                margin
-        );
-
-        // Применяем ограничения
-        constraintSet.applyTo(binding.constraintLayout);
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        binding = null;
-    }
+//    @SuppressLint("SetTextI18n")
+//    public void createNewButton() {
+//        buttonCounter++;
+//
+//        Button newButton = new Button(requireContext());
+//        newButton.setText("Новая кнопка " + buttonCounter);
+//        newButton.setId(View.generateViewId());
+//
+//        // Добавляем кнопку в контейнер
+//        binding.constraintLayout.addView(newButton);
+//
+//        // Настраиваем ограничения через ConstraintSet
+//        ConstraintSet constraintSet = new ConstraintSet();
+//        constraintSet.clone(binding.constraintLayout);
+//
+//        int margin = 24; // Отступ в dp
+//
+//        // Подключаем к верху и левому краю родителя
+//        constraintSet.connect(
+//                newButton.getId(),
+//                ConstraintSet.TOP,
+//                ConstraintSet.PARENT_ID,
+//                ConstraintSet.TOP,
+//                margin
+//        );
+//        constraintSet.connect(
+//                newButton.getId(),
+//                ConstraintSet.START,
+//                ConstraintSet.PARENT_ID,
+//                ConstraintSet.START,
+//                margin
+//        );
+//
+//        // Применяем ограничения
+//        constraintSet.applyTo(binding.constraintLayout);
+//    }
+//
+//    @Override
+//    public void onDestroyView() {
+//        super.onDestroyView();
+//        binding = null;
+//    }
 
 }
