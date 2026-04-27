@@ -22,6 +22,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -173,7 +174,7 @@ public class HomeFragment extends Fragment {
         dialog.setTitle("Добавление объекта");
 
         EditText editName = dialog.findViewById(R.id.etObjectName);
-        EditText editDevices = dialog.findViewById(R.id.spinnerDevices);
+        Spinner editDevices = dialog.findViewById(R.id.spinnerDevices);
         EditText editWidth = dialog.findViewById(R.id.etWidth);
         EditText editLength = dialog.findViewById(R.id.etLength);
         Button btnSave = dialog.findViewById(R.id.btnConfirm);
@@ -181,16 +182,23 @@ public class HomeFragment extends Fragment {
 
         btnSave.setOnClickListener(v -> {
             String name = editName.getText().toString();
-            String devices = editDevices.getText().toString();
-            Integer sizeX = Integer.parseInt(String.valueOf(editWidth.getText()));
-            Integer sizeY = Integer.parseInt(String.valueOf(editLength.getText()));
+//            String devices = editDevices.getText().toString();
+//            Integer sizeX = Integer.parseInt(String.valueOf(editWidth.getText()));
+//            Integer sizeY = Integer.parseInt(String.valueOf(editLength.getText()));
+            int sizeX = 50;
+            int sizeY = 50;
 
 //            if (!name.isEmpty() && !sizeStr.isEmpty()) {
 //                createNewButton(name, sizeStr);
 //                isWaitingForPosition = true;
 //                dialog.dismiss();
 //            }
-            if (!name.isEmpty() && !(sizeX == null) && !(sizeY == null)) {
+//            if (!name.isEmpty() && !(sizeX == null) && !(sizeY == null)) {
+//                // Передаём имя во фрагменты
+//                passNameToCurrentFragment(name, sizeX, sizeY);
+//                dialog.dismiss();
+//            }
+            if (!name.isEmpty()) {
                 // Передаём имя во фрагменты
                 passNameToCurrentFragment(name, sizeX, sizeY);
                 dialog.dismiss();

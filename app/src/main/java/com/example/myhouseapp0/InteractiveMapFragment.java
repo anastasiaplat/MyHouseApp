@@ -22,11 +22,6 @@ public class InteractiveMapFragment extends Fragment implements OnObjectAddedLis
         return inflater.inflate(R.layout.fragment_interactive_map, container, false);
     }
 
-    @Override
-    public void onObjectAdded(String objectName, Integer sizeX, Integer sizeY) {
-
-        addButtonToMap(objectName);
-    }
     private void addButtonToMap(String name) {
         // Создаём новую кнопку
         Button newButton;
@@ -63,5 +58,10 @@ public class InteractiveMapFragment extends Fragment implements OnObjectAddedLis
     private int dpToPx(int dp) {
         float density = requireContext().getResources().getDisplayMetrics().density;
         return Math.round(dp * density);
+    }
+
+    @Override
+    public void onObjectAdded(String objectName, Integer sizeX, Integer sizeY) {
+        addButtonToMap(objectName);
     }
 }
