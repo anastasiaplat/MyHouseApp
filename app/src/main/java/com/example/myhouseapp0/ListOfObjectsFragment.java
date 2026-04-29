@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.example.myhouseapp0.databinding.FragmentListOfObjectsBinding;
 import com.example.myhouseapp0.rooms.BathroomFragment;
@@ -34,7 +35,7 @@ public class ListOfObjectsFragment extends Fragment implements OnObjectAddedList
 
     private ConstraintLayout constraintLayout;
 //    private FragmentListOfObjectsBinding binding;
-//    private int buttonCounter = 0;
+    private int buttonCounter = 0;
 //    private Button createButton;
 //    private int lastButtonId = -1; // ID последней созданной кнопки
 //    public static ListOfObjectsFragment newInstance(int tabNumber) {
@@ -62,16 +63,45 @@ public class ListOfObjectsFragment extends Fragment implements OnObjectAddedList
 
     }
     public void onObjectAdded(String objectName, Integer sizeX, Integer sizeY) {
-        addButtonToList(objectName);
+//        addButtonToList(objectName);
+        Toast.makeText(requireContext(), "testing", Toast.LENGTH_SHORT).show();
+
     }
+    @SuppressLint("ResourceAsColor")
     private void addButtonToList(String name) {
-        Button newButton = new Button(requireContext());
-        newButton.setText(name);
-        newButton.setLayoutParams(new ConstraintLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
-        ));
-        constraintLayout.addView(newButton);
+//        Button newButton = new Button(requireContext());
+//        newButton.setId(View.generateViewId());
+//        newButton.setText(name);
+//        newButton.setWidth(330);
+//        newButton.setHeight(65);
+//        newButton.setBackgroundResource(R.drawable.btn_rectangle);
+//        newButton.setTextColor(R.color.navbar);
+//        newButton.setTextSize(18);
+////        newButton.setLayoutParams(new ConstraintLayout.LayoutParams(
+////                ViewGroup.LayoutParams.MATCH_PARENT,
+////                ViewGroup.LayoutParams.WRAP_CONTENT
+////        ));
+//        constraintLayout.addView(newButton);
+//
+//        // Позиционируем через ConstraintSet
+//        ConstraintSet constraintSet = new ConstraintSet();
+//        constraintSet.clone(constraintLayout); // копируем текущие ограничения
+//        int parentId = ConstraintLayout.LayoutParams.PARENT_ID;
+//        int newButtonId = newButton.getId();
+//        // Горизонтальное позиционирование: левая граница кнопки к левой границе родителя
+//        constraintSet.connect(
+//                newButtonId, ConstraintSet.START,
+//                parentId, ConstraintSet.START, 32
+//        );
+//        // Вертикальное позиционирование: верхняя граница кнопки относительно верха родителя
+//        // Смещение зависит от счётчика — каждая следующая кнопка ниже
+//        constraintSet.connect(
+//                newButtonId, ConstraintSet.TOP,
+//                parentId, ConstraintSet.TOP, 100 + buttonCounter * 80
+//        );
+//        // Применяем ограничения
+//        constraintSet.applyTo(constraintLayout);
+
     }
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {

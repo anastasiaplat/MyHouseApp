@@ -24,6 +24,7 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -173,6 +174,7 @@ public class HomeFragment extends Fragment {
         dialog.setContentView(R.layout.dialog_add_object);
         dialog.setTitle("Добавление объекта");
 
+
         EditText editName = dialog.findViewById(R.id.etObjectName);
         Spinner editDevices = dialog.findViewById(R.id.spinnerDevices);
         EditText editWidth = dialog.findViewById(R.id.etWidth);
@@ -198,11 +200,8 @@ public class HomeFragment extends Fragment {
 //                passNameToCurrentFragment(name, sizeX, sizeY);
 //                dialog.dismiss();
 //            }
-            if (!name.isEmpty()) {
-                // Передаём имя во фрагменты
-                passNameToCurrentFragment(name, sizeX, sizeY);
-                dialog.dismiss();
-            }
+            passNameToCurrentFragment(name, sizeX, sizeY);
+            dialog.dismiss();
         });
 
         btnCancel.setOnClickListener(v -> dialog.dismiss());
@@ -222,13 +221,44 @@ public class HomeFragment extends Fragment {
     }
 
     private void passNameToCurrentFragment(String name, int sizeX, int sizeY) {
-        int currentPosition = viewPager2.getCurrentItem();
-        Fragment currentFragment = getChildFragmentManager().findFragmentByTag(
-                "android:switcher:" + viewPager2.getId() + ":" + currentPosition);
 
-        if (currentFragment instanceof DialogAddObject.OnObjectAddedListener) {
-            ((DialogAddObject.OnObjectAddedListener) currentFragment).onObjectAdded(name, sizeX, sizeY);
+//        Fragment currentFragment = getChildFragmentManager().findFragmentByTag(
+//                "android:switcher:" + viewPager2.getId() + ":" + "0");
+
+         // 3. Проверяем количество фрагментов
+        int itemCount = viewPager2.getAdapter().getItemCount();
+        Log.d("Fragment", "Количество фрагментов во ViewPager2: " + itemCount);
+
+        // 4. Формируем тег и логируем его
+        int viewPagerId = viewPager2.getId();
+        String tag = "android:switcher:" + viewPagerId + ":0";
+        Log.d("Fragment", "Ищем фрагмент с тегом: " + tag);
+
+        // 5. Ищем фрагмент
+        Fragment currentFragment = getChildFragmentManager().findFragmentByTag(tag);
+        if (currentFragment == null) {
+            Log.w("Fragment", "Фрагмент не найден (null)");
+        } else {
+            Log.d("Fragment", "Фрагмент найден: " + currentFragment.getClass().getSimpleName());
         }
+
+
+
+//        if (currentFragment instanceof DialogAddObject.OnObjectAddedListener) {
+//            ((DialogAddObject.OnObjectAddedListener) currentFragment).onObjectAdded(name, sizeX, sizeY);
+//        }
+//        if (currentFragment != null) {
+//            if (currentFragment instanceof OnObjectAddedListener) {
+//                Toast.makeText(requireContext(), "object adding is going", Toast.LENGTH_SHORT).show();
+//                                ((OnObjectAddedListener) currentFragment).onObjectAdded(name, sizeX, sizeY);
+//            } else {
+//                // Логика на случай, если фрагмент найден, но не реализует интерфейс
+//                Toast.makeText(requireContext(), "кущий фрагмент не реализует OnObjectAddedListener", Toast.LENGTH_SHORT).show();
+//            }
+//        } else {
+//            // Логика на случай, если фрагмент не найден
+//            Toast.makeText(requireContext(), "Не удалось найти текущий фрагмент во ViewPager2", Toast.LENGTH_SHORT).show();
+//        }
     }
 //    private void createNewButton(String name, String sizeStr) {
 //        Button newButton = new Button(getActivity());

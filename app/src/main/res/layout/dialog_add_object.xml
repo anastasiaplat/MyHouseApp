@@ -5,7 +5,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+    >
 
     <TextView
         android:id="@+id/textView"
@@ -73,21 +74,22 @@
         android:id="@+id/etWidth"
         android:layout_width="111dp"
         android:layout_height="50dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="24dp"
         android:layout_marginEnd="92dp"
         android:layout_weight="1"
         android:hint="Ширина"
         android:inputType="numberDecimal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/etLength"
         app:layout_constraintTop_toBottomOf="@+id/textView4" />
 
     <EditText
         android:id="@+id/etLength"
         android:layout_width="108dp"
         android:layout_height="50dp"
-        android:layout_marginStart="48dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginStart="56dp"
+        android:layout_marginTop="24dp"
         android:layout_weight="1"
         android:hint="Длина"
         android:inputType="numberDecimal"
@@ -99,22 +101,22 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end"
-        android:text="Сохранить"
         android:fontFamily="sans-serif-medium"
+        android:text="Сохранить"
         android:textColor="@color/navbar"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.142"
+        app:layout_constraintHorizontal_bias="0.358"
         app:layout_constraintStart_toEndOf="@+id/btnCancel"
         app:layout_constraintTop_toBottomOf="@+id/etWidth"
-        app:layout_constraintVertical_bias="0.156" />
+        app:layout_constraintVertical_bias="0.166" />
 
     <Button
         android:id="@+id/btnCancel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end"
-        android:layout_marginStart="72dp"
+        android:layout_marginStart="56dp"
         android:backgroundTint="@color/gray"
         android:fontFamily="sans-serif-medium"
         android:text="Отменить"
@@ -122,7 +124,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/etLength"
-        app:layout_constraintVertical_bias="0.167" />
+        app:layout_constraintVertical_bias="0.166" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
