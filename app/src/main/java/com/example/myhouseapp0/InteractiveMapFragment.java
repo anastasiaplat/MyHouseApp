@@ -1,7 +1,9 @@
 package com.example.myhouseapp0;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -16,17 +18,25 @@ public class InteractiveMapFragment extends Fragment implements OnObjectAddedLis
     private int buttonCounter = 0; // счётчик для позиционирования кнопок
     private static final int MARGIN_DP = 16; // отступ между кнопками в dp
 
+        @SuppressLint("MissingInflatedId")
         @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_interactive_map, container, false);
+        View view = inflater.inflate(R.layout.fragment_interactive_map, container, false);
+        relativeLayout = view.findViewById(R.id.map_view);
+        return view;
     }
 
     private void addButtonToMap(String name) {
         // Создаём новую кнопку
         Button newButton;
         newButton = new Button(requireContext());
+        newButton.setId(View.generateViewId());
         newButton.setText(name);
+        newButton.setAllCaps(false);
+        newButton.setBackgroundResource(R.drawable.btn_rectangle);
+        newButton.setTextColor(ContextCompat.getColor(requireContext(), R.color.navbar));
+        newButton.setTextSize(18);
 
         // Задаём фиксированный размер (квадратная кнопка)
         int buttonSize = dpToPx(80); // размер 80dp

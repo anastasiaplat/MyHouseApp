@@ -169,6 +169,28 @@ public class HomeFragment extends Fragment {
 //        // Здесь вы можете добавить логику для добавления кнопки в ваш ViewPager
 //        // Например, передать данные во ViewPagerAdapter и обновить адаптер
 //    }
+
+
+    // Получить ListOfObjectsFragment
+    public ListOfObjectsFragment getListOfObjectsFragment() {
+        Fragment fragment = viewPagerAdapter.getFragment(0); // позиция 0
+        if (fragment instanceof ListOfObjectsFragment) {
+            return (ListOfObjectsFragment) fragment;
+        }
+        return null;
+    }
+
+    // Получить InteractiveMapFragment
+    public InteractiveMapFragment getInteractiveMapFragment() {
+        Fragment fragment = viewPagerAdapter.getFragment(1); // позиция 1
+        if (fragment instanceof InteractiveMapFragment) {
+            return (InteractiveMapFragment) fragment;
+        }
+        return null;
+    }
+
+
+
     private void showAddButtonDialog() {
         Dialog dialog = new Dialog(requireContext());
         dialog.setContentView(R.layout.dialog_add_object);
@@ -222,27 +244,14 @@ public class HomeFragment extends Fragment {
 
     private void passNameToCurrentFragment(String name, int sizeX, int sizeY) {
 
+        ListOfObjectsFragment listFragment = getListOfObjectsFragment();
+        listFragment.onObjectAdded(name, sizeX, sizeY);
+
+        InteractiveMapFragment mapFragment = getInteractiveMapFragment();
+        mapFragment.onObjectAdded(name, sizeX, sizeY);
+
 //        Fragment currentFragment = getChildFragmentManager().findFragmentByTag(
 //                "android:switcher:" + viewPager2.getId() + ":" + "0");
-
-         // 3. Проверяем количество фрагментов
-        int itemCount = viewPager2.getAdapter().getItemCount();
-        Log.d("Fragment", "Количество фрагментов во ViewPager2: " + itemCount);
-
-        // 4. Формируем тег и логируем его
-        int viewPagerId = viewPager2.getId();
-        String tag = "android:switcher:" + viewPagerId + ":0";
-        Log.d("Fragment", "Ищем фрагмент с тегом: " + tag);
-
-        // 5. Ищем фрагмент
-        Fragment currentFragment = getChildFragmentManager().findFragmentByTag(tag);
-        if (currentFragment == null) {
-            Log.w("Fragment", "Фрагмент не найден (null)");
-        } else {
-            Log.d("Fragment", "Фрагмент найден: " + currentFragment.getClass().getSimpleName());
-        }
-
-
 
 //        if (currentFragment instanceof DialogAddObject.OnObjectAddedListener) {
 //            ((DialogAddObject.OnObjectAddedListener) currentFragment).onObjectAdded(name, sizeX, sizeY);
@@ -260,39 +269,6 @@ public class HomeFragment extends Fragment {
 //            Toast.makeText(requireContext(), "Не удалось найти текущий фрагмент во ViewPager2", Toast.LENGTH_SHORT).show();
 //        }
     }
-//    private void createNewButton(String name, String sizeStr) {
-//        Button newButton = new Button(getActivity());
-//        newButton.setText(name);
-//
-//        // Парсим размеры из строки "100x50"
-//        try {
-//            String[] sizes = sizeStr.split("x");
-//            int width = Integer.parseInt(sizes[0]);
-//            int height = Integer.parseInt(sizes[1]);
-//            newButton.setLayoutParams(new FrameLayout.LayoutParams(width, height));
-//        } catch (Exception e) {
-//            // Если парсинг не удался, используем стандартные размеры
-//            newButton.setLayoutParams(new FrameLayout.LayoutParams(
-//                    FrameLayout.LayoutParams.WRAP_CONTENT,
-//                    FrameLayout.LayoutParams.WRAP_CONTENT
-//            ));
-//        }
-//    }
-
-//    private void placeButtonAtPosition(float x, float y) {
-//        // Проверяем, что контейнер инициализирован
-//        if (container == null) {
-//            return;
-//        }
-//
-//        if (newButton != null) {
-//            FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) newButton.getLayoutParams();
-//            params.leftMargin = (int) x;
-//            params.topMargin = (int) y;
-//            container.addView(newButton);
-//            newButton = null;
-//        }
-//    }
 
 }
 

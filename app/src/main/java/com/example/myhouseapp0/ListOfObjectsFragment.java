@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -63,44 +64,46 @@ public class ListOfObjectsFragment extends Fragment implements OnObjectAddedList
 
     }
     public void onObjectAdded(String objectName, Integer sizeX, Integer sizeY) {
-//        addButtonToList(objectName);
-        Toast.makeText(requireContext(), "testing", Toast.LENGTH_SHORT).show();
+        addButtonToList(objectName);
+//        Toast.makeText(requireContext(), "btn is creating", Toast.LENGTH_SHORT).show();
 
     }
     @SuppressLint("ResourceAsColor")
     private void addButtonToList(String name) {
-//        Button newButton = new Button(requireContext());
-//        newButton.setId(View.generateViewId());
-//        newButton.setText(name);
-//        newButton.setWidth(330);
-//        newButton.setHeight(65);
-//        newButton.setBackgroundResource(R.drawable.btn_rectangle);
-//        newButton.setTextColor(R.color.navbar);
-//        newButton.setTextSize(18);
-////        newButton.setLayoutParams(new ConstraintLayout.LayoutParams(
-////                ViewGroup.LayoutParams.MATCH_PARENT,
-////                ViewGroup.LayoutParams.WRAP_CONTENT
-////        ));
-//        constraintLayout.addView(newButton);
-//
-//        // Позиционируем через ConstraintSet
-//        ConstraintSet constraintSet = new ConstraintSet();
-//        constraintSet.clone(constraintLayout); // копируем текущие ограничения
-//        int parentId = ConstraintLayout.LayoutParams.PARENT_ID;
-//        int newButtonId = newButton.getId();
-//        // Горизонтальное позиционирование: левая граница кнопки к левой границе родителя
-//        constraintSet.connect(
-//                newButtonId, ConstraintSet.START,
-//                parentId, ConstraintSet.START, 32
-//        );
-//        // Вертикальное позиционирование: верхняя граница кнопки относительно верха родителя
-//        // Смещение зависит от счётчика — каждая следующая кнопка ниже
-//        constraintSet.connect(
-//                newButtonId, ConstraintSet.TOP,
-//                parentId, ConstraintSet.TOP, 100 + buttonCounter * 80
-//        );
-//        // Применяем ограничения
-//        constraintSet.applyTo(constraintLayout);
+        Button newButton = new Button(requireContext());
+        newButton.setId(View.generateViewId());
+        newButton.setText(name);
+        newButton.setWidth(330);
+        newButton.setHeight(65);
+        newButton.setBackgroundResource(R.drawable.btn_rectangle);
+        newButton.setTextColor(ContextCompat.getColor(requireContext(), R.color.navbar));
+        newButton.setTextSize(18);
+        newButton.setAllCaps(false);
+//        newButton.setLayoutParams(new ConstraintLayout.LayoutParams(
+//                ViewGroup.LayoutParams.MATCH_PARENT,
+//                ViewGroup.LayoutParams.WRAP_CONTENT
+//        ));
+        constraintLayout.addView(newButton);
+
+        // Позиционируем через ConstraintSet
+        ConstraintSet constraintSet = new ConstraintSet();
+        constraintSet.clone(constraintLayout); // копируем текущие ограничения
+        int parentId = ConstraintLayout.LayoutParams.PARENT_ID;
+        int newButtonId = newButton.getId();
+        // Горизонтальное позиционирование: левая граница кнопки к левой границе родителя
+        constraintSet.connect(
+                newButtonId, ConstraintSet.START,
+                parentId, ConstraintSet.START, 32
+        );
+        // Вертикальное позиционирование: верхняя граница кнопки относительно верха родителя
+        // Смещение зависит от счётчика — каждая следующая кнопка ниже
+        constraintSet.connect(
+                newButtonId, ConstraintSet.TOP,
+                parentId, ConstraintSet.TOP, 100 + buttonCounter * 300
+        );
+        // Применяем ограничения
+        constraintSet.applyTo(constraintLayout);
+        buttonCounter++;
 
     }
     @Override
