@@ -104,7 +104,8 @@ public class InteractiveMapFragment extends Fragment implements OnObjectAddedLis
 
         // Визуальная индикация ожидания выбора позиции (опционально)
         if (relativeLayout != null && isAdded()) {
-            relativeLayout.setBackgroundColor(0x20FF0000);
+            relativeLayout.setBackgroundColor(0xFFEDFCEC);
+            Toast.makeText(requireContext(), "Выберите место для установки объекта", Toast.LENGTH_SHORT).show();
         }
     }
     /**
@@ -142,14 +143,27 @@ public class InteractiveMapFragment extends Fragment implements OnObjectAddedLis
         if (applyButton == null) {
             applyButton = new Button(requireContext());
             applyButton.setText("Применить");
-            applyButton.setBackgroundColor(0xFF4CAF50);
-            applyButton.setTextColor(0xFFFFFFFF);
+            applyButton.setWidth(150);
+            applyButton.setHeight(40);
+            applyButton.setTextColor(ContextCompat.getColor(requireContext(), R.color.navbar));
+            applyButton.setAllCaps(false);
+            applyButton.setTextSize(15);
+            applyButton.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white_green));
 
-            LinearLayout.LayoutParams buttonParams = new LinearLayout.LayoutParams(
+            // Используем RelativeLayout.LayoutParams, чтобы позиционировать кнопку внутри RelativeLayout (container)
+            RelativeLayout.LayoutParams buttonParams = new RelativeLayout.LayoutParams(
                     ViewGroup.LayoutParams.WRAP_CONTENT,
                     ViewGroup.LayoutParams.WRAP_CONTENT
             );
-            buttonParams.gravity = Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL;
+            // Располагаем кнопку внизу контейнера
+            buttonParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+            // Центрируем кнопку по горизонтали
+            buttonParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
+            // Добавляем небольшие отступы (16dp), чтобы кнопка не прилипала к краям
+            int marginInDp = 16;
+            float density_preview_btn = getResources().getDisplayMetrics().density;
+            int marginInPx = (int) (marginInDp * density);
+            buttonParams.setMargins(0, 0, 0, marginInPx);
             applyButton.setLayoutParams(buttonParams);
 
             // Добавляем кнопку в контейнер
@@ -157,6 +171,14 @@ public class InteractiveMapFragment extends Fragment implements OnObjectAddedLis
 
             // Обработчик кнопки "Применить"
             applyButton.setOnClickListener(v -> {
+                    if (!createButtonAtPositionFromPreview(
+                            (int) (pendingButtonConfig.width * getResources().getDisplayMetrics().density),
+                            (int) (pendingButtonConfig.height * getResources().getDisplayMetrics().density)
+                    )) {
+                        // Если создание не удалось (есть пересечение), остаёмся в режиме предварительного просмотра
+                        return;
+                    }
+
                 // Создаём реальную кнопку в позиции предварительного просмотра
                 createButtonAtPositionFromPreview(widthPx, heightPx);
 
@@ -235,78 +257,90 @@ public class InteractiveMapFragment extends Fragment implements OnObjectAddedLis
     /**
      * Создаёт реальную кнопку на основе позиции предварительного просмотра
      */
-    private void createButtonAtPositionFromPreview(int widthPx, int heightPx) {
+    private boolean createButtonAtPositionFromPreview(int widthPx, int heightPx) {
         // Получаем позицию предварительного просмотра
         RelativeLayout.LayoutParams previewParams = (RelativeLayout.LayoutParams) previewOverlay.getLayoutParams();
         int finalX = previewParams.leftMargin;
         int finalY = previewParams.topMargin;
 
-        Point finalPosition = findNearestFreeSpace(finalX, finalY, widthPx, heightPx);
 
-        if (finalPosition == null) {
-            Toast.makeText(requireContext(), "Не удалось найти свободное место для кнопки", Toast.LENGTH_SHORT).show();
-            return;
+        // Создаём прямоугольник для новой кнопки
+        Rect newButtonRect = new Rect(finalX, finalY, finalX + widthPx, finalY + heightPx);
+
+        // Проверяем наложение с существующими кнопками
+        if (hasOverlap(newButtonRect)) {
+            Toast.makeText(requireContext(), "Кнопка перекрывает существующую. Выберите другое место", Toast.LENGTH_SHORT).show();
+            return false; // Прерываем создание кнопки
+        }
+        // Проверяем, что кнопка внутри контейнера
+        if (!isInsideContainer(newButtonRect)) {
+            Toast.makeText(requireContext(), "Кнопка выходит за границы контейнера. Переместите её внутрь", Toast.LENGTH_SHORT).show();
+            return false;
         }
 
         Button newButton = new Button(requireContext());
         newButton.setText(pendingButtonConfig.text);
         newButton.setBackgroundColor(pendingButtonConfig.color);
+        newButton.setTextColor(ContextCompat.getColor(requireContext(), R.color.navbar));
+        newButton.setTextSize(18);
+        newButton.setAllCaps(false);
         // Убираем стандартные отступы кнопки
         newButton.setMinWidth(0);
         newButton.setMinHeight(0);
         newButton.setPadding(0, 0, 0, 0);
 
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(widthPx, heightPx);
-        params.leftMargin = finalPosition.x;
-        params.topMargin = finalPosition.y;
+        params.leftMargin = finalX;
+        params.topMargin = finalY;
 
         newButton.setLayoutParams(params);
         newButton.setId(View.generateViewId());
         relativeLayout.addView(newButton);
         buttons.add(newButton);
+        return true;
     }
     /**
      * Рассчитывает финальную позицию кнопки с проверкой наложения
      */
-    private Point calculateFinalPosition(float touchX, float touchY, int newWidth, int newHeight) {
-        int startX = (int) touchX - newWidth / 2;
-        int startY = (int) touchY - newHeight / 2;
-
-        Point position = findNearestFreeSpace(startX, startY, newWidth, newHeight);
-        return limitToContainerBounds(position, newWidth, newHeight);
-    }
+//    private Point calculateFinalPosition(float touchX, float touchY, int newWidth, int newHeight) {
+//        int startX = (int) touchX - newWidth / 2;
+//        int startY = (int) touchY - newHeight / 2;
+//
+//        Point position = findNearestFreeSpace(startX, startY, newWidth, newHeight);
+//        return limitToContainerBounds(position, newWidth, newHeight);
+//    }
     /**
      * Находит ближайшее свободное место для кнопки
      */
-    private Point findNearestFreeSpace(int x, int y, int width, int height) {
-        Rect newButtonRect = new Rect(x, y, x + width, y + height);
-
-        if (!hasOverlap(newButtonRect)) {
-            return new Point(x, y);
-        }
-
-        List<Point> candidatePositions = new ArrayList<>();
-
-        int[] offsetsX = {-width, 0, width, 0};
-        int[] offsetsY = {0, -height, 0, height};
-
-        for (int i = 0; i < offsetsX.length; i++) {
-            int testX = x + offsetsX[i];
-            int testY = y + offsetsY[i];
-            Rect testRect = new Rect(testX, testY, testX + width, testY + height);
-            if (!hasOverlap(testRect) && isInsideContainer(testRect)) {
-                candidatePositions.add(new Point(testX, testY));
-            }
-        }
-
-    // Если нашли свободные позиции, выбираем ближайшую к исходной точке
-    if (!candidatePositions.isEmpty()) {
-        return findClosestPoint(candidatePositions, x, y);
-    }
-
-    // Если не нашли свободных позиций в основных направлениях, ищем более далеко
-    return searchWiderArea(x, y, width, height);
-}
+//    private Point findNearestFreeSpace(int x, int y, int width, int height) {
+//        Rect newButtonRect = new Rect(x, y, x + width, y + height);
+//
+//        if (!hasOverlap(newButtonRect)) {
+//            return new Point(x, y);
+//        }
+//
+//        List<Point> candidatePositions = new ArrayList<>();
+//
+//        int[] offsetsX = {-width, 0, width, 0};
+//        int[] offsetsY = {0, -height, 0, height};
+//
+//        for (int i = 0; i < offsetsX.length; i++) {
+//            int testX = x + offsetsX[i];
+//            int testY = y + offsetsY[i];
+//            Rect testRect = new Rect(testX, testY, testX + width, testY + height);
+//            if (!hasOverlap(testRect) && isInsideContainer(testRect)) {
+//                candidatePositions.add(new Point(testX, testY));
+//            }
+//        }
+//
+//    // Если нашли свободные позиции, выбираем ближайшую к исходной точке
+//    if (!candidatePositions.isEmpty()) {
+//        return findClosestPoint(candidatePositions, x, y);
+//    }
+//
+//    // Если не нашли свободных позиций в основных направлениях, ищем более далеко
+//    return searchWiderArea(x, y, width, height);
+//}
 
     /**
      * Проверяет, есть ли наложение с существующими кнопками
@@ -325,65 +359,65 @@ public class InteractiveMapFragment extends Fragment implements OnObjectAddedLis
 
 
 
-    private void createButtonAtPosition(float x, float y) {
-        if (pendingButtonConfig == null) return;
-
-        float density = getResources().getDisplayMetrics().density;
-        int widthPx = (int) (pendingButtonConfig.width * density);
-        int heightPx = (int) (pendingButtonConfig.height * density);
-
-        Point finalPosition = calculateFinalPosition(x, y, widthPx, heightPx);
-
-        Button newButton = new Button(requireContext());
-        newButton.setText(pendingButtonConfig.text);
-        newButton.setBackgroundColor(pendingButtonConfig.color);
-        // Убираем стандартные отступы кнопки
-        newButton.setMinWidth(0);
-        newButton.setMinHeight(0);
-        newButton.setPadding(0, 0, 0, 0);
-
-        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(widthPx, heightPx);
-
-//        if (pendingButtonConfig.isStandalone || buttons.isEmpty()) {
-//            // Отдельно стоящая кнопка или первая кнопка
-////            params.leftMargin = (int) x - widthPx / 2;
-////            params.topMargin = (int) y - heightPx / 2;
-//            params.leftMargin = Math.max(0, (int) x - widthPx / 2);
-//            params.topMargin = Math.max(0, (int) y - heightPx / 2);
-//        } else {
-//            // Примыкающая к ближайшей кнопке
+//    private void createButtonAtPosition(float x, float y) {
+//        if (pendingButtonConfig == null) return;
 //
-//            Button nearestButton = findNearestButton(x, y);
-////            Point attachmentPoint = calculateAttachmentPoint(nearestButton, x, y);
+//        float density = getResources().getDisplayMetrics().density;
+//        int widthPx = (int) (pendingButtonConfig.width * density);
+//        int heightPx = (int) (pendingButtonConfig.height * density);
+//
+//        Point finalPosition = calculateFinalPosition(x, y, widthPx, heightPx);
+//
+//        Button newButton = new Button(requireContext());
+//        newButton.setText(pendingButtonConfig.text);
+//        newButton.setBackgroundColor(pendingButtonConfig.color);
+//        // Убираем стандартные отступы кнопки
+//        newButton.setMinWidth(0);
+//        newButton.setMinHeight(0);
+//        newButton.setPadding(0, 0, 0, 0);
+//
+//        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(widthPx, heightPx);
+//
+////        if (pendingButtonConfig.isStandalone || buttons.isEmpty()) {
+////            // Отдельно стоящая кнопка или первая кнопка
+//////            params.leftMargin = (int) x - widthPx / 2;
+//////            params.topMargin = (int) y - heightPx / 2;
+////            params.leftMargin = Math.max(0, (int) x - widthPx / 2);
+////            params.topMargin = Math.max(0, (int) y - heightPx / 2);
+////        } else {
+////            // Примыкающая к ближайшей кнопке
 ////
-////            params.leftMargin = attachmentPoint.x;
-////            params.topMargin = attachmentPoint.y;
-//            if (nearestButton != null) {
-//                Point attachmentPoint = calculateAttachmentPoint(nearestButton, x, y, widthPx, heightPx);
-//                params.leftMargin = attachmentPoint.x;
-//                params.topMargin = attachmentPoint.y;
-//            } else {
-//                // Если ближайшая кнопка не найдена, размещаем как отдельно стоящую
-//                params.leftMargin = Math.max(0, (int) x - widthPx / 2);
-//                params.topMargin = Math.max(0, (int) y - heightPx / 2);
-//            }
+////            Button nearestButton = findNearestButton(x, y);
+//////            Point attachmentPoint = calculateAttachmentPoint(nearestButton, x, y);
+//////
+//////            params.leftMargin = attachmentPoint.x;
+//////            params.topMargin = attachmentPoint.y;
+////            if (nearestButton != null) {
+////                Point attachmentPoint = calculateAttachmentPoint(nearestButton, x, y, widthPx, heightPx);
+////                params.leftMargin = attachmentPoint.x;
+////                params.topMargin = attachmentPoint.y;
+////            } else {
+////                // Если ближайшая кнопка не найдена, размещаем как отдельно стоящую
+////                params.leftMargin = Math.max(0, (int) x - widthPx / 2);
+////                params.topMargin = Math.max(0, (int) y - heightPx / 2);
+////            }
+////        }
+//
+//        params.leftMargin = finalPosition.x;
+//        params.topMargin = finalPosition.y;
+//
+//
+//        newButton.setLayoutParams(params);
+//        newButton.setId(View.generateViewId());
+//        relativeLayout.addView(newButton);
+//        buttons.add(newButton);
+//
+//        // Сброс состояния
+//        pendingButtonConfig = null;
+//        if (relativeLayout != null && isAdded()) {
+//            relativeLayout.setBackgroundColor(0x00000000);
 //        }
-
-        params.leftMargin = finalPosition.x;
-        params.topMargin = finalPosition.y;
-
-
-        newButton.setLayoutParams(params);
-        newButton.setId(View.generateViewId());
-        relativeLayout.addView(newButton);
-        buttons.add(newButton);
-
-        // Сброс состояния
-        pendingButtonConfig = null;
-        if (relativeLayout != null && isAdded()) {
-            relativeLayout.setBackgroundColor(0x00000000);
-        }
-    }
+//    }
     /**
      * Рассчитывает финальную позицию кнопки с проверкой наложения
      */
@@ -763,6 +797,6 @@ public class InteractiveMapFragment extends Fragment implements OnObjectAddedLis
 
     @Override
     public void onObjectAdded(String objectName, Integer sizeX, Integer sizeY) {
-        addButtonToMap(objectName);
+//        addButtonToMap(objectName);
     }
 }

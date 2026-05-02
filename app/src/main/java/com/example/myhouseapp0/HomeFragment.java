@@ -221,10 +221,10 @@ public class HomeFragment extends Fragment {
         btnSave.setOnClickListener(v -> {
             String name = editName.getText().toString();
 //            String devices = editDevices.getText().toString();
-//            Integer sizeX = Integer.parseInt(String.valueOf(editWidth.getText()));
-//            Integer sizeY = Integer.parseInt(String.valueOf(editLength.getText()));
-            int sizeX = 50;
-            int sizeY = 50;
+            int sizeX = Integer.parseInt(String.valueOf(editWidth.getText())) / 5;
+            int sizeY = Integer.parseInt(String.valueOf(editLength.getText())) / 5;
+//            int sizeX = 50;
+//            int sizeY = 50;
 
 //            if (!name.isEmpty() && !sizeStr.isEmpty()) {
 //                createNewButton(name, sizeStr);
