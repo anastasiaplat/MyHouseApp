@@ -8,18 +8,20 @@ import android.os.Bundle;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class InteractiveMapFragment extends Fragment implements OnObjectAddedListener{
+public class InteractiveMapFragment extends Fragment implements OnObjectAddedListener {
 
     private RelativeLayout relativeLayout;
     private int buttonCounter = 0; // счётчик для позиционирования кнопок
@@ -27,26 +29,37 @@ public class InteractiveMapFragment extends Fragment implements OnObjectAddedLis
     private List<Button> buttons = new ArrayList<>(); // Список всех созданных кнопок
     private boolean isWaitingForPosition = false; // Флаг ожидания выбора позиции
     private ButtonConfig pendingButtonConfig; // Конфигурация кнопки, ожидающей позиции
+    private View previewOverlay; // Предпросмотр кнопки
+    private Button applyButton; // Кнопка "Применить"
 
-        @SuppressLint("MissingInflatedId")
-        @Override
+    @SuppressLint("MissingInflatedId")
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_interactive_map, container, false);
         relativeLayout = view.findViewById(R.id.map_view);
 
         // Обработчик касаний по контейнеру
-        this.relativeLayout.setOnTouchListener((v, event) -> {
-            if (isWaitingForPosition && event.getAction() == MotionEvent.ACTION_DOWN) {
-                float x = event.getX();
-                float y = event.getY();
-                createButtonAtPosition(x, y);
-                isWaitingForPosition = false;
-                return true;
-            }
-            return false;
-        });
-
+        if (this.relativeLayout != null) {
+            this.relativeLayout.setOnTouchListener((v, event) -> {
+                if (isWaitingForPosition)
+                    try {
+                    switch (event.getAction()) {
+                        case MotionEvent.ACTION_DOWN:
+                            showPreviewAtPosition(event.getX(), event.getY());
+                            return true;
+                        case MotionEvent.ACTION_MOVE:
+                            updatePreviewPosition(event.getX(), event.getY());
+                            return true;
+                        default:
+                            return false;
+                    }
+                }catch (Exception e) {
+                        Toast.makeText(requireContext(), "Ошибка обработки касания", Toast.LENGTH_SHORT).show();
+                    }
+                return false;
+            });
+        }
         return view;
     }
     /**
@@ -99,6 +112,219 @@ public class InteractiveMapFragment extends Fragment implements OnObjectAddedLis
      * @param x Координата X в пикселях
      * @param y Координата Y в пикселях
      */
+
+    /**
+     * Показывает предварительный просмотр кнопки в указанной позиции
+     */
+    private void showPreviewAtPosition(float x, float y) {
+        if (pendingButtonConfig == null || relativeLayout == null) return;
+
+        float density = getResources().getDisplayMetrics().density;
+        int widthPx = (int) (pendingButtonConfig.width * density);
+        int heightPx = (int) (pendingButtonConfig.height * density);
+
+        // Создаём предварительный просмотр только если его ещё нет
+        if (previewOverlay == null) {
+            previewOverlay = new View(requireContext());
+            previewOverlay.setBackgroundColor(0x80C0C0C0); // Полупрозрачный серый
+
+            RelativeLayout.LayoutParams previewParams = new RelativeLayout.LayoutParams(widthPx, heightPx);
+            previewParams.leftMargin = (int) x - widthPx / 2;
+            previewParams.topMargin = (int) y - heightPx / 2;
+            previewOverlay.setLayoutParams(previewParams);
+
+            relativeLayout.addView(previewOverlay);
+        } else {
+            // Обновляем позицию существующего превью
+            updatePreviewPosition(x, y);
+        }
+        // Создаём кнопку "Применить" только если её ещё нет
+        if (applyButton == null) {
+            applyButton = new Button(requireContext());
+            applyButton.setText("Применить");
+            applyButton.setBackgroundColor(0xFF4CAF50);
+            applyButton.setTextColor(0xFFFFFFFF);
+
+            LinearLayout.LayoutParams buttonParams = new LinearLayout.LayoutParams(
+                    ViewGroup.LayoutParams.WRAP_CONTENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT
+            );
+            buttonParams.gravity = Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL;
+            applyButton.setLayoutParams(buttonParams);
+
+            // Добавляем кнопку в контейнер
+            relativeLayout.addView(applyButton);
+
+            // Обработчик кнопки "Применить"
+            applyButton.setOnClickListener(v -> {
+                // Создаём реальную кнопку в позиции предварительного просмотра
+                createButtonAtPositionFromPreview(widthPx, heightPx);
+
+                // Убираем предварительный просмотр и кнопку "Применить"
+                relativeLayout.removeView(previewOverlay);
+                relativeLayout.removeView(applyButton);
+                previewOverlay = null;
+                applyButton = null;
+
+                isWaitingForPosition = false;
+                relativeLayout.setBackgroundColor(0x00000000);
+            });
+        }
+    }
+//
+//
+//        LinearLayout.LayoutParams buttonParams = new LinearLayout.LayoutParams(
+//                ViewGroup.LayoutParams.WRAP_CONTENT,
+//                ViewGroup.LayoutParams.WRAP_CONTENT
+//        );
+//        buttonParams.gravity = Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL;
+//        applyButton.setLayoutParams(buttonParams);
+//
+//        // Добавляем кнопку в контейнер
+//        relativeLayout.addView(applyButton);
+//
+//        // Обработчик перемещения предварительного просмотра
+//        previewOverlay.setOnTouchListener((v, event) -> {
+//            if (event.getAction() == MotionEvent.ACTION_MOVE) {
+//                float newX = event.getRawX();
+//                float newY = event.getRawY();
+//
+//                // Переводим координаты в систему контейнера
+//                int[] containerLocation = new int[2];
+//                relativeLayout.getLocationOnScreen(containerLocation);
+//                newX -= containerLocation[0];
+//                newY -= containerLocation[1];
+//
+//                updatePreviewPosition((int) newX, (int) newY, widthPx, heightPx);
+//                return true;
+//            }
+//            return false;
+//        });
+
+        // Обработчик кнопки "Применить"
+//        applyButton.setOnClickListener(v -> {
+//            // Создаём реальную кнопку в позиции предварительного просмотра
+//            createButtonAtPositionFromPreview(widthPx, heightPx);
+//
+//            // Убираем предварительный просмотр и кнопку "Применить"
+//            relativeLayout.removeView(previewOverlay);
+//            relativeLayout.removeView(applyButton);
+//            previewOverlay = null;
+//            applyButton = null;
+//
+//            isWaitingForPosition = false;
+//            relativeLayout.setBackgroundColor(0x00000000);
+//        });
+//    }
+    /**
+     * Обновляет позицию предварительного просмотра
+     */
+    private void updatePreviewPosition(float x, float y) {
+        if (previewOverlay == null) return;
+
+        float density = getResources().getDisplayMetrics().density;
+        int widthPx = (int) (pendingButtonConfig.width * density);
+        int heightPx = (int) (pendingButtonConfig.height * density);
+
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) previewOverlay.getLayoutParams();
+        params.leftMargin = (int) x - widthPx / 2;
+        params.topMargin = (int) y - heightPx / 2;
+
+        previewOverlay.setLayoutParams(params);
+    }
+    /**
+     * Создаёт реальную кнопку на основе позиции предварительного просмотра
+     */
+    private void createButtonAtPositionFromPreview(int widthPx, int heightPx) {
+        // Получаем позицию предварительного просмотра
+        RelativeLayout.LayoutParams previewParams = (RelativeLayout.LayoutParams) previewOverlay.getLayoutParams();
+        int finalX = previewParams.leftMargin;
+        int finalY = previewParams.topMargin;
+
+        Point finalPosition = findNearestFreeSpace(finalX, finalY, widthPx, heightPx);
+
+        if (finalPosition == null) {
+            Toast.makeText(requireContext(), "Не удалось найти свободное место для кнопки", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        Button newButton = new Button(requireContext());
+        newButton.setText(pendingButtonConfig.text);
+        newButton.setBackgroundColor(pendingButtonConfig.color);
+        // Убираем стандартные отступы кнопки
+        newButton.setMinWidth(0);
+        newButton.setMinHeight(0);
+        newButton.setPadding(0, 0, 0, 0);
+
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(widthPx, heightPx);
+        params.leftMargin = finalPosition.x;
+        params.topMargin = finalPosition.y;
+
+        newButton.setLayoutParams(params);
+        newButton.setId(View.generateViewId());
+        relativeLayout.addView(newButton);
+        buttons.add(newButton);
+    }
+    /**
+     * Рассчитывает финальную позицию кнопки с проверкой наложения
+     */
+    private Point calculateFinalPosition(float touchX, float touchY, int newWidth, int newHeight) {
+        int startX = (int) touchX - newWidth / 2;
+        int startY = (int) touchY - newHeight / 2;
+
+        Point position = findNearestFreeSpace(startX, startY, newWidth, newHeight);
+        return limitToContainerBounds(position, newWidth, newHeight);
+    }
+    /**
+     * Находит ближайшее свободное место для кнопки
+     */
+    private Point findNearestFreeSpace(int x, int y, int width, int height) {
+        Rect newButtonRect = new Rect(x, y, x + width, y + height);
+
+        if (!hasOverlap(newButtonRect)) {
+            return new Point(x, y);
+        }
+
+        List<Point> candidatePositions = new ArrayList<>();
+
+        int[] offsetsX = {-width, 0, width, 0};
+        int[] offsetsY = {0, -height, 0, height};
+
+        for (int i = 0; i < offsetsX.length; i++) {
+            int testX = x + offsetsX[i];
+            int testY = y + offsetsY[i];
+            Rect testRect = new Rect(testX, testY, testX + width, testY + height);
+            if (!hasOverlap(testRect) && isInsideContainer(testRect)) {
+                candidatePositions.add(new Point(testX, testY));
+            }
+        }
+
+    // Если нашли свободные позиции, выбираем ближайшую к исходной точке
+    if (!candidatePositions.isEmpty()) {
+        return findClosestPoint(candidatePositions, x, y);
+    }
+
+    // Если не нашли свободных позиций в основных направлениях, ищем более далеко
+    return searchWiderArea(x, y, width, height);
+}
+
+    /**
+     * Проверяет, есть ли наложение с существующими кнопками
+     */
+    private boolean hasOverlap(Rect testRect) {
+        for (Button existingButton : buttons) {
+            Rect existingRect = getButtonBounds(existingButton);
+            if (Rect.intersects(testRect, existingRect)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+
+
+
     private void createButtonAtPosition(float x, float y) {
         if (pendingButtonConfig == null) return;
 
@@ -161,62 +387,62 @@ public class InteractiveMapFragment extends Fragment implements OnObjectAddedLis
     /**
      * Рассчитывает финальную позицию кнопки с проверкой наложения
      */
-    private Point calculateFinalPosition(float touchX, float touchY, int newWidth, int newHeight) {
-        // Начальная позиция — точно по центру касания
-        int startX = (int) touchX - newWidth / 2;
-        int startY = (int) touchY - newHeight / 2;
-
-        // Проверяем наложение с существующими кнопками
-        Point position = findNearestFreeSpace(startX, startY, newWidth, newHeight);
-
-        // Ограничиваем позицию границами контейнера
-        return limitToContainerBounds(position, newWidth, newHeight);
-    }
-    private Point findNearestFreeSpace(int x, int y, int width, int height) {
-        Rect newButtonRect = new Rect(x, y, x + width, y + height);
-
-        // Если нет наложения, возвращаем исходную позицию
-        if (!hasOverlap(newButtonRect)) {
-            return new Point(x, y);
-        }
-
-        // Ищем ближайшее свободное место в разных направлениях
-        List<Point> candidatePositions = new ArrayList<>();
-
-        // Пробуем разные направления сдвига
-        int[] offsetsX = {-width, 0, width, 0};
-        int[] offsetsY = {0, -height, 0, height};
-
-        for (int i = 0; i < offsetsX.length; i++) {
-            int testX = x + offsetsX[i];
-            int testY = y + offsetsY[i];
-            Rect testRect = new Rect(testX, testY, testX + width, testY + height);
-
-            // Проверяем, что позиция свободна и внутри контейнера
-            if (!hasOverlap(testRect) && isInsideContainer(testRect)) {
-                candidatePositions.add(new Point(testX, testY));
-            }
-        }
-        // Если нашли свободные позиции, выбираем ближайшую к исходной точке
-        if (!candidatePositions.isEmpty()) {
-            return findClosestPoint(candidatePositions, x, y);
-        }
-
-        // Если не нашли свободных позиций в основных направлениях, ищем более далеко
-        return searchWiderArea(x, y, width, height);
-    }
+//    private Point calculateFinalPosition(float touchX, float touchY, int newWidth, int newHeight) {
+//        // Начальная позиция — точно по центру касания
+//        int startX = (int) touchX - newWidth / 2;
+//        int startY = (int) touchY - newHeight / 2;
+//
+//        // Проверяем наложение с существующими кнопками
+//        Point position = findNearestFreeSpace(startX, startY, newWidth, newHeight);
+//
+//        // Ограничиваем позицию границами контейнера
+//        return limitToContainerBounds(position, newWidth, newHeight);
+//    }
+//    private Point findNearestFreeSpace(int x, int y, int width, int height) {
+//        Rect newButtonRect = new Rect(x, y, x + width, y + height);
+//
+//        // Если нет наложения, возвращаем исходную позицию
+//        if (!hasOverlap(newButtonRect)) {
+//            return new Point(x, y);
+//        }
+//
+//        // Ищем ближайшее свободное место в разных направлениях
+//        List<Point> candidatePositions = new ArrayList<>();
+//
+//        // Пробуем разные направления сдвига
+//        int[] offsetsX = {-width, 0, width, 0};
+//        int[] offsetsY = {0, -height, 0, height};
+//
+//        for (int i = 0; i < offsetsX.length; i++) {
+//            int testX = x + offsetsX[i];
+//            int testY = y + offsetsY[i];
+//            Rect testRect = new Rect(testX, testY, testX + width, testY + height);
+//
+//            // Проверяем, что позиция свободна и внутри контейнера
+//            if (!hasOverlap(testRect) && isInsideContainer(testRect)) {
+//                candidatePositions.add(new Point(testX, testY));
+//            }
+//        }
+//        // Если нашли свободные позиции, выбираем ближайшую к исходной точке
+//        if (!candidatePositions.isEmpty()) {
+//            return findClosestPoint(candidatePositions, x, y);
+//        }
+//
+//        // Если не нашли свободных позиций в основных направлениях, ищем более далеко
+//        return searchWiderArea(x, y, width, height);
+//    }
     /**
      * Проверяет, есть ли наложение с существующими кнопками
      */
-    private boolean hasOverlap(Rect testRect) {
-        for (Button existingButton : buttons) {
-            Rect existingRect = getButtonBounds(existingButton);
-            if (Rect.intersects(testRect, existingRect)) {
-                return true;
-            }
-        }
-        return false;
-    }
+//    private boolean hasOverlap(Rect testRect) {
+//        for (Button existingButton : buttons) {
+//            Rect existingRect = getButtonBounds(existingButton);
+//            if (Rect.intersects(testRect, existingRect)) {
+//                return true;
+//            }
+//        }
+//        return false;
+//    }
     /**
      * Ищет свободное место в более широкой области
      */
@@ -322,6 +548,19 @@ public class InteractiveMapFragment extends Fragment implements OnObjectAddedLis
         return position;
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        // Очищаем ссылки при уничтожении фрагмента
+        if (previewOverlay != null && relativeLayout != null) {
+            relativeLayout.removeView(previewOverlay);
+        }
+        if (applyButton != null && relativeLayout != null) {
+            relativeLayout.removeView(applyButton);
+        }
+        previewOverlay = null;
+        applyButton = null;
+    }
     /**
      * Проверяет наложение с существующими кнопками и сдвигает позицию при необходимости
      */
