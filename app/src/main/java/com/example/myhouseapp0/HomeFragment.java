@@ -239,7 +239,7 @@ public class HomeFragment extends Fragment {
 
             String selectedDevice = devices.getSelectedItem().toString();
 //            createNewFragment(name, selectedDevice);
-            createDynamicFragment(name, devicesList);
+//            createDynamicFragment(name, devicesList);
 
             passNameToCurrentFragment(name, sizeX, sizeY);
             dialog.dismiss();
@@ -312,7 +312,8 @@ public class HomeFragment extends Fragment {
         listFragment.onObjectAdded(name, sizeX, sizeY);
 
         InteractiveMapFragment mapFragment = getInteractiveMapFragment();
-        mapFragment.onObjectAdded(name, sizeX, sizeY);
+//        mapFragment.onObjectAdded(name, sizeX, sizeY);
+        mapFragment.createButton(name, sizeX, sizeY, 0xFF00FF00, false);
 
 //        Fragment currentFragment = getChildFragmentManager().findFragmentByTag(
 //                "android:switcher:" + viewPager2.getId() + ":" + "0");
