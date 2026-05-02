@@ -19,6 +19,7 @@ import androidx.fragment.app.DialogFragment;
 import com.google.android.material.textfield.MaterialAutoCompleteTextView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class DialogAddObject extends DialogFragment {
@@ -50,9 +51,19 @@ public class DialogAddObject extends DialogFragment {
 //        loadDevicesToSpinner();
 
         etName = dialogView.findViewById(R.id.etObjectName);
-
+        Spinner spinnerDevices = dialogView.findViewById(R.id.spinnerDevices);
         etSizeX = dialogView.findViewById(R.id.etWidth);
         etSizeX = dialogView.findViewById(R.id.etLength);
+
+        // Заполняем Spinner устройствами (замените на свои данные)
+//        ArrayAdapter<String> adapter = new ArrayAdapter<>(
+//                requireContext(),
+//                android.R.layout.simple_spinner_item,
+//                Arrays.asList("Устройство 1", "Устройство 2", "Устройство 3")
+//        );
+//        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//        spinnerDevices.setAdapter(adapter);
+
         btn_Confirm = dialogView.findViewById(R.id.btnConfirm);
         btn_Cancel = dialogView.findViewById(R.id.btnCancel);
 
@@ -62,6 +73,8 @@ public class DialogAddObject extends DialogFragment {
             String name = etName.getText().toString();
             String sizeXStr = etSizeX.getText().toString();
             String sizeYStr = etSizeY.getText().toString();
+            List<String> selectedDevices = new ArrayList<>();
+            selectedDevices.add(spinnerDevices.getSelectedItem().toString());
 
             if (name.isEmpty() || sizeXStr.isEmpty() || sizeYStr.isEmpty()) {
                 Toast.makeText(requireContext(), "Заполните все поля", Toast.LENGTH_SHORT).show();

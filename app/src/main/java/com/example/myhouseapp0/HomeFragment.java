@@ -19,6 +19,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -43,6 +44,7 @@ import com.google.android.material.tabs.TabLayout;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -62,6 +64,8 @@ public class HomeFragment extends Fragment {
     Button btnAdd;
 //    , btn_edit;
 //    private static final String TAG = "MainFragment";
+
+    private DB_helper dbHelper;
 
 
 
@@ -88,6 +92,7 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        dbHelper = new DB_helper(requireContext());
         return inflater.inflate(R.layout.fragment_home, container, false);
     }
 
@@ -198,11 +203,20 @@ public class HomeFragment extends Fragment {
 
 
         EditText editName = dialog.findViewById(R.id.etObjectName);
-        Spinner editDevices = dialog.findViewById(R.id.spinnerDevices);
+        Spinner devices = dialog.findViewById(R.id.spinnerDevices);
         EditText editWidth = dialog.findViewById(R.id.etWidth);
         EditText editLength = dialog.findViewById(R.id.etLength);
         Button btnSave = dialog.findViewById(R.id.btnConfirm);
         Button btnCancel = dialog.findViewById(R.id.btnCancel);
+
+        List<String> devicesList = dbHelper.getDevices();
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(
+                requireContext(),
+                android.R.layout.simple_spinner_item,
+                devicesList
+        );
+        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        devices.setAdapter(arrayAdapter);
 
         btnSave.setOnClickListener(v -> {
             String name = editName.getText().toString();
@@ -222,6 +236,11 @@ public class HomeFragment extends Fragment {
 //                passNameToCurrentFragment(name, sizeX, sizeY);
 //                dialog.dismiss();
 //            }
+
+            String selectedDevice = devices.getSelectedItem().toString();
+//            createNewFragment(name, selectedDevice);
+            createDynamicFragment(name, devicesList);
+
             passNameToCurrentFragment(name, sizeX, sizeY);
             dialog.dismiss();
         });
@@ -241,6 +260,51 @@ public class HomeFragment extends Fragment {
 //        dialog.show(getParentFragmentManager(), "AddObjectDialog");
 
     }
+
+    private void createDynamicFragment(String name, List<String> devices) {
+        // Создаём класс фрагмента динамически
+        Class<?> fragmentClass = createFragmentClass(name);
+
+        try {
+            Fragment newFragment = (Fragment) fragmentClass.newInstance();
+            // Здесь можно передать данные через Bundle
+            Bundle args = new Bundle();
+            args.putStringArrayList("devices", new ArrayList<>(devices));
+            newFragment.setArguments(args);
+
+
+            // Сохраняем ссылку на фрагмент для дальнейшего использования
+            FragmentManager fm = getParentFragmentManager();
+            fm.beginTransaction()
+                    .add(R.id.frame_layout_devices, newFragment, name + "Fragment")
+                    .addToBackStack(null)
+                    .commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private Class<?> createFragmentClass(String name) {
+        // В реальном приложении используйте динамическую генерацию классов
+        // или предопределённый набор шаблонов
+        return CustomFragment.class;
+    }
+
+
+//    private void createNewFragment(String name, String device) {
+//        Bundle args = new Bundle();
+//        args.putString("name", name);
+//        args.putString("device", device);
+//
+//        CustomFragment newFragment = new CustomFragment();
+//        newFragment.setArguments(args);
+//
+//        requireActivity().getSupportFragmentManager()
+//                .beginTransaction()
+//                .replace(R.id.frame_layout, newFragment)
+//                .addToBackStack(null)
+//                .commit();
+//    }
 
     private void passNameToCurrentFragment(String name, int sizeX, int sizeY) {
 
@@ -268,6 +332,15 @@ public class HomeFragment extends Fragment {
 //            // Логика на случай, если фрагмент не найден
 //            Toast.makeText(requireContext(), "Не удалось найти текущий фрагмент во ViewPager2", Toast.LENGTH_SHORT).show();
 //        }
+    }
+
+
+    private void replaceFragment(Fragment fragment){
+        FragmentManager fragmentManager = getParentFragmentManager();
+        FragmentTransaction fragmentTransaction=fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.frame_layout_devices, fragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
     }
 
 }

@@ -79,6 +79,7 @@ public class ListOfObjectsFragment extends Fragment implements OnObjectAddedList
         newButton.setTextColor(ContextCompat.getColor(requireContext(), R.color.navbar));
         newButton.setTextSize(18);
         newButton.setAllCaps(false);
+
 //        newButton.setLayoutParams(new ConstraintLayout.LayoutParams(
 //                ViewGroup.LayoutParams.MATCH_PARENT,
 //                ViewGroup.LayoutParams.WRAP_CONTENT
@@ -104,6 +105,8 @@ public class ListOfObjectsFragment extends Fragment implements OnObjectAddedList
         // Применяем ограничения
         constraintSet.applyTo(constraintLayout);
         buttonCounter++;
+        newButton.setOnClickListener(v -> replaceFragment(new CustomFragment()));
+
 
     }
     @Override
