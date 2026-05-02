@@ -35,24 +35,7 @@ public class ListOfObjectsFragment extends Fragment implements OnObjectAddedList
 
 
     private ConstraintLayout constraintLayout;
-//    private FragmentListOfObjectsBinding binding;
     private int buttonCounter = 0;
-//    private Button createButton;
-//    private int lastButtonId = -1; // ID последней созданной кнопки
-//    public static ListOfObjectsFragment newInstance(int tabNumber) {
-//        ListOfObjectsFragment fragment = new ListOfObjectsFragment();
-//        Bundle args = new Bundle();
-//        args.putInt("tabNumber", tabNumber);
-//        fragment.setArguments(args);
-//        return fragment;
-//    }
-//    @Override
-//    public void onCreate(@Nullable Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        if (getArguments() != null) {
-//            pageNumber = getArguments().getInt("page_number");
-//        }
-//    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -65,7 +48,6 @@ public class ListOfObjectsFragment extends Fragment implements OnObjectAddedList
     }
     public void onObjectAdded(String objectName, Integer sizeX, Integer sizeY) {
         addButtonToList(objectName);
-//        Toast.makeText(requireContext(), "btn is creating", Toast.LENGTH_SHORT).show();
 
     }
     @SuppressLint("ResourceAsColor")
@@ -80,10 +62,6 @@ public class ListOfObjectsFragment extends Fragment implements OnObjectAddedList
         newButton.setTextSize(18);
         newButton.setAllCaps(false);
 
-//        newButton.setLayoutParams(new ConstraintLayout.LayoutParams(
-//                ViewGroup.LayoutParams.MATCH_PARENT,
-//                ViewGroup.LayoutParams.WRAP_CONTENT
-//        ));
         constraintLayout.addView(newButton);
 
         // Позиционируем через ConstraintSet
@@ -145,48 +123,6 @@ public class ListOfObjectsFragment extends Fragment implements OnObjectAddedList
         fragmentTransaction.commit();
     }
 
-    // Метод для создания новой кнопки в ConstraintLayout
-//    @SuppressLint("SetTextI18n")
-//    public void createNewButton() {
-//        buttonCounter++;
-//
-//        Button newButton = new Button(requireContext());
-//        newButton.setText("Новая кнопка " + buttonCounter);
-//        newButton.setId(View.generateViewId());
-//
-//        // Добавляем кнопку в контейнер
-//        binding.constraintLayout.addView(newButton);
-//
-//        // Настраиваем ограничения через ConstraintSet
-//        ConstraintSet constraintSet = new ConstraintSet();
-//        constraintSet.clone(binding.constraintLayout);
-//
-//        int margin = 24; // Отступ в dp
-//
-//        // Подключаем к верху и левому краю родителя
-//        constraintSet.connect(
-//                newButton.getId(),
-//                ConstraintSet.TOP,
-//                ConstraintSet.PARENT_ID,
-//                ConstraintSet.TOP,
-//                margin
-//        );
-//        constraintSet.connect(
-//                newButton.getId(),
-//                ConstraintSet.START,
-//                ConstraintSet.PARENT_ID,
-//                ConstraintSet.START,
-//                margin
-//        );
-//
-//        // Применяем ограничения
-//        constraintSet.applyTo(binding.constraintLayout);
-//    }
-//
-//    @Override
-//    public void onDestroyView() {
-//        super.onDestroyView();
-//        binding = null;
-//    }
+
 
 }

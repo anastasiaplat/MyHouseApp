@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -312,8 +313,7 @@ public class HomeFragment extends Fragment {
         listFragment.onObjectAdded(name, sizeX, sizeY);
 
         InteractiveMapFragment mapFragment = getInteractiveMapFragment();
-//        mapFragment.onObjectAdded(name, sizeX, sizeY);
-        mapFragment.createButton(name, sizeX, sizeY, 0xFF00FF00, false);
+        mapFragment.createButton(name, sizeX, sizeY, ContextCompat.getColor(requireContext(), R.color.white_green), false);
 
 //        Fragment currentFragment = getChildFragmentManager().findFragmentByTag(
 //                "android:switcher:" + viewPager2.getId() + ":" + "0");
