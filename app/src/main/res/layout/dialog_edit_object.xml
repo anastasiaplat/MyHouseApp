@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <TextView
+        android:id="@+id/textView_edit"
+        android:layout_width="274dp"
+        android:layout_height="51dp"
+        android:layout_marginTop="28dp"
+        android:fontFamily="sans-serif-medium"
+        android:gravity="center"
+        android:text="Редактирование объекта"
+        android:textSize="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/etObjectName_edit"
+        android:layout_width="330dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="32dp"
+        android:fontFamily="sans-serif-medium"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.493"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView_edit" />
+
+    <TextView
+        android:id="@+id/textView3_edit"
+        android:layout_width="315dp"
+        android:layout_height="33dp"
+        android:layout_marginTop="28dp"
+        android:fontFamily="sans-serif-medium"
+        android:text="Устройства"
+        android:textSize="18dp"
+        app:flow_horizontalBias="0.2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/etObjectName_edit" />
+
+    <Spinner
+        android:id="@+id/spinnerDevices_edit"
+        android:layout_width="320dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.549"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView3_edit" />
+
+    <TextView
+        android:id="@+id/textView4_edit"
+        android:layout_width="317dp"
+        android:layout_height="37dp"
+        android:layout_marginTop="32dp"
+        android:fontFamily="sans-serif-medium"
+        android:text="Размеры (м)"
+        android:textSize="18dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.489"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/spinnerDevices_edit" />
+
+    <EditText
+        android:id="@+id/etWidth_edit"
+        android:layout_width="136dp"
+        android:layout_height="51dp"
+        android:layout_marginTop="24dp"
+        android:layout_weight="1"
+        android:inputType="numberDecimal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.367"
+        app:layout_constraintStart_toEndOf="@+id/etLength_edit"
+        app:layout_constraintTop_toBottomOf="@+id/textView4_edit" />
+
+    <EditText
+        android:id="@+id/etLength_edit"
+        android:layout_width="140dp"
+        android:layout_height="44dp"
+        android:layout_marginStart="48dp"
+        android:layout_marginTop="32dp"
+        android:layout_weight="1"
+        android:inputType="numberDecimal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView4_edit" />
+
+    <Button
+        android:id="@+id/btnConfirm_edit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:layout_marginEnd="68dp"
+        android:layout_marginBottom="188dp"
+        android:fontFamily="sans-serif-medium"
+        android:text="Подтвердить"
+        android:textColor="@color/navbar"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.968"
+        app:layout_constraintStart_toEndOf="@+id/btnCancel_edit"
+        app:layout_constraintTop_toBottomOf="@+id/etWidth_edit"
+        app:layout_constraintVertical_bias="0.777" />
+
+    <Button
+        android:id="@+id/btnCancel_edit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:layout_marginStart="60dp"
+        android:layout_marginBottom="188dp"
+        android:backgroundTint="@color/gray"
+        android:fontFamily="sans-serif-medium"
+        android:text="Отменить"
+        android:textColor="@color/navbar"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/etLength_edit"
+        app:layout_constraintVertical_bias="0.774" />
+
+    <Button
+        android:id="@+id/btnDelete_edit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:layout_marginTop="12dp"
+        android:backgroundTint="@color/light_red"
+        android:fontFamily="sans-serif-medium"
+        android:text="Удалить объект"
+        android:textColor="@color/navbar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnCancel_edit" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -26,11 +26,26 @@ public class InteractiveMapFragment extends Fragment implements OnObjectAddedLis
     private RelativeLayout relativeLayout;
     private int buttonCounter = 0; // счётчик для позиционирования кнопок
     private static final int MARGIN_DP = 16; // отступ между кнопками в dp
-    private List<Button> buttons = new ArrayList<>(); // Список всех созданных кнопок
-    private boolean isWaitingForPosition = false; // Флаг ожидания выбора позиции
-    private ButtonConfig pendingButtonConfig; // Конфигурация кнопки, ожидающей позиции
-    private View previewOverlay; // Предпросмотр кнопки
-    private Button applyButton; // Кнопка "Применить"
+    private List<Button> buttons = new ArrayList<>(); // список всех созданных кнопок
+    private boolean isWaitingForPosition = false; // флаг ожидания выбора позиции
+    private ButtonConfig pendingButtonConfig; // конфигурация кнопки, ожидающей позиции
+    private View previewOverlay; // предпросмотр кнопки
+    private Button applyButton;
+    private boolean isInEditMode = false; // флаг режима редактирования
+    private Button selectedButtonForEdit; //выбранная для редактирования кнопка
+
+
+    public void enterEditMode() {
+        if (buttons.isEmpty()) {
+            Toast.makeText(requireContext(), "Нет объектов для редактирования", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        isInEditMode = true;
+        Toast.makeText(requireContext(), "Выберите объект для редактирования", Toast.LENGTH_SHORT).show();
+        highlightAllButtons();
+
+    }
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -42,6 +57,13 @@ public class InteractiveMapFragment extends Fragment implements OnObjectAddedLis
         // Обработчик касаний по контейнеру
         if (this.relativeLayout != null) {
             this.relativeLayout.setOnTouchListener((v, event) -> {
+                            if (isInEditMode) {
+                                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                                    selectButtonForEdit(event.getX(), event.getY());
+                                    return true;
+                                }
+                                return false;
+                            }
                 if (isWaitingForPosition)
                     try {
                     switch (event.getAction()) {
@@ -305,6 +327,72 @@ public class InteractiveMapFragment extends Fragment implements OnObjectAddedLis
         previewOverlay = null;
         applyButton = null;
     }
+
+
+
+    /**
+     * Подсвечивает все кнопки рамкой для выбора
+     */
+    public void highlightAllButtons() {
+        isInEditMode = true;
+        for (Button button : buttons) {
+            // Или простой вариант — изменить цвет фона с прозрачностью
+            button.setBackgroundColor(0x80ADD8E6); // Полупрозрачный голубой
+        }
+    }
+
+    /**
+     * Снимает подсветку со всех кнопок
+     */
+    private void removeButtonHighlights() {
+        for (Button button : buttons) {
+            // Возвращаем исходный цвет (сохраняйте исходный цвет при создании кнопки)
+            button.setBackgroundColor(getOriginalButtonColor(button));
+        }
+    }
+    /**
+     * Получает исходный цвет кнопки (реализуйте хранение цветов)
+     */
+    private int getOriginalButtonColor(Button button) {
+        // Здесь должна быть логика получения исходного цвета
+        // Например, можно хранить цвета в Map<Button, Integer>
+        return 0xFF90EE90; // Возвращаем светло‑зелёный по умолчанию
+    }
+
+
+    /**
+     * Обрабатывает выбор кнопки для редактирования
+     */
+    private void selectButtonForEdit(float x, float y) {
+        for (Button button : buttons) {
+            Rect buttonRect = getButtonBounds(button);
+            if (buttonRect.contains((int) x, (int) y)) {
+                // Передаём выбор кнопки в HomeFragment для показа диалога
+                ((HomeFragment) requireParentFragment()).showEditDialog(button);
+                return;
+            }
+        }
+    }
+
+    /**
+     * Применяет изменения к кнопке после редактирования (вызывается из HomeFragment)
+     */
+    public void applyButtonEdit(Button button, String newName, int newWidth, int newHeight) {
+        button.setText(newName);
+
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) button.getLayoutParams();
+        params.width = newWidth;
+        params.height = newHeight;
+        button.setLayoutParams(params);
+
+        isInEditMode = false;
+        removeButtonHighlights();
+    }
+
+
+
+
+
 
 
     @Override

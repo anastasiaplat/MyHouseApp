@@ -24,6 +24,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -62,13 +64,14 @@ public class HomeFragment extends Fragment {
     TabLayout tabLayout;
     ViewPager2 viewPager2;
     ViewPagerAdapter viewPagerAdapter;
-    Button btnAdd;
-//    , btn_edit;
+    Button btnAdd, btn_edit;
+    private boolean isInEditMode = false; // Флаг режима редактирования
+    private Button selectedButtonForEdit; // Выбранная для редактирования кнопка
 //    private static final String TAG = "MainFragment";
 
     private DB_helper dbHelper;
 
-
+    private InteractiveMapFragment mapFragment;
 
     public String APIKey = "5805dd66a332dedde152edfe026bb26f";
     private static final String site = "https://api.openweathermap.org/data/2.5/weather?q=Kazan&units=metric&appid=5805dd66a332dedde152edfe026bb26f&lang=ru";
@@ -136,9 +139,12 @@ public class HomeFragment extends Fragment {
 
 
         btnAdd  = view.findViewById(R.id.btn_add);
+        btn_edit = view.findViewById(R.id.btn_edit);
 
         btnAdd.setOnClickListener(v -> showAddButtonDialog());
 
+
+        btn_edit.setOnClickListener(v -> showAddButtonDialog());
         // ___________________________
 
        // ViewFlipper viewFlipper = (ViewFlipper) findViewById(R.id.)
@@ -172,9 +178,9 @@ public class HomeFragment extends Fragment {
 //    }
 
 //    public void addButton(String name, String size) {
-//        // Здесь вы можете добавить логику для добавления кнопки в ваш ViewPager
-//        // Например, передать данные во ViewPagerAdapter и обновить адаптер
 //    }
+
+
 
 
     // Получить ListOfObjectsFragment
@@ -195,9 +201,16 @@ public class HomeFragment extends Fragment {
         return null;
     }
 
-
+    private void setupButtonListeners() {
+                // Кнопка "Редактировать"
+        btn_edit.setOnClickListener(v -> {
+            getInteractiveMapFragment().enterEditMode();
+        });
+    }
 
     private void showAddButtonDialog() {
+        // Обработчики кнопок
+        setupButtonListeners();
         Dialog dialog = new Dialog(requireContext());
         dialog.setContentView(R.layout.dialog_add_object);
         dialog.setTitle("Добавление объекта");
@@ -259,6 +272,56 @@ public class HomeFragment extends Fragment {
 //            }
 //        });
 //        dialog.show(getParentFragmentManager(), "AddObjectDialog");
+
+    }
+    void showEditDialog(Button buttonToEdit) {
+        Dialog dialog_edit = new Dialog(requireContext());
+        dialog_edit.setTitle("Редактирование кнопки");
+        dialog_edit.setContentView(R.layout.dialog_edit_object);
+
+        EditText editName_edit = dialog_edit.findViewById(R.id.etObjectName_edit);
+        Spinner devices_edit = dialog_edit.findViewById(R.id.spinnerDevices_edit);
+
+        List<String> devicesList = dbHelper.getDevices();
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(
+                requireContext(),
+                android.R.layout.simple_spinner_item,
+                devicesList
+        );
+        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        devices_edit.setAdapter(arrayAdapter);
+        EditText editWidth_edit = dialog_edit.findViewById(R.id.etWidth_edit);
+        EditText editLength_edit = dialog_edit.findViewById(R.id.etLength_edit);
+        Button btnSave_edit = dialog_edit.findViewById(R.id.btnConfirm_edit);
+        Button btnCancel_edit = dialog_edit.findViewById(R.id.btnCancel_edit);
+        Button btnDelete = dialog_edit.findViewById(R.id.btnDelete_edit);
+
+        btnSave_edit.setOnClickListener(v -> {
+            String new_name = editName_edit.getText().toString();
+//            String devices = editDevices.getText().toString();
+            int sizeX_new = Integer.parseInt(String.valueOf(editWidth_edit.getText())) / 5;
+            int sizeY_new = Integer.parseInt(String.valueOf(editLength_edit.getText())) / 5;
+
+//            if (!name.isEmpty() && !sizeStr.isEmpty()) {
+//                createNewButton(name, sizeStr);
+//                isWaitingForPosition = true;
+//                dialog.dismiss();
+//            }
+//            if (!name.isEmpty() && !(sizeX == null) && !(sizeY == null)) {
+//                // Передаём имя во фрагменты
+//                passNameToCurrentFragment(name, sizeX, sizeY);
+//                dialog.dismiss();
+//            }
+
+            // Передаём изменения в MainFragment для применения
+            mapFragment.applyButtonEdit(buttonToEdit, new_name, sizeX_new, sizeY_new);
+
+            dialog_edit.dismiss();
+        });
+
+        btnCancel_edit.setOnClickListener(v -> dialog_edit.dismiss());
+        dialog_edit.show();
+
 
     }
 
@@ -334,6 +397,16 @@ public class HomeFragment extends Fragment {
 //            Toast.makeText(requireContext(), "Не удалось найти текущий фрагмент во ViewPager2", Toast.LENGTH_SHORT).show();
 //        }
     }
+    private void passNameToCurrentFragment_edit(String name, int sizeX, int sizeY) {
+
+//        ListOfObjectsFragment listFragment = getListOfObjectsFragment();
+//        listFragment.onObjectAdded(name, sizeX, sizeY);
+
+        InteractiveMapFragment mapFragment = getInteractiveMapFragment();
+        mapFragment.highlightAllButtons();
+
+    }
+
 
 
     private void replaceFragment(Fragment fragment){
