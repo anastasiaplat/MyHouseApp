@@ -25,6 +25,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -48,6 +49,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -65,6 +67,9 @@ public class HomeFragment extends Fragment {
     ViewPager2 viewPager2;
     ViewPagerAdapter viewPagerAdapter;
     Button btnAdd, btn_edit;
+    private DialogAddObject.OnDevicesSelectedListener listener;
+    private boolean[] checkedDevices;
+    private String[] deviceList = {"Устройство1", "2", "3", "4", "Наушники"};
     private boolean isInEditMode = false; // Флаг режима редактирования
     private Button selectedButtonForEdit; // Выбранная для редактирования кнопка
 //    private static final String TAG = "MainFragment";
@@ -146,7 +151,9 @@ public class HomeFragment extends Fragment {
 
         btn_edit.setOnClickListener(v -> showAddButtonDialog());
         // ___________________________
-
+// Инициализируем массив здесь — после загрузки разметки
+        checkedDevices = new boolean[deviceList.length];
+        Arrays.fill(checkedDevices, false); // Явно задаём все значения как false
 
         TextView temptext = view.findViewById(R.id.textview_temp);
         TextView datetext = view.findViewById(R.id.textview_date);
@@ -208,6 +215,12 @@ public class HomeFragment extends Fragment {
     }
 
     private void showAddButtonDialog() {
+// Защита от null
+        if (checkedDevices == null) {
+            Toast.makeText(requireContext(), "Ошибка инициализации диалога", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         // Обработчики кнопок
         setupButtonListeners();
         Dialog dialog = new Dialog(requireContext());
@@ -216,20 +229,33 @@ public class HomeFragment extends Fragment {
 
 
         EditText editName = dialog.findViewById(R.id.etObjectName);
-        Spinner devices = dialog.findViewById(R.id.spinnerDevices);
+        ListView devices = dialog.findViewById(R.id.spinnerDevices);
         EditText editWidth = dialog.findViewById(R.id.etWidth);
         EditText editLength = dialog.findViewById(R.id.etLength);
         Button btnSave = dialog.findViewById(R.id.btnConfirm);
         Button btnCancel = dialog.findViewById(R.id.btnCancel);
 
-        List<String> devicesList = dbHelper.getDevices();
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(
                 requireContext(),
-                android.R.layout.simple_spinner_item,
-                devicesList
+                android.R.layout.simple_list_item_multiple_choice,
+                deviceList
         );
-        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//
+//        List<String> devicesList = dbHelper.getDevices();
+//        DeviceMultiSelectAdapter arrayAdapter = new DeviceMultiSelectAdapter(
+//                requireContext(),
+//                devicesList
+//        );
+//        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         devices.setAdapter(arrayAdapter);
+        devices.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+
+        for (int i = 0; i < deviceList.length; i++) {
+            if (checkedDevices[i]) {
+                devices.setItemChecked(i, true);
+            }
+        }
+
 
         btnSave.setOnClickListener(v -> {
             String name = editName.getText().toString();
@@ -249,8 +275,22 @@ public class HomeFragment extends Fragment {
 //                passNameToCurrentFragment(name, sizeX, sizeY);
 //                dialog.dismiss();
 //            }
-
-            String selectedDevice = devices.getSelectedItem().toString();
+            List<String> selectedDevices = new ArrayList<>();
+            for (int i = 0; i < deviceList.length; i++) {
+                if (devices.isItemChecked(i)) {
+                    selectedDevices.add(deviceList[i]);
+                    checkedDevices[i] = true;
+                } else {
+                    checkedDevices[i] = false;
+                }
+            }
+            if (selectedDevices.isEmpty()) {
+                Toast.makeText(requireContext(), "Выберите хотя бы одно устройство", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            handleSelectedDevices(String.valueOf(editName), selectedDevices);
+//            listener.onDevicesSelected(selectedDevices);
+//            String selectedDevice = devices.getSelectedItem().toString();
 //            createNewFragment(name, selectedDevice);
 //            createDynamicFragment(name, devicesList);
 
@@ -272,6 +312,12 @@ public class HomeFragment extends Fragment {
 //        });
 //        dialog.show(getParentFragmentManager(), "AddObjectDialog");
 
+    }
+    private void handleSelectedDevices(String name, List<String> selectedDevices) {
+        String message = String.format("Объект: %s\nУстройства: %s",
+                name, String.join(", ", selectedDevices));
+        Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show();
+        // Здесь можно добавить логику сохранения данных
     }
     void showEditDialog(Button buttonToEdit) {
         Dialog dialog_edit = new Dialog(requireContext());

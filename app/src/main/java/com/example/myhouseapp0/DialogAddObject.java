@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -25,9 +26,15 @@ import java.util.List;
 public class DialogAddObject extends DialogFragment {
     private OnObjectAddedListener listener;
     private DB_helper dbHelper;
-    private Spinner devicesSpinner;
+//    private Spinner devicesSpinner;
     private EditText etName, etSizeX, etSizeY;
     private Button btn_Confirm, btn_Cancel;
+    private DeviceMultiSelectAdapter adapter;
+    private List<String> deviceList;
+    private OnDevicesSelectedListener listener_devices;
+    public interface OnDevicesSelectedListener {
+        void onDevicesSelected(List<String> selectedDevices);
+    }
 
     public interface OnObjectAddedListener {
         void onObjectAdded(String name, int sizeX, int sizeY);
@@ -36,7 +43,11 @@ public class DialogAddObject extends DialogFragment {
     public void setOnObjectAddedListener(OnObjectAddedListener listener) {
         this.listener = listener;
     }
-
+    public static DialogFragment newInstance(OnDevicesSelectedListener listener) {
+        DialogFragment fragment = new DialogAddObject();
+        ((DialogAddObject) fragment).listener_devices = listener;
+        return fragment;
+    }
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -50,8 +61,27 @@ public class DialogAddObject extends DialogFragment {
 //        initViews(dialogView);
 //        loadDevicesToSpinner();
 
+        // Инициализация списка устройств (замените на свои данные)
+        deviceList = Arrays.asList(
+                "Устройство 1",
+                "Устройство 2",
+                "Устройство 3",
+                "Устройство 4",
+                "Устройство 5"
+        );
+
+        ListView listView = dialogView.findViewById(R.id.spinnerDevices);
+        adapter = new DeviceMultiSelectAdapter(requireContext(), deviceList);
+        listView.setAdapter(adapter);
+
+        // Обработчик выбора элементов
+        listView.setOnItemClickListener((parent, view, position, id) -> {
+            boolean isChecked = !adapter.checkedItems.get(position, false);
+            adapter.setItemChecked(position, isChecked);
+        });
+
         etName = dialogView.findViewById(R.id.etObjectName);
-        Spinner spinnerDevices = dialogView.findViewById(R.id.spinnerDevices);
+//        Spinner spinnerDevices = dialogView.findViewById(R.id.spinnerDevices);
         etSizeX = dialogView.findViewById(R.id.etWidth);
         etSizeX = dialogView.findViewById(R.id.etLength);
 
@@ -73,8 +103,8 @@ public class DialogAddObject extends DialogFragment {
             String name = etName.getText().toString();
             String sizeXStr = etSizeX.getText().toString();
             String sizeYStr = etSizeY.getText().toString();
-            List<String> selectedDevices = new ArrayList<>();
-            selectedDevices.add(spinnerDevices.getSelectedItem().toString());
+//            List<String> selectedDevices = new ArrayList<>();
+//            selectedDevices.add(spinnerDevices.getSelectedItem().toString());
 
             if (name.isEmpty() || sizeXStr.isEmpty() || sizeYStr.isEmpty()) {
                 Toast.makeText(requireContext(), "Заполните все поля", Toast.LENGTH_SHORT).show();
