@@ -147,7 +147,6 @@ public class HomeFragment extends Fragment {
         btn_edit.setOnClickListener(v -> showAddButtonDialog());
         // ___________________________
 
-       // ViewFlipper viewFlipper = (ViewFlipper) findViewById(R.id.)
 
         TextView temptext = view.findViewById(R.id.textview_temp);
         TextView datetext = view.findViewById(R.id.textview_date);
@@ -349,8 +348,6 @@ public class HomeFragment extends Fragment {
     }
 
     private Class<?> createFragmentClass(String name) {
-        // В реальном приложении используйте динамическую генерацию классов
-        // или предопределённый набор шаблонов
         return CustomFragment.class;
     }
 

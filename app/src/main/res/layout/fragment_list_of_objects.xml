@@ -7,6 +7,12 @@
     android:foregroundTint="#B6E7B5"
     tools:context=".ListOfObjectsFragment">
 
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:contentDescription="Область с прокручиваемым содержимым"
+        android:fillViewport="true">
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraint_layout"
         android:layout_width="match_parent"
@@ -137,5 +143,5 @@
 <!--            tools:ignore="MissingConstraints,RtlSymmetry" />-->
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
+    </ScrollView>
 </FrameLayout>
