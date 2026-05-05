@@ -12,12 +12,14 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.myhouseapp0.databinding.FragmentListOfObjectsBinding;
@@ -36,6 +38,7 @@ public class ListOfObjectsFragment extends Fragment implements OnObjectAddedList
 
     private ConstraintLayout constraintLayout;
     private int buttonCounter = 0;
+    private TextView textInfo;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -43,6 +46,58 @@ public class ListOfObjectsFragment extends Fragment implements OnObjectAddedList
 
         View view = inflater.inflate(R.layout.fragment_list_of_objects, container, false);
         constraintLayout = view.findViewById(R.id.constraint_layout);
+
+        textInfo = new TextView(requireContext());
+        textInfo.setId(View.generateViewId());
+        textInfo.setText("Объекты не добавлены");
+        // Задаём параметры ширины и высоты
+        ConstraintLayout.LayoutParams params = new ConstraintLayout.LayoutParams(
+                ConstraintLayout.LayoutParams.WRAP_CONTENT,
+                ConstraintLayout.LayoutParams.WRAP_CONTENT
+        );
+        textInfo.setLayoutParams(params);
+
+        // Добавляем TextView в родительский ConstraintLayout
+        constraintLayout.addView(textInfo);
+
+        // Получаем ConstraintSet для настройки ограничений
+        ConstraintSet constraintSet = new ConstraintSet();
+        constraintSet.clone(constraintLayout);
+
+        // Устанавливаем ограничения для центрирования
+        constraintSet.connect(
+                textInfo.getId(),
+                ConstraintSet.START,
+                ConstraintSet.PARENT_ID,
+                ConstraintSet.START
+        );
+        constraintSet.connect(
+                textInfo.getId(),
+                ConstraintSet.END,
+                ConstraintSet.PARENT_ID,
+                ConstraintSet.END
+        );
+        constraintSet.connect(
+                textInfo.getId(),
+                ConstraintSet.TOP,
+                ConstraintSet.PARENT_ID,
+                ConstraintSet.TOP
+        );
+        constraintSet.connect(
+                textInfo.getId(),
+                ConstraintSet.BOTTOM,
+                ConstraintSet.PARENT_ID,
+                ConstraintSet.BOTTOM
+        );
+
+        // Применяем ограничения к ConstraintLayout
+        constraintSet.applyTo(constraintLayout);
+
+        // Дополнительно настраиваем внешний вид
+        textInfo.setGravity(Gravity.CENTER);
+        textInfo.setTextSize(16);
+        textInfo.setTextColor(ContextCompat.getColor(requireContext(), R.color.navbar));
+
         return view;
 
     }
@@ -52,6 +107,7 @@ public class ListOfObjectsFragment extends Fragment implements OnObjectAddedList
     }
     @SuppressLint("ResourceAsColor")
     private void addButtonToList(String name) {
+        textInfo.setVisibility(View.GONE);
         Button newButton = new Button(requireContext());
         newButton.setId(View.generateViewId());
         newButton.setText(name);

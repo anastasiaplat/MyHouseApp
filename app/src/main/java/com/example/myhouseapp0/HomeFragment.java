@@ -115,6 +115,9 @@ public class HomeFragment extends Fragment {
         viewPager2.setUserInputEnabled(false);
         viewPagerAdapter = new ViewPagerAdapter(this);
         viewPager2.setAdapter(viewPagerAdapter);
+        viewPager2.setPageTransformer((page, position) -> {
+            // Пустая реализация отключает все анимации
+        });
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {

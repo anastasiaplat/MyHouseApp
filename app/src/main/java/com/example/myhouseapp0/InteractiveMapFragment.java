@@ -1,6 +1,7 @@
 package com.example.myhouseapp0;
 
 import android.annotation.SuppressLint;
+import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.os.Bundle;
@@ -16,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -24,6 +26,7 @@ import java.util.List;
 public class InteractiveMapFragment extends Fragment implements OnObjectAddedListener {
 
     private RelativeLayout relativeLayout;
+    private TextView textInfo;
     private int buttonCounter = 0; // счётчик для позиционирования кнопок
     private static final int MARGIN_DP = 16; // отступ между кнопками в dp
     private List<Button> buttons = new ArrayList<>(); // список всех созданных кнопок
@@ -53,6 +56,39 @@ public class InteractiveMapFragment extends Fragment implements OnObjectAddedLis
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_interactive_map, container, false);
         relativeLayout = view.findViewById(R.id.map_view);
+
+        textInfo = new TextView(requireContext());
+        textInfo.setId(View.generateViewId());
+        textInfo.setText("Объекты не добавлены");
+        // Задаём параметры ширины и высоты
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.WRAP_CONTENT,
+                RelativeLayout.LayoutParams.WRAP_CONTENT
+        );
+
+        // Устанавливаем атрибут для центрирования по горизонтали и вертикали относительно родителя
+        params.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
+
+        // Применяем параметры к TextView
+        textInfo.setLayoutParams(params);
+
+        // Дополнительно можно настроить внешний вид TextView
+        textInfo.setGravity(Gravity.CENTER); // центрирование текста внутри TextView
+        textInfo.setTextSize(16); // размер текста
+        textInfo.setTextColor(ContextCompat.getColor(requireContext(), R.color.navbar)); // цвет текста
+
+        // Добавляем TextView в родительский RelativeLayout
+        relativeLayout.addView(textInfo);
+
+
+//        if (buttons.isEmpty()) {
+//            textInfo.setVisibility(View.VISIBLE);
+//            Toast.makeText(requireContext(), "отображаем", Toast.LENGTH_SHORT).show();
+//            } else {
+//            textInfo.setVisibility(View.GONE);
+//            Toast.makeText(requireContext(), "скрываем в онкриет", Toast.LENGTH_SHORT).show();
+//        }
+
 
         // Обработчик касаний по контейнеру
         if (this.relativeLayout != null) {
@@ -108,6 +144,8 @@ public class InteractiveMapFragment extends Fragment implements OnObjectAddedLis
             return;
         }
 
+        textInfo.setVisibility(View.GONE);
+
         // Для первой кнопки всегда standalone
         if (buttons.isEmpty()) {
             isStandalone = true;
@@ -128,6 +166,10 @@ public class InteractiveMapFragment extends Fragment implements OnObjectAddedLis
      */
     private void showPreviewAtPosition(float x, float y) {
         if (pendingButtonConfig == null || relativeLayout == null) return;
+
+
+
+
 
         float density = getResources().getDisplayMetrics().density;
         int widthPx = (int) (pendingButtonConfig.width * density);
