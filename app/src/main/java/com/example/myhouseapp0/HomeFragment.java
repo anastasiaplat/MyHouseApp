@@ -115,9 +115,6 @@ public class HomeFragment extends Fragment {
         viewPager2.setUserInputEnabled(false);
         viewPagerAdapter = new ViewPagerAdapter(this);
         viewPager2.setAdapter(viewPagerAdapter);
-        viewPager2.setPageTransformer((page, position) -> {
-            // Пустая реализация отключает все анимации
-        });
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -152,7 +149,7 @@ public class HomeFragment extends Fragment {
         btnAdd.setOnClickListener(v -> showAddButtonDialog());
 
 
-        btn_edit.setOnClickListener(v -> showAddButtonDialog());
+//        btn_edit.setOnClickListener(v -> showEditDialog());
         // ___________________________
 // Инициализируем массив здесь — после загрузки разметки
         checkedDevices = new boolean[deviceList.length];
@@ -287,10 +284,10 @@ public class HomeFragment extends Fragment {
                     checkedDevices[i] = false;
                 }
             }
-            if (selectedDevices.isEmpty()) {
-                Toast.makeText(requireContext(), "Выберите хотя бы одно устройство", Toast.LENGTH_SHORT).show();
-                return;
-            }
+//            if (selectedDevices.isEmpty()) {
+//                Toast.makeText(requireContext(), "Выберите хотя бы одно устройство", Toast.LENGTH_SHORT).show();
+//                return;
+//            }
             handleSelectedDevices(String.valueOf(editName), selectedDevices);
 //            listener.onDevicesSelected(selectedDevices);
 //            String selectedDevice = devices.getSelectedItem().toString();
@@ -299,6 +296,7 @@ public class HomeFragment extends Fragment {
 
             passNameToCurrentFragment(name, sizeX, sizeY);
             dialog.dismiss();
+            viewPager2.setCurrentItem(1);
         });
 
         btnCancel.setOnClickListener(v -> dialog.dismiss());
@@ -322,7 +320,7 @@ public class HomeFragment extends Fragment {
         Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show();
         // Здесь можно добавить логику сохранения данных
     }
-    void showEditDialog(Button buttonToEdit) {
+    public void showEditDialog(Button buttonToEdit) {
         Dialog dialog_edit = new Dialog(requireContext());
         dialog_edit.setTitle("Редактирование кнопки");
         dialog_edit.setContentView(R.layout.dialog_edit_object);
