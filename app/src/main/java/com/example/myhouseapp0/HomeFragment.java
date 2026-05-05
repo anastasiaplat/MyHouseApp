@@ -296,7 +296,8 @@ public class HomeFragment extends Fragment {
 
             passNameToCurrentFragment(name, sizeX, sizeY);
             dialog.dismiss();
-            viewPager2.setCurrentItem(1);
+            if (viewPager2.getCurrentItem() != 1) {viewPager2.setCurrentItem(1);}
+
         });
 
         btnCancel.setOnClickListener(v -> dialog.dismiss());
