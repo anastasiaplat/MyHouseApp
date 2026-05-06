@@ -75,7 +75,7 @@
         android:layout_height="37dp"
         android:layout_marginTop="28dp"
         android:fontFamily="sans-serif-medium"
-        android:text="Размеры (м)"
+        android:text="Размеры (см)"
         android:textSize="18dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

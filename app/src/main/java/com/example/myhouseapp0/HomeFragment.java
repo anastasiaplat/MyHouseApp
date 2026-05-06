@@ -259,12 +259,10 @@ public class HomeFragment extends Fragment {
 
         btnSave.setOnClickListener(v -> {
             String name = editName.getText().toString();
-//            String devices = editDevices.getText().toString();
-            int sizeX = Integer.parseInt(String.valueOf(editWidth.getText())) / 5;
-            int sizeY = Integer.parseInt(String.valueOf(editLength.getText())) / 5;
-//            int sizeX = 50;
-//            int sizeY = 50;
-
+//            int sizeX = Integer.parseInt(String.valueOf(editWidth.getText())) / 5;
+//            int sizeY = Integer.parseInt(String.valueOf(editLength.getText())) / 5;
+            String length = editLength.getText().toString();
+            String width = editWidth.getText().toString();
 //            if (!name.isEmpty() && !sizeStr.isEmpty()) {
 //                createNewButton(name, sizeStr);
 //                isWaitingForPosition = true;
@@ -275,6 +273,7 @@ public class HomeFragment extends Fragment {
 //                passNameToCurrentFragment(name, sizeX, sizeY);
 //                dialog.dismiss();
 //            }
+//
             List<String> selectedDevices = new ArrayList<>();
             for (int i = 0; i < deviceList.length; i++) {
                 if (devices.isItemChecked(i)) {
@@ -284,19 +283,76 @@ public class HomeFragment extends Fragment {
                     checkedDevices[i] = false;
                 }
             }
-//            if (selectedDevices.isEmpty()) {
-//                Toast.makeText(requireContext(), "Выберите хотя бы одно устройство", Toast.LENGTH_SHORT).show();
-//                return;
-//            }
-            handleSelectedDevices(String.valueOf(editName), selectedDevices);
+            boolean isValid = true;
+
+
+            // Проверка на заполнение имени
+            if (name.isEmpty()) {
+                editName.setError("Поле обязательно для заполнения");
+                isValid = false;
+            } else if (!isNameUnique(name)) {
+                editName.setError("Название должно быть уникальным");
+                isValid = false;
+            } else {
+                editName.setError(null);
+            }
+
+            int sizeX, sizeY;
+            // Проверка sizeX
+            if (width.isEmpty()) {
+                editWidth.setError("Поле обязательно для заполнения");
+                isValid = false;
+            } else {
+                try {
+                    sizeX = Integer.parseInt(width);
+                    if (sizeX < 100 || sizeX > 1000) {
+                        editWidth.setError("Значение допустимо от 100 до 1000");
+                        isValid = false;
+                    } else {
+                        editWidth.setError(null);
+                    }
+                } catch (NumberFormatException e) {
+                    editWidth.setError("Введите корректное число");
+                    isValid = false;
+                }
+            }
+
+            // Проверка sizeY
+            if (length.isEmpty()) {
+                editLength.setError("Поле обязательно для заполнения");
+                isValid = false;
+            } else {
+                try {
+                    sizeY = Integer.parseInt(length);
+                    if (sizeY < 100 || sizeY > 1000) {
+                        editLength.setError("Значение допустимо от 100 до 1000");
+                        isValid = false;
+                    } else {
+                        editLength.setError(null);
+                    }
+                } catch (NumberFormatException e) {
+                    editLength.setError("Введите корректное число");
+                    isValid = false;
+                }
+            }
+
+            if (selectedDevices.isEmpty()) {
+                Toast.makeText(requireContext(), "Выберите хотя бы одно устройство", Toast.LENGTH_SHORT).show();
+                isValid = false;
+            }
+            if (isValid) {
+                // Все проверки пройдены — выполняем основное действие
+                handleSelectedDevices(String.valueOf(editName), selectedDevices);
+                passNameToCurrentFragment(name, Integer.parseInt(length)/5, Integer.parseInt(width)/5);
+                if (viewPager2.getCurrentItem() != 1) {viewPager2.setCurrentItem(1);}
+                                dialog.dismiss();
+            }
+
 //            listener.onDevicesSelected(selectedDevices);
 //            String selectedDevice = devices.getSelectedItem().toString();
 //            createNewFragment(name, selectedDevice);
 //            createDynamicFragment(name, devicesList);
 
-            passNameToCurrentFragment(name, sizeX, sizeY);
-            dialog.dismiss();
-            if (viewPager2.getCurrentItem() != 1) {viewPager2.setCurrentItem(1);}
 
         });
 
@@ -315,6 +371,19 @@ public class HomeFragment extends Fragment {
 //        dialog.show(getParentFragmentManager(), "AddObjectDialog");
 
     }
+    private boolean isNameUnique(String name) {
+        // Здесь может быть проверка в базе данных, SharedPreferences или списке
+        // Пример с простым списком:
+        List<String> existingNames = getExistingNames(); // ваш источник данных
+        return !existingNames.contains(name);
+    }
+
+    private List<String> getExistingNames() {
+        // Реализация получения существующих имён
+        // Может быть запрос к БД, чтение из файла и т. д.
+        return new ArrayList<>(); // замените на реальную реализацию
+    }
+
     private void handleSelectedDevices(String name, List<String> selectedDevices) {
         String message = String.format("Объект: %s\nУстройства: %s",
                 name, String.join(", ", selectedDevices));
