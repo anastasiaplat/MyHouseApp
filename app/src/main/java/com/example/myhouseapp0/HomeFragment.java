@@ -69,7 +69,7 @@ public class HomeFragment extends Fragment {
     Button btnAdd, btn_edit;
     private DialogAddObject.OnDevicesSelectedListener listener;
     private boolean[] checkedDevices;
-    private String[] deviceList = {"Устройство1", "2", "3", "4", "Наушники"};
+    private String[] deviceList = {"Устройство 1", "Устройство 2", "Устройство 3", "Устройство 4", "Устройство 5"};
     private boolean isInEditMode = false; // Флаг режима редактирования
     private Button selectedButtonForEdit; // Выбранная для редактирования кнопка
 //    private static final String TAG = "MainFragment";
@@ -77,6 +77,7 @@ public class HomeFragment extends Fragment {
     private DB_helper dbHelper;
 
     private InteractiveMapFragment mapFragment;
+    private  ListOfObjectsFragment listFragment;
 
     public String APIKey = "5805dd66a332dedde152edfe026bb26f";
     private static final String site = "https://api.openweathermap.org/data/2.5/weather?q=Kazan&units=metric&appid=5805dd66a332dedde152edfe026bb26f&lang=ru";
@@ -144,11 +145,19 @@ public class HomeFragment extends Fragment {
 
         mapFragment = (InteractiveMapFragment) viewPagerAdapter.createFragment(1);
 
+        listFragment = (ListOfObjectsFragment) viewPagerAdapter.createFragment(0);
+
         btnAdd  = view.findViewById(R.id.btn_add);
         btn_edit = view.findViewById(R.id.btn_edit);
 
         btnAdd.setOnClickListener(v -> showAddButtonDialog());
-        btn_edit.setOnClickListener(v -> mapFragment.enterEditMode());
+        btn_edit.setOnClickListener(v -> {
+            mapFragment.enterEditMode();
+            listFragment.editButtonOnList();
+        });
+
+//        btn_ok = view.findViewById(R.id.btn_ok);
+//        btn_stop = view.findViewById(R.id.btn_stop);
 
 
 //        btn_edit.setOnClickListener(v -> showEditDialog());
@@ -187,6 +196,9 @@ public class HomeFragment extends Fragment {
 
 //    public void addButton(String name, String size) {
 //    }
+
+
+
 
 
 
@@ -491,7 +503,7 @@ public class HomeFragment extends Fragment {
     private void passNameToCurrentFragment(String name, int sizeX, int sizeY) {
 
         ListOfObjectsFragment listFragment = getListOfObjectsFragment();
-        listFragment.onObjectAdded(name, sizeX, sizeY);
+        listFragment.addButtonToList(name);
 
         InteractiveMapFragment mapFragment = getInteractiveMapFragment();
         mapFragment.createButton(name, sizeX, sizeY, ContextCompat.getColor(requireContext(), R.color.white_green));

@@ -44,15 +44,24 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/etObjectName_edit" />
 
-    <Spinner
+    <ListView
         android:id="@+id/spinnerDevices_edit"
-        android:layout_width="311dp"
-        android:layout_height="82dp"
-        android:layout_marginTop="8dp"
+        android:layout_width="268dp"
+        android:layout_height="165dp"
+        android:choiceMode="multipleChoice"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.549"
+        app:layout_constraintHorizontal_bias="0.494"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView3_edit" />
+
+    <!-- Область для отображения выбранных чипов -->
+    <com.google.android.material.chip.ChipGroup
+        android:id="@+id/chipGroup_edit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:singleSelection="false"
+        app:selectionRequired="false"
+        tools:ignore="MissingConstraints" />
 
     <TextView
         android:id="@+id/textView4_edit"
@@ -69,8 +78,8 @@
 
     <EditText
         android:id="@+id/etWidth_edit"
-        android:layout_width="135dp"
-        android:layout_height="42dp"
+        android:layout_width="144dp"
+        android:layout_height="46dp"
         android:layout_marginTop="12dp"
         android:layout_weight="1"
         android:inputType="numberDecimal"
@@ -81,9 +90,9 @@
 
     <EditText
         android:id="@+id/etLength_edit"
-        android:layout_width="140dp"
-        android:layout_height="44dp"
-        android:layout_marginStart="52dp"
+        android:layout_width="148dp"
+        android:layout_height="46dp"
+        android:layout_marginStart="36dp"
         android:layout_marginTop="12dp"
         android:layout_weight="1"
         android:inputType="numberDecimal"
@@ -94,22 +103,22 @@
         android:id="@+id/btnConfirm_edit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="end"
+        android:layout_marginTop="10dp"
         android:layout_marginBottom="188dp"
         android:fontFamily="sans-serif-medium"
         android:text="Подтвердить"
         android:textColor="@color/navbar"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.225"
+        app:layout_constraintHorizontal_bias="0.08"
         app:layout_constraintStart_toEndOf="@+id/btn_change_position"
         app:layout_constraintTop_toBottomOf="@+id/etWidth_edit"
-        app:layout_constraintVertical_bias="0.276" />
+        app:layout_constraintVertical_bias="0.227" />
 
     <Button
         android:id="@+id/btnCancel_edit"
-        android:layout_width="37dp"
-        android:layout_height="38dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_gravity="end"
         android:background="@android:color/transparent"
         android:drawableTop="@drawable/icon_close"
@@ -139,7 +148,7 @@
         android:id="@+id/btn_change_position"
         android:layout_width="166dp"
         android:layout_height="53dp"
-        android:layout_marginTop="28dp"
+        android:layout_marginTop="10dp"
         android:fontFamily="sans-serif-medium"
         android:text="Изменить местоположение"
         android:textColor="@color/navbar"

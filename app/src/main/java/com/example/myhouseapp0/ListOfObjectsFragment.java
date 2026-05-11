@@ -17,23 +17,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.myhouseapp0.databinding.FragmentListOfObjectsBinding;
-import com.example.myhouseapp0.rooms.BathroomFragment;
-import com.example.myhouseapp0.rooms.BedroomFragment;
-import com.example.myhouseapp0.rooms.CarRoomFragment;
-import com.example.myhouseapp0.rooms.GreenhouseFragment;
-import com.example.myhouseapp0.rooms.HallRoomFragment;
-import com.example.myhouseapp0.rooms.KitchenFragment;
-import com.example.myhouseapp0.rooms.StoreroomFragment;
-import com.example.myhouseapp0.rooms.YardFragment;
 
-
-public class ListOfObjectsFragment extends Fragment implements OnObjectAddedListener {
+public class ListOfObjectsFragment extends Fragment{
 
 
     private ConstraintLayout constraintLayout;
@@ -49,15 +37,16 @@ public class ListOfObjectsFragment extends Fragment implements OnObjectAddedList
         return view;
 
     }
-    public void onObjectAdded(String objectName, Integer sizeX, Integer sizeY) {
-        addButtonToList(objectName);
-
-    }
+//    public void onObjectAdded(String objectName) {
+//        addButtonToList(objectName);
+//
+//    }
     @SuppressLint("ResourceAsColor")
-    private void addButtonToList(String name) {
+    public void addButtonToList(String name) {
         textInfo.setVisibility(View.GONE);
         Button newButton = new Button(requireContext());
         newButton.setId(View.generateViewId());
+
         newButton.setText(name);
         newButton.setWidth(330);
         newButton.setHeight(65);
@@ -84,11 +73,28 @@ public class ListOfObjectsFragment extends Fragment implements OnObjectAddedList
                 newButtonId, ConstraintSet.TOP,
                 parentId, ConstraintSet.TOP, 100 + buttonCounter * 300
         );
+        buttonCounter++;
+        newButton.setTag(buttonCounter);
+        Toast.makeText(requireContext(), "Tag on list"+newButton.getTag(), Toast.LENGTH_SHORT).show();
         // Применяем ограничения
         constraintSet.applyTo(constraintLayout);
-        buttonCounter++;
         newButton.setOnClickListener(v -> replaceFragment(new CustomFragment()));
 
+
+    }
+
+    public void editButtonOnList(){
+        Toast.makeText(requireContext(), "Метод вызвался", Toast.LENGTH_SHORT).show();
+        InteractiveMapFragment mapFragment = HomeFragment.newInstance().getInteractiveMapFragment();
+        for (int i = 0; i < constraintLayout.getChildCount(); i++) {
+            View child = constraintLayout.getChildAt(i);
+            if (child instanceof Button && mapFragment.selectedButtonId.equals(child.getTag())) {
+                ((Button) child).setText(mapFragment.newButtonName);
+                Toast.makeText(requireContext(), "newName"+mapFragment.newButtonName, Toast.LENGTH_SHORT).show();
+            }
+        }
+        constraintLayout.requestLayout();
+        constraintLayout.invalidate();
 
     }
     @Override
