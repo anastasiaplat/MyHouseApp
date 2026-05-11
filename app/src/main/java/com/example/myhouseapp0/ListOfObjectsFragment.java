@@ -45,6 +45,56 @@ public class ListOfObjectsFragment extends Fragment implements OnObjectAddedList
         // Inflate the layout for this fragment
 
         View view = inflater.inflate(R.layout.fragment_list_of_objects, container, false);
+
+        return view;
+
+    }
+    public void onObjectAdded(String objectName, Integer sizeX, Integer sizeY) {
+        addButtonToList(objectName);
+
+    }
+    @SuppressLint("ResourceAsColor")
+    private void addButtonToList(String name) {
+        textInfo.setVisibility(View.GONE);
+        Button newButton = new Button(requireContext());
+        newButton.setId(View.generateViewId());
+        newButton.setText(name);
+        newButton.setWidth(330);
+        newButton.setHeight(65);
+        newButton.setBackgroundResource(R.drawable.btn_rectangle);
+        newButton.setTextColor(ContextCompat.getColor(requireContext(), R.color.navbar));
+        newButton.setTextSize(18);
+        newButton.setAllCaps(false);
+
+        constraintLayout.addView(newButton);
+
+        // Позиционируем через ConstraintSet
+        ConstraintSet constraintSet = new ConstraintSet();
+        constraintSet.clone(constraintLayout); // копируем текущие ограничения
+        int parentId = ConstraintLayout.LayoutParams.PARENT_ID;
+        int newButtonId = newButton.getId();
+        // Горизонтальное позиционирование: левая граница кнопки к левой границе родителя
+        constraintSet.connect(
+                newButtonId, ConstraintSet.START,
+                parentId, ConstraintSet.START, 32
+        );
+        // Вертикальное позиционирование: верхняя граница кнопки относительно верха родителя
+        // Смещение зависит от счётчика — каждая следующая кнопка ниже
+        constraintSet.connect(
+                newButtonId, ConstraintSet.TOP,
+                parentId, ConstraintSet.TOP, 100 + buttonCounter * 300
+        );
+        // Применяем ограничения
+        constraintSet.applyTo(constraintLayout);
+        buttonCounter++;
+        newButton.setOnClickListener(v -> replaceFragment(new CustomFragment()));
+
+
+    }
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
         constraintLayout = view.findViewById(R.id.constraint_layout);
 
         textInfo = new TextView(requireContext());
@@ -98,54 +148,7 @@ public class ListOfObjectsFragment extends Fragment implements OnObjectAddedList
         textInfo.setTextSize(16);
         textInfo.setTextColor(ContextCompat.getColor(requireContext(), R.color.navbar));
 
-        return view;
 
-    }
-    public void onObjectAdded(String objectName, Integer sizeX, Integer sizeY) {
-        addButtonToList(objectName);
-
-    }
-    @SuppressLint("ResourceAsColor")
-    private void addButtonToList(String name) {
-        textInfo.setVisibility(View.GONE);
-        Button newButton = new Button(requireContext());
-        newButton.setId(View.generateViewId());
-        newButton.setText(name);
-        newButton.setWidth(330);
-        newButton.setHeight(65);
-        newButton.setBackgroundResource(R.drawable.btn_rectangle);
-        newButton.setTextColor(ContextCompat.getColor(requireContext(), R.color.navbar));
-        newButton.setTextSize(18);
-        newButton.setAllCaps(false);
-
-        constraintLayout.addView(newButton);
-
-        // Позиционируем через ConstraintSet
-        ConstraintSet constraintSet = new ConstraintSet();
-        constraintSet.clone(constraintLayout); // копируем текущие ограничения
-        int parentId = ConstraintLayout.LayoutParams.PARENT_ID;
-        int newButtonId = newButton.getId();
-        // Горизонтальное позиционирование: левая граница кнопки к левой границе родителя
-        constraintSet.connect(
-                newButtonId, ConstraintSet.START,
-                parentId, ConstraintSet.START, 32
-        );
-        // Вертикальное позиционирование: верхняя граница кнопки относительно верха родителя
-        // Смещение зависит от счётчика — каждая следующая кнопка ниже
-        constraintSet.connect(
-                newButtonId, ConstraintSet.TOP,
-                parentId, ConstraintSet.TOP, 100 + buttonCounter * 300
-        );
-        // Применяем ограничения
-        constraintSet.applyTo(constraintLayout);
-        buttonCounter++;
-        newButton.setOnClickListener(v -> replaceFragment(new CustomFragment()));
-
-
-    }
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
 
 //        Button btn_to_hallroom = view.findViewById(R.id.btn_hallroom);
 //        btn_to_hallroom.setOnClickListener(v -> replaceFragment(new HallRoomFragment()));

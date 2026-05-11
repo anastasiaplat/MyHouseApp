@@ -142,11 +142,13 @@ public class HomeFragment extends Fragment {
 
 
 
+        mapFragment = (InteractiveMapFragment) viewPagerAdapter.createFragment(1);
 
         btnAdd  = view.findViewById(R.id.btn_add);
         btn_edit = view.findViewById(R.id.btn_edit);
 
         btnAdd.setOnClickListener(v -> showAddButtonDialog());
+        btn_edit.setOnClickListener(v -> mapFragment.enterEditMode());
 
 
 //        btn_edit.setOnClickListener(v -> showEditDialog());
@@ -342,10 +344,12 @@ public class HomeFragment extends Fragment {
             }
             if (isValid) {
                 // Все проверки пройдены — выполняем основное действие
+                if (viewPager2.getCurrentItem() != 1) {viewPager2.setCurrentItem(1, true);}
+
                 handleSelectedDevices(String.valueOf(editName), selectedDevices);
                 passNameToCurrentFragment(name, Integer.parseInt(length)/5, Integer.parseInt(width)/5);
-                if (viewPager2.getCurrentItem() != 1) {viewPager2.setCurrentItem(1);}
-                                dialog.dismiss();
+                dialog.dismiss();
+
             }
 
 //            listener.onDevicesSelected(selectedDevices);
@@ -387,7 +391,7 @@ public class HomeFragment extends Fragment {
     private void handleSelectedDevices(String name, List<String> selectedDevices) {
         String message = String.format("Объект: %s\nУстройства: %s",
                 name, String.join(", ", selectedDevices));
-        Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show();
+//        Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show();
         // Здесь можно добавить логику сохранения данных
     }
     public void showEditDialog(Button buttonToEdit) {
@@ -490,7 +494,7 @@ public class HomeFragment extends Fragment {
         listFragment.onObjectAdded(name, sizeX, sizeY);
 
         InteractiveMapFragment mapFragment = getInteractiveMapFragment();
-        mapFragment.createButton(name, sizeX, sizeY, ContextCompat.getColor(requireContext(), R.color.white_green), false);
+        mapFragment.createButton(name, sizeX, sizeY, ContextCompat.getColor(requireContext(), R.color.white_green));
 
 //        Fragment currentFragment = getChildFragmentManager().findFragmentByTag(
 //                "android:switcher:" + viewPager2.getId() + ":" + "0");

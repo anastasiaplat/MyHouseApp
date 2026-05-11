@@ -1,6 +1,7 @@
 package com.example.myhouseapp0;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.Rect;
@@ -19,7 +20,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import androidx.fragment.app.Fragment;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,8 +37,8 @@ public class InteractiveMapFragment extends Fragment implements OnObjectAddedLis
     private Button applyButton;
     private boolean isInEditMode = false; // флаг режима редактирования
     private Button selectedButtonForEdit; //выбранная для редактирования кнопка
-
-
+    private Button btnApplyPosition;
+    private boolean isInPositionEditMode = false;
     public void enterEditMode() {
         if (buttons.isEmpty()) {
             Toast.makeText(requireContext(), "Нет объектов для редактирования", Toast.LENGTH_SHORT).show();
@@ -46,9 +47,106 @@ public class InteractiveMapFragment extends Fragment implements OnObjectAddedLis
 
         isInEditMode = true;
         Toast.makeText(requireContext(), "Выберите объект для редактирования", Toast.LENGTH_SHORT).show();
-        highlightAllButtons();
+//        highlightAllButtons();
+        // Устанавливаем обработчик кликов на все кнопки на карте
+        for (int i = 0; i < relativeLayout.getChildCount(); i++) {
+            View child = relativeLayout.getChildAt(i);
+            if (child instanceof Button) {
+                child.setOnClickListener(v -> {
+                    selectedButtonForEdit = (Button) v;
+                    showEditObjectDialog();
+                });
+            }
+        }
 
     }
+    private void showEditObjectDialog() {
+        String name = selectedButtonForEdit.getText().toString();
+        int width = selectedButtonForEdit.getWidth();
+        int height = selectedButtonForEdit.getHeight();
+
+        EditObjectDialog dialog = new EditObjectDialog(
+                name, width, height,
+                new EditObjectDialog.OnObjectEditedListener() {
+                    @Override
+                    public void onObjectEdited(String newName, int newWidth, int newHeight) {
+                        // Обновляем текст кнопки
+                        selectedButtonForEdit.setText(newName);
+                        // Обновляем размеры
+                        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) selectedButtonForEdit.getLayoutParams();
+                        params.width = newWidth;
+                        params.height = newHeight;
+                        selectedButtonForEdit.setLayoutParams(params);
+//                        relativeLayout.invalidate();
+//                        relativeLayout.requestLayout();
+
+                        // Выходим из режима редактирования
+                        exitEditMode();
+                    }
+
+//                    @Override
+//                    public void onPositionEditRequested() {
+////                        enterPositionEditMode(); // Включаем режим редактирования позиции
+//                    }
+                });
+        dialog.show(getParentFragmentManager(), "EditObjectDialog");
+    }
+    public void enterPositionEditMode() {
+        if (selectedButtonForEdit != null) {
+            isInPositionEditMode = true;
+
+            // Показываем кнопку «Применить» на фрагменте
+            btnApplyPosition.setVisibility(View.VISIBLE);
+
+            selectedButtonForEdit.setOnTouchListener((v, event) -> {
+                if (event.getAction() == MotionEvent.ACTION_MOVE) {
+                    RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) v.getLayoutParams();
+                    params.leftMargin = (int) event.getRawX() - v.getWidth() / 2;
+                    params.topMargin = (int) event.getRawY() - v.getHeight() / 2 - getStatusBarHeight();
+                    v.setLayoutParams(params);
+                    return true;
+                }
+                return false;
+            });
+        }
+    }
+
+    /**
+     * Выходит из режима редактирования позиции
+     */
+    public void exitPositionEditMode() {
+        if (selectedButtonForEdit != null) {
+            selectedButtonForEdit.setOnTouchListener(null);
+            isInPositionEditMode = false;
+
+            // Скрываем кнопку «Применить»
+            btnApplyPosition.setVisibility(View.GONE);
+
+            // Здесь можно добавить логику сохранения новой позиции в базу данных
+            // или обновления других связанных данных
+        }
+    }
+    private int getStatusBarHeight() {
+        int result = 0;
+        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            result = getResources().getDimensionPixelSize(resourceId);
+        }
+        return result;
+    }
+    private void exitEditMode() {
+        isInEditMode = false;
+        selectedButtonForEdit = null;
+
+        // Убираем обработчики кликов у всех кнопок
+        for (int i = 0; i < relativeLayout.getChildCount(); i++) {
+            View child = relativeLayout.getChildAt(i);
+            if (child instanceof Button) {
+                child.setOnClickListener(null);
+            }
+        }
+    }
+
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -79,6 +177,13 @@ public class InteractiveMapFragment extends Fragment implements OnObjectAddedLis
 
         // Добавляем TextView в родительский RelativeLayout
         relativeLayout.addView(textInfo);
+
+        btnApplyPosition = view.findViewById(R.id.btn_apply);
+
+        // Обработчик для кнопки «Применить»
+        btnApplyPosition.setOnClickListener(v -> {
+            exitPositionEditMode();
+        });
 
 
 //        if (buttons.isEmpty()) {
@@ -128,37 +233,29 @@ public class InteractiveMapFragment extends Fragment implements OnObjectAddedLis
         int width;
         int height;
         int color;
-        boolean isStandalone;
 
-        ButtonConfig(String text, int width, int height, int color, boolean isStandalone) {
+        ButtonConfig(String text, int width, int height, int color) {
             this.text = text;
             this.width = width;
             this.height = height;
             this.color = color;
-            this.isStandalone = isStandalone;
         }
     }
-    public void createButton(String text, int width, int height, int color, boolean isStandalone) {
-        if (relativeLayout == null || !isAdded()) {
-            pendingButtonConfig = new ButtonConfig(text, width, height, color, isStandalone);
-            return;
-        }
+    public void createButton(String text, int width, int height, int color) {
 
+        if (relativeLayout == null || !isAdded()) {
+            pendingButtonConfig = new ButtonConfig(text, width, height, color);
+                        return;
+        }
+//        Toast.makeText(requireContext(), "create button", Toast.LENGTH_SHORT).show();
         textInfo.setVisibility(View.GONE);
 
-        // Для первой кнопки всегда standalone
-        if (buttons.isEmpty()) {
-            isStandalone = true;
-        }
-
-        pendingButtonConfig = new ButtonConfig(text, width, height, color, isStandalone);
+        pendingButtonConfig = new ButtonConfig(text, width, height, color);
         isWaitingForPosition = true;
 
-        // Визуальная индикация ожидания выбора позиции (опционально)
-        if (relativeLayout != null && isAdded()) {
+        // Визуальная индика!= null && isAdded()) {
             relativeLayout.setBackgroundColor(0xFFEDFCEC);
             Toast.makeText(requireContext(), "Выберите место для установки объекта", Toast.LENGTH_SHORT).show();
-        }
     }
 
     /**
@@ -290,6 +387,8 @@ public class InteractiveMapFragment extends Fragment implements OnObjectAddedLis
         newButton.setTextColor(ContextCompat.getColor(requireContext(), R.color.navbar));
         newButton.setTextSize(18);
         newButton.setAllCaps(false);
+        newButton.setMinHeight(0);
+        newButton.setMinWidth(0);
         // Убираем стандартные отступы кнопки
         newButton.setMinWidth(0);
         newButton.setMinHeight(0);

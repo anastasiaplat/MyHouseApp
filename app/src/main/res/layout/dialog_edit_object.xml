@@ -128,7 +128,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="72dp"
         android:backgroundTint="@color/light_red"
         android:fontFamily="sans-serif-medium"
         android:text="Удалить объект"
@@ -136,6 +136,19 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnCancel_edit" />
+
+    <Button
+        android:id="@+id/btn_change_position"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:fontFamily="sans-serif-medium"
+        android:text="Изменить местоположение"
+        android:textColor="@color/navbar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.435"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnConfirm_edit" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

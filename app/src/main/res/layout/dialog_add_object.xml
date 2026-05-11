@@ -66,8 +66,6 @@
         app:selectionRequired="false"
         tools:ignore="MissingConstraints" />
 
-    <!-- Кнопка для открытия диалога выбора -->
-
 
     <TextView
         android:id="@+id/textView4"

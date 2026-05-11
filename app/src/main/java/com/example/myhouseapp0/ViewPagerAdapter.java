@@ -15,8 +15,12 @@ public class ViewPagerAdapter extends FragmentStateAdapter {
 
         super(fragmentActivity);
         fragments = new ArrayList<>();
-        fragments.add(new ListOfObjectsFragment());    // позиция 0
-        fragments.add(new InteractiveMapFragment());   // позиция 1
+
+        fragments.add(new ListOfObjectsFragment());
+        fragments.add(new InteractiveMapFragment());
+
+        // позиция 0
+        // позиция 1
     }
 
     @NonNull
