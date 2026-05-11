@@ -37,7 +37,7 @@ public class InteractiveMapFragment extends Fragment implements OnObjectAddedLis
     private Button applyButton;
     private boolean isInEditMode = false; // флаг режима редактирования
     private Button selectedButtonForEdit; //выбранная для редактирования кнопка
-    private Button btnApplyPosition;
+//    private Button btnApplyPosition;
     private boolean isInPositionEditMode = false;
     public void enterEditMode() {
         if (buttons.isEmpty()) {
@@ -77,8 +77,9 @@ public class InteractiveMapFragment extends Fragment implements OnObjectAddedLis
                         params.width = newWidth;
                         params.height = newHeight;
                         selectedButtonForEdit.setLayoutParams(params);
-//                        relativeLayout.invalidate();
-//                        relativeLayout.requestLayout();
+                        relativeLayout.requestLayout();
+                        relativeLayout.invalidate();
+
 
                         // Выходим из режима редактирования
                         exitEditMode();
@@ -91,12 +92,15 @@ public class InteractiveMapFragment extends Fragment implements OnObjectAddedLis
                 });
         dialog.show(getParentFragmentManager(), "EditObjectDialog");
     }
+
+
+
     public void enterPositionEditMode() {
         if (selectedButtonForEdit != null) {
             isInPositionEditMode = true;
 
             // Показываем кнопку «Применить» на фрагменте
-            btnApplyPosition.setVisibility(View.VISIBLE);
+//            btnApplyPosition.setVisibility(View.VISIBLE);
 
             selectedButtonForEdit.setOnTouchListener((v, event) -> {
                 if (event.getAction() == MotionEvent.ACTION_MOVE) {
@@ -120,7 +124,7 @@ public class InteractiveMapFragment extends Fragment implements OnObjectAddedLis
             isInPositionEditMode = false;
 
             // Скрываем кнопку «Применить»
-            btnApplyPosition.setVisibility(View.GONE);
+//            btnApplyPosition.setVisibility(View.GONE);
 
             // Здесь можно добавить логику сохранения новой позиции в базу данных
             // или обновления других связанных данных
@@ -178,12 +182,11 @@ public class InteractiveMapFragment extends Fragment implements OnObjectAddedLis
         // Добавляем TextView в родительский RelativeLayout
         relativeLayout.addView(textInfo);
 
-        btnApplyPosition = view.findViewById(R.id.btn_apply);
 
         // Обработчик для кнопки «Применить»
-        btnApplyPosition.setOnClickListener(v -> {
-            exitPositionEditMode();
-        });
+//        btnApplyPosition.setOnClickListener(v -> {
+//            exitPositionEditMode();
+//        });
 
 
 //        if (buttons.isEmpty()) {
