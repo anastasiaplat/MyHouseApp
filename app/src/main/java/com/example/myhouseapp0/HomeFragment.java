@@ -72,7 +72,6 @@ public class HomeFragment extends Fragment {
     private String[] deviceList = {"Устройство 1", "Устройство 2", "Устройство 3", "Устройство 4", "Устройство 5"};
     private boolean isInEditMode = false; // Флаг режима редактирования
     private Button selectedButtonForEdit; // Выбранная для редактирования кнопка
-//    private static final String TAG = "MainFragment";
 
     private DB_helper dbHelper;
 
@@ -142,30 +141,14 @@ public class HomeFragment extends Fragment {
         });
 
 
-
         mapFragment = (InteractiveMapFragment) viewPagerAdapter.createFragment(1);
-
         listFragment = (ListOfObjectsFragment) viewPagerAdapter.createFragment(0);
-
         btnAdd  = view.findViewById(R.id.btn_add);
         btn_edit = view.findViewById(R.id.btn_edit);
-
         btnAdd.setOnClickListener(v -> showAddButtonDialog());
-//        btn_edit.setOnClickListener(v -> {
-//            mapFragment.enterEditMode();
-//            listFragment.editButtonOnList();
-//        });
-
-//        btn_ok = view.findViewById(R.id.btn_ok);
-//        btn_stop = view.findViewById(R.id.btn_stop);
-
-
-//        btn_edit.setOnClickListener(v -> showEditDialog());
-        // ___________________________
 // Инициализируем массив здесь — после загрузки разметки
         checkedDevices = new boolean[deviceList.length];
         Arrays.fill(checkedDevices, false); // Явно задаём все значения как false
-
         TextView temptext = view.findViewById(R.id.textview_temp);
         TextView datetext = view.findViewById(R.id.textview_date);
         datetext.setText(day + " " + month + " " + year);
@@ -228,7 +211,6 @@ public class HomeFragment extends Fragment {
         dialog.setContentView(R.layout.dialog_add_object);
         dialog.setTitle("Добавление объекта");
 
-
         EditText editName = dialog.findViewById(R.id.etObjectName);
         ListView devices = dialog.findViewById(R.id.spinnerDevices);
         EditText editWidth = dialog.findViewById(R.id.etWidth);
@@ -257,7 +239,6 @@ public class HomeFragment extends Fragment {
             }
         }
 
-
         btnSave.setOnClickListener(v -> {
             String name = editName.getText().toString();
 //            int sizeX = Integer.parseInt(String.valueOf(editWidth.getText())) / 5;
@@ -275,7 +256,6 @@ public class HomeFragment extends Fragment {
                 }
             }
             boolean isValid = true;
-
 
             // Проверка на заполнение имени
             if (name.isEmpty()) {
@@ -348,24 +328,10 @@ public class HomeFragment extends Fragment {
 //            String selectedDevice = devices.getSelectedItem().toString();
 //            createNewFragment(name, selectedDevice);
 //            createDynamicFragment(name, devicesList);
-
-
         });
 
         btnCancel.setOnClickListener(v -> dialog.dismiss());
         dialog.show();
-
-
-//        DialogAddObject dialog = new DialogAddObject();
-//        dialog.setOnObjectAddedListener((name, sizeX, sizeY) -> {
-//            // Передаём данные в первый фрагмент (позиция 0)
-//            Fragment firstFragment = pagerAdapter.getFragment(0);
-//            if (firstFragment instanceof FirstModeFragment) {
-//                ((FirstModeFragment) firstFragment).addButton(name, sizeX, sizeY);
-//            }
-//        });
-//        dialog.show(getParentFragmentManager(), "AddObjectDialog");
-
     }
     private boolean isNameUnique(String name) {
         // Здесь может быть проверка в базе данных, SharedPreferences или списке
@@ -414,17 +380,6 @@ public class HomeFragment extends Fragment {
             int sizeX_new = Integer.parseInt(String.valueOf(editWidth_edit.getText())) / 5;
             int sizeY_new = Integer.parseInt(String.valueOf(editLength_edit.getText())) / 5;
 
-//            if (!name.isEmpty() && !sizeStr.isEmpty()) {
-//                createNewButton(name, sizeStr);
-//                isWaitingForPosition = true;
-//                dialog.dismiss();
-//            }
-//            if (!name.isEmpty() && !(sizeX == null) && !(sizeY == null)) {
-//                // Передаём имя во фрагменты
-//                passNameToCurrentFragment(name, sizeX, sizeY);
-//                dialog.dismiss();
-//            }
-
             // Передаём изменения в MainFragment для применения
             mapFragment.applyButtonEdit(buttonToEdit, new_name, sizeX_new, sizeY_new);
 
@@ -433,8 +388,6 @@ public class HomeFragment extends Fragment {
 
         btnCancel_edit.setOnClickListener(v -> dialog_edit.dismiss());
         dialog_edit.show();
-
-
     }
 
     private void createDynamicFragment(String name, List<String> devices) {

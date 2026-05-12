@@ -89,8 +89,6 @@ public class ListOfObjectsFragment extends Fragment{
         newButton.setTag(buttonCounter);
         listButtons.add(newButton); // Добавляем в список
 
-        Toast.makeText(requireContext(), "Tag on list: " + newButton.getTag(), Toast.LENGTH_SHORT).show();
-
         // Применяем ограничения
         constraintSet.applyTo(constraintLayout);
         newButton.setOnClickListener(v -> replaceFragment(new CustomFragment()));
@@ -130,8 +128,6 @@ public class ListOfObjectsFragment extends Fragment{
         }
     }
     public void editButtonOnList(){
-        Toast.makeText(requireContext(), "Метод вызвался", Toast.LENGTH_SHORT).show();
-
         HomeFragment homeFragment = (HomeFragment) requireParentFragment();
         InteractiveMapFragment mapFragment = homeFragment.getMapFragment();
 
@@ -145,7 +141,6 @@ public class ListOfObjectsFragment extends Fragment{
             if (listButton.getTag() != null && listButton.getTag().equals(mapFragment.selectedButtonId)) {
                 listButton.setText(mapFragment.newButtonName);
                 buttonFound = true;
-                Toast.makeText(requireContext(), "Название обновлено: " + mapFragment.newButtonName, Toast.LENGTH_SHORT).show();
                 break;
             }
         }
@@ -259,8 +254,6 @@ public class ListOfObjectsFragment extends Fragment{
             constraintLayout.removeView(buttonToRemove);
             // Удаляем из списка кнопок
             listButtons.remove(buttonToRemove);
-
-            Toast.makeText(requireContext(), "Объект удалён из списка", Toast.LENGTH_SHORT).show();
 
             // Обновляем видимость textInfo
             updateTextInfoVisibility();

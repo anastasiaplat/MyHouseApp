@@ -32,7 +32,6 @@ public class InteractiveMapFragment extends Fragment implements OnObjectAddedLis
     private int buttonCounter = 0; // счётчик для позиционирования кнопок
     public Object selectedButtonId;
     public String newButtonName;
-    private static final int MARGIN_DP = 16; // отступ между кнопками в dp
     private List<Button> buttons = new ArrayList<>(); // список всех созданных кнопок
     private boolean isWaitingForPosition = false; // флаг ожидания выбора позиции
     private ButtonConfig pendingButtonConfig; // конфигурация кнопки, ожидающей позиции
@@ -64,39 +63,20 @@ public class InteractiveMapFragment extends Fragment implements OnObjectAddedLis
 
     }
     private void showEditObjectDialog() {
-
         String name = selectedButtonForEdit.getText().toString();
         int width = selectedButtonForEdit.getWidth();
         int height = selectedButtonForEdit.getHeight();
-
         EditObjectDialog dialog = new EditObjectDialog(
                 name, width, height,
                 new EditObjectDialog.OnObjectEditedListener() {
-
                     @Override
                     public void onObjectEdited(String newName, int newWidth, int newHeight,  List<String> selectedDevices) {
-
-                        // Обновляем текст кнопки
-//                        selectedButtonForEdit.setText(newName);
-//                        newButtonName= newName;
-//                        // Обновляем размеры
-//                        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) selectedButtonForEdit.getLayoutParams();
-//                        params.width = newWidth;
-//                        params.height = newHeight;
-//                        selectedButtonForEdit.setLayoutParams(params);
-//                        relativeLayout.requestLayout();
-//                        relativeLayout.invalidate();
-
                         newButtonName = newName;
                         int newOriginalWidth = newWidth; // конвертируем обратно в исходные размеры
                         int newOriginalHeight = newHeight;
-
                         // Передаём данные в HomeFragment для синхронизации с ListOfObjectsFragment
                         HomeFragment homeFragment = (HomeFragment) requireParentFragment();
                         homeFragment.onObjectEditedInDialog(selectedButtonForEdit.getTag(), newName, newOriginalWidth, newOriginalHeight);
-
-
-
                         // Выходим из режима редактирования
                         exitEditMode();
                     }
@@ -106,10 +86,6 @@ public class InteractiveMapFragment extends Fragment implements OnObjectAddedLis
                         homeFragment.onObjectDeletedInDialog(selectedButtonForEdit.getTag());
                         exitEditMode();
                     }
-//                    @Override
-//                    public void onPositionEditRequested() {
-////                        enterPositionEditMode(); // Включаем режим редактирования позиции
-//                    }
                 });
         dialog.show(getParentFragmentManager(), "EditObjectDialog");
     }
@@ -119,7 +95,7 @@ public class InteractiveMapFragment extends Fragment implements OnObjectAddedLis
             relativeLayout.removeView(targetButton);
             buttons.remove(targetButton); // удаляем из списка кнопок
             updateTextInfoVisibility();
-            Toast.makeText(requireContext(), "Объект удалён с карты", Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), "Объект удалён", Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(requireContext(), "Кнопка для удаления не найдена на карте", Toast.LENGTH_SHORT).show();
         }
@@ -132,10 +108,8 @@ public class InteractiveMapFragment extends Fragment implements OnObjectAddedLis
             relativeLayout.removeView(selectedButtonForEdit);
             updateTextInfoVisibility();
             selectedButtonForEdit = null; // Обнуляем ссылку
-            Toast.makeText(getContext(), "Объект удален", Toast.LENGTH_SHORT).show();
         }
     }
-
     public void enterPositionEditMode() {
         if (selectedButtonForEdit != null) {
             isInPositionEditMode = true;
@@ -191,15 +165,12 @@ public class InteractiveMapFragment extends Fragment implements OnObjectAddedLis
             }
         }
     }
-
-
     @SuppressLint("MissingInflatedId")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_interactive_map, container, false);
         relativeLayout = view.findViewById(R.id.map_view);
-
         textInfo = new TextView(requireContext());
         textInfo.setId(View.generateViewId());
         textInfo.setText("Объекты не добавлены");
@@ -222,22 +193,6 @@ public class InteractiveMapFragment extends Fragment implements OnObjectAddedLis
 
         // Добавляем TextView в родительский RelativeLayout
         relativeLayout.addView(textInfo);
-
-
-        // Обработчик для кнопки «Применить»
-//        btnApplyPosition.setOnClickListener(v -> {
-//            exitPositionEditMode();
-//        });
-
-
-//        if (buttons.isEmpty()) {
-//            textInfo.setVisibility(View.VISIBLE);
-//            Toast.makeText(requireContext(), "отображаем", Toast.LENGTH_SHORT).show();
-//            } else {
-//            textInfo.setVisibility(View.GONE);
-//            Toast.makeText(requireContext(), "скрываем в онкриет", Toast.LENGTH_SHORT).show();
-//        }
-
 
         // Обработчик касаний по контейнеру
         if (this.relativeLayout != null) {
@@ -287,13 +242,7 @@ public class InteractiveMapFragment extends Fragment implements OnObjectAddedLis
     }
     public void createButton(String text, int width, int height, int color) {
 
-//        if (relativeLayout == null || !isAdded()) {
-//            pendingButtonConfig = new ButtonConfig(text, width, height, color);
-//                        return;
-//        }
-//        Toast.makeText(requireContext(), "create button", Toast.LENGTH_SHORT).show();
         textInfo.setVisibility(View.GONE);
-
         pendingButtonConfig = new ButtonConfig(text, width, height, color);
         isWaitingForPosition = true;
 
@@ -380,8 +329,6 @@ public class InteractiveMapFragment extends Fragment implements OnObjectAddedLis
         }
     }
 
-
-
     /**
      * Обновляет позицию предварительного просмотра
      */
@@ -406,7 +353,6 @@ public class InteractiveMapFragment extends Fragment implements OnObjectAddedLis
         RelativeLayout.LayoutParams previewParams = (RelativeLayout.LayoutParams) previewOverlay.getLayoutParams();
         int finalX = previewParams.leftMargin;
         int finalY = previewParams.topMargin;
-
 
         // Создаём прямоугольник для новой кнопки
         Rect newButtonRect = new Rect(finalX, finalY, finalX + widthPx, finalY + heightPx);
@@ -441,18 +387,12 @@ public class InteractiveMapFragment extends Fragment implements OnObjectAddedLis
         buttonCounter++;
         newButton.setId(View.generateViewId());
         newButton.setTag(buttonCounter);
-        Toast.makeText(requireContext(), "Tag on Map:"+newButton.getTag(), Toast.LENGTH_SHORT).show();
-
-
         // Сохраняем исходные размеры (до /5) и отображаемые
         int originalWidth = (int) (widthPx / getResources().getDisplayMetrics().density);
         int originalHeight = (int) (heightPx / getResources().getDisplayMetrics().density);
 
-
-
         buttons.add(newButton);
         relativeLayout.addView(newButton);
-
         return true;
     }
         /**
@@ -520,8 +460,6 @@ public class InteractiveMapFragment extends Fragment implements OnObjectAddedLis
         applyButton = null;
     }
 
-
-
     /**
      * Подсвечивает все кнопки рамкой для выбора
      */
@@ -551,7 +489,6 @@ public class InteractiveMapFragment extends Fragment implements OnObjectAddedLis
         return 0xFF90EE90; // Возвращаем светло‑зелёный по умолчанию
     }
 
-
     /**
      * Обрабатывает выбор кнопки для редактирования
      */
@@ -571,16 +508,13 @@ public class InteractiveMapFragment extends Fragment implements OnObjectAddedLis
      */
     public void applyButtonEdit(Button button, String newName, int newOriginalWidth, int newOriginalHeight) {
         button.setText(newName);
-
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) button.getLayoutParams();
         params.width = newOriginalWidth;
         params.height = newOriginalHeight;
         button.setLayoutParams(params);
-
         isInEditMode = false;
         removeButtonHighlights();
     }
-
 
     private int getButtonCount() {
         int count = 0;
@@ -632,7 +566,5 @@ public class InteractiveMapFragment extends Fragment implements OnObjectAddedLis
     public void onObjectAdded(String objectName, Integer sizeX, Integer sizeY) {
 //        addButtonToMap(objectName);
     }
-
-
 
 }
