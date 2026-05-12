@@ -40,7 +40,6 @@ public class InteractiveMapFragment extends Fragment implements OnObjectAddedLis
     private Button applyButton;
     private boolean isInEditMode = false; // флаг режима редактирования
     private Button selectedButtonForEdit; //выбранная для редактирования кнопка
-//    private Button btnApplyPosition;
     private boolean isInPositionEditMode = false;
     public void enterEditMode() {
         if (buttons.isEmpty()) {
@@ -65,6 +64,7 @@ public class InteractiveMapFragment extends Fragment implements OnObjectAddedLis
 
     }
     private void showEditObjectDialog() {
+
         String name = selectedButtonForEdit.getText().toString();
         int width = selectedButtonForEdit.getWidth();
         int height = selectedButtonForEdit.getHeight();
@@ -75,6 +75,7 @@ public class InteractiveMapFragment extends Fragment implements OnObjectAddedLis
 
                     @Override
                     public void onObjectEdited(String newName, int newWidth, int newHeight,  List<String> selectedDevices) {
+
                         // Обновляем текст кнопки
                         selectedButtonForEdit.setText(newName);
                         newButtonName= newName;
@@ -85,7 +86,6 @@ public class InteractiveMapFragment extends Fragment implements OnObjectAddedLis
                         selectedButtonForEdit.setLayoutParams(params);
                         relativeLayout.requestLayout();
                         relativeLayout.invalidate();
-
 
                         // Выходим из режима редактирования
                         exitEditMode();
@@ -275,7 +275,7 @@ public class InteractiveMapFragment extends Fragment implements OnObjectAddedLis
         pendingButtonConfig = new ButtonConfig(text, width, height, color);
         isWaitingForPosition = true;
 
-        // Визуальная индика!= null && isAdded()) {
+        // Визуальная индикация
             relativeLayout.setBackgroundColor(0xFFEDFCEC);
             Toast.makeText(requireContext(), "Выберите место для установки объекта", Toast.LENGTH_SHORT).show();
     }
@@ -285,11 +285,6 @@ public class InteractiveMapFragment extends Fragment implements OnObjectAddedLis
      */
     private void showPreviewAtPosition(float x, float y) {
         if (pendingButtonConfig == null || relativeLayout == null) return;
-
-
-
-
-
         float density = getResources().getDisplayMetrics().density;
         int widthPx = (int) (pendingButtonConfig.width * density);
         int heightPx = (int) (pendingButtonConfig.height * density);
@@ -342,25 +337,23 @@ public class InteractiveMapFragment extends Fragment implements OnObjectAddedLis
 //            applyAddButton(widthPx, heightPx);
             // Обработчик кнопки "Применить"
             applyButton.setOnClickListener(v -> {
-                    if (!createButtonAtPositionFromPreview(
-                            (int) (pendingButtonConfig.width * getResources().getDisplayMetrics().density),
-                            (int) (pendingButtonConfig.height * getResources().getDisplayMetrics().density)
-                    )) {
-                        // Если создание не удалось (есть пересечение), остаёмся в режиме предварительного просмотра
-                        return;
-                    }
+                // Создаём реальную кнопку — метод сам проверит условия и вернёт false при ошибке
+                boolean success = createButtonAtPositionFromPreview(
+                        (int) (pendingButtonConfig.width * getResources().getDisplayMetrics().density),
+                        (int) (pendingButtonConfig.height * getResources().getDisplayMetrics().density)
+                );
 
-                // Создаём реальную кнопку в позиции предварительного просмотра
-                createButtonAtPositionFromPreview(widthPx, heightPx);
+                if (success) {
+                    // Убираем предварительный просмотр и кнопку «Применить» только при успешном создании
+                    relativeLayout.removeView(previewOverlay);
+                    relativeLayout.removeView(applyButton);
+                    previewOverlay = null;
+                    applyButton = null;
 
-                // Убираем предварительный просмотр и кнопку "Применить"
-                relativeLayout.removeView(previewOverlay);
-                relativeLayout.removeView(applyButton);
-                previewOverlay = null;
-                applyButton = null;
-
-                isWaitingForPosition = false;
-                relativeLayout.setBackgroundColor(0x00000000);
+                    isWaitingForPosition = false;
+                    relativeLayout.setBackgroundColor(0x00000000);
+                }
+                // Если создание не удалось, остаёмся в режиме предварительного просмотра
             });
         }
     }
@@ -413,8 +406,6 @@ public class InteractiveMapFragment extends Fragment implements OnObjectAddedLis
         newButton.setTextColor(ContextCompat.getColor(requireContext(), R.color.navbar));
         newButton.setTextSize(18);
         newButton.setAllCaps(false);
-        newButton.setMinHeight(0);
-        newButton.setMinWidth(0);
         // Убираем стандартные отступы кнопки
         newButton.setMinWidth(0);
         newButton.setMinHeight(0);
@@ -429,8 +420,23 @@ public class InteractiveMapFragment extends Fragment implements OnObjectAddedLis
         newButton.setId(View.generateViewId());
         newButton.setTag(buttonCounter);
         Toast.makeText(requireContext(), "Tag on Map:"+newButton.getTag(), Toast.LENGTH_SHORT).show();
-        relativeLayout.addView(newButton);
+
+
+        // Сохраняем исходные размеры (до /5) и отображаемые
+        int originalWidth = (int) (widthPx / getResources().getDisplayMetrics().density);
+        int originalHeight = (int) (heightPx / getResources().getDisplayMetrics().density);
+
+        ButtonData buttonData = new ButtonData(
+                pendingButtonConfig.text,
+                originalWidth,
+                originalHeight,
+                pendingButtonConfig.color,
+                newButton
+        );
+
         buttons.add(newButton);
+        relativeLayout.addView(newButton);
+
         return true;
     }
         /**
@@ -503,13 +509,13 @@ public class InteractiveMapFragment extends Fragment implements OnObjectAddedLis
     /**
      * Подсвечивает все кнопки рамкой для выбора
      */
-    public void highlightAllButtons() {
-        isInEditMode = true;
-        for (Button button : buttons) {
-            // Или простой вариант — изменить цвет фона с прозрачностью
-            button.setBackgroundColor(0x80ADD8E6); // Полупрозрачный голубой
-        }
-    }
+//    public void highlightAllButtons() {
+//        isInEditMode = true;
+//        for (Button button : buttons) {
+//            // Или простой вариант — изменить цвет фона с прозрачностью
+//            button.setBackgroundColor(0x80ADD8E6); // Полупрозрачный голубой
+//        }
+//    }
 
     /**
      * Снимает подсветку со всех кнопок
@@ -547,12 +553,12 @@ public class InteractiveMapFragment extends Fragment implements OnObjectAddedLis
     /**
      * Применяет изменения к кнопке после редактирования (вызывается из HomeFragment)
      */
-    public void applyButtonEdit(Button button, String newName, int newWidth, int newHeight) {
+    public void applyButtonEdit(Button button, String newName, int newOriginalWidth, int newOriginalHeight) {
         button.setText(newName);
 
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) button.getLayoutParams();
-        params.width = newWidth;
-        params.height = newHeight;
+        params.width = newOriginalWidth;
+        params.height = newOriginalHeight;
         button.setLayoutParams(params);
 
         isInEditMode = false;
@@ -568,5 +574,24 @@ public class InteractiveMapFragment extends Fragment implements OnObjectAddedLis
     @Override
     public void onObjectAdded(String objectName, Integer sizeX, Integer sizeY) {
 //        addButtonToMap(objectName);
+    }
+    private static class ButtonData {
+        String name;
+        int originalWidth;  // исходное значение (до /5)
+        int originalHeight; // исходное значение (до /5)
+        int displayWidth;   // отображаемое значение (/5)
+        int displayHeight;  // отображаемое значение (/5)
+        int color;
+        Button buttonView;
+
+        ButtonData(String name, int originalWidth, int originalHeight, int color, Button buttonView) {
+            this.name = name;
+            this.originalWidth = originalWidth;
+            this.originalHeight = originalHeight;
+            this.displayWidth = originalWidth / 5;
+            this.displayHeight = originalHeight / 5;
+            this.color = color;
+            this.buttonView = buttonView;
+        }
     }
 }

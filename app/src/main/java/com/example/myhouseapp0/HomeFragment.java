@@ -185,24 +185,6 @@ public class HomeFragment extends Fragment {
         requestQueue.add(request);
     }
 
-//    private void addButtonToCurrentTab() {
-//        int currentPosition = viewPager2.getCurrentItem();
-//        Fragment currentFragment = viewPagerAdapter.createFragment(currentPosition);
-//
-//        if (currentFragment instanceof ListOfObjectsFragment) {
-//            ((ListOfObjectsFragment) currentFragment).createNewButton();
-//        }
-//    }
-
-//    public void addButton(String name, String size) {
-//    }
-
-
-
-
-
-
-
     // Получить ListOfObjectsFragment
     public ListOfObjectsFragment getListOfObjectsFragment() {
         Fragment fragment = viewPagerAdapter.getFragment(0); // позиция 0
@@ -277,16 +259,6 @@ public class HomeFragment extends Fragment {
 //            int sizeY = Integer.parseInt(String.valueOf(editLength.getText())) / 5;
             String length = editLength.getText().toString();
             String width = editWidth.getText().toString();
-//            if (!name.isEmpty() && !sizeStr.isEmpty()) {
-//                createNewButton(name, sizeStr);
-//                isWaitingForPosition = true;
-//                dialog.dismiss();
-//            }
-//            if (!name.isEmpty() && !(sizeX == null) && !(sizeY == null)) {
-//                // Передаём имя во фрагменты
-//                passNameToCurrentFragment(name, sizeX, sizeY);
-//                dialog.dismiss();
-//            }
 //
             List<String> selectedDevices = new ArrayList<>();
             for (int i = 0; i < deviceList.length; i++) {
@@ -310,6 +282,8 @@ public class HomeFragment extends Fragment {
             } else {
                 editName.setError(null);
             }
+            int originalSizeX, originalSizeY; // исходные значения для проверок
+            int finalSizeX = 0, finalSizeY = 0; // итоговые размеры для кнопки
 
             int sizeX, sizeY;
             // Проверка sizeX
@@ -318,12 +292,13 @@ public class HomeFragment extends Fragment {
                 isValid = false;
             } else {
                 try {
-                    sizeX = Integer.parseInt(width);
-                    if (sizeX < 100 || sizeX > 1000) {
+                    originalSizeX = Integer.parseInt(width);
+                    if (originalSizeX < 100 || originalSizeX > 1000) {
                         editWidth.setError("Значение допустимо от 100 до 1000");
                         isValid = false;
                     } else {
                         editWidth.setError(null);
+                        finalSizeX = originalSizeX / 5; // конвертация в масштабе 5:1
                     }
                 } catch (NumberFormatException e) {
                     editWidth.setError("Введите корректное число");
@@ -337,12 +312,13 @@ public class HomeFragment extends Fragment {
                 isValid = false;
             } else {
                 try {
-                    sizeY = Integer.parseInt(length);
-                    if (sizeY < 100 || sizeY > 1000) {
+                    originalSizeY = Integer.parseInt(length);
+                    if (originalSizeY < 100 || originalSizeY > 1000) {
                         editLength.setError("Значение допустимо от 100 до 1000");
                         isValid = false;
                     } else {
                         editLength.setError(null);
+                        finalSizeY = originalSizeY / 5; // конвертация в масштабе 5:1
                     }
                 } catch (NumberFormatException e) {
                     editLength.setError("Введите корректное число");
@@ -359,7 +335,7 @@ public class HomeFragment extends Fragment {
                 if (viewPager2.getCurrentItem() != 1) {viewPager2.setCurrentItem(1, true);}
 
                 handleSelectedDevices(String.valueOf(editName), selectedDevices);
-                passNameToCurrentFragment(name, Integer.parseInt(length)/5, Integer.parseInt(width)/5);
+                passNameToCurrentFragment(name, finalSizeX, finalSizeY);
                 dialog.dismiss();
 
             }
@@ -484,22 +460,6 @@ public class HomeFragment extends Fragment {
         return CustomFragment.class;
     }
 
-
-//    private void createNewFragment(String name, String device) {
-//        Bundle args = new Bundle();
-//        args.putString("name", name);
-//        args.putString("device", device);
-//
-//        CustomFragment newFragment = new CustomFragment();
-//        newFragment.setArguments(args);
-//
-//        requireActivity().getSupportFragmentManager()
-//                .beginTransaction()
-//                .replace(R.id.frame_layout, newFragment)
-//                .addToBackStack(null)
-//                .commit();
-//    }
-
     private void passNameToCurrentFragment(String name, int sizeX, int sizeY) {
 
         ListOfObjectsFragment listFragment = getListOfObjectsFragment();
@@ -527,18 +487,6 @@ public class HomeFragment extends Fragment {
 //            Toast.makeText(requireContext(), "Не удалось найти текущий фрагмент во ViewPager2", Toast.LENGTH_SHORT).show();
 //        }
     }
-    private void passNameToCurrentFragment_edit(String name, int sizeX, int sizeY) {
-
-//        ListOfObjectsFragment listFragment = getListOfObjectsFragment();
-//        listFragment.onObjectAdded(name, sizeX, sizeY);
-
-        InteractiveMapFragment mapFragment = getInteractiveMapFragment();
-        mapFragment.highlightAllButtons();
-
-    }
-
-
-
     private void replaceFragment(Fragment fragment){
         FragmentManager fragmentManager = getParentFragmentManager();
         FragmentTransaction fragmentTransaction=fragmentManager.beginTransaction();
