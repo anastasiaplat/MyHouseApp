@@ -90,7 +90,8 @@ void onObjectDeleted(); // Новый метод для обработки уд�
                 String newWidth = etWidth.getText().toString();
                 String newLength = etLength.getText().toString();
                 boolean isValid = true;
-
+                int newOriginalSizeX, newOriginalSizeY; // исходные значения для проверок
+                int newFinalSizeX = 0, newFinalSizeY = 0; // итоговые размеры для кнопки
 
                 // Проверка на заполнение имени
                 if (newName.isEmpty()) {
@@ -110,12 +111,13 @@ void onObjectDeleted(); // Новый метод для обработки уд�
                     isValid = false;
                 } else {
                     try {
-                        newSizeX = Integer.parseInt(newWidth);
-                        if (newSizeX < 100 || newSizeX > 1000) {
+                        newOriginalSizeX = Integer.parseInt(newWidth);
+                        if (newOriginalSizeX < 100 || newOriginalSizeX > 1000) {
                             etWidth.setError("Значение допустимо от 100 до 1000");
                             isValid = false;
                         } else {
                             etWidth.setError(null);
+                            newFinalSizeX = newOriginalSizeX / 5; // конвертация в масштабе 5:1
                         }
                     } catch (NumberFormatException e) {
                         etWidth.setError("Введите корректное число");
@@ -129,12 +131,13 @@ void onObjectDeleted(); // Новый метод для обработки уд�
                     isValid = false;
                 } else {
                     try {
-                        newSizeY = Integer.parseInt(newLength);
-                        if (newSizeY < 100 || newSizeY > 1000) {
+                        newOriginalSizeY = Integer.parseInt(newLength);
+                        if (newOriginalSizeY < 100 || newOriginalSizeY > 1000) {
                             etLength.setError("Значение допустимо от 100 до 1000");
                             isValid = false;
                         } else {
                             etLength.setError(null);
+                            newFinalSizeY = newOriginalSizeY / 5; // конвертация в масштабе 5:1
                         }
                     } catch (NumberFormatException e) {
                         etLength.setError("Введите корректное число");
@@ -160,7 +163,8 @@ void onObjectDeleted(); // Новый метод для обработки уд�
                 if (isValid) {
                     // Все проверки пройдены — выполняем основное действие
                     if (listener != null) {
-                        listener.onObjectEdited(newName, Integer.parseInt(newWidth), Integer.parseInt(newLength), selectedDevices);
+                        listener.onObjectEdited(newName, newFinalSizeX, newFinalSizeY, selectedDevices);
+
                     }
                     dialog.dismiss();
 

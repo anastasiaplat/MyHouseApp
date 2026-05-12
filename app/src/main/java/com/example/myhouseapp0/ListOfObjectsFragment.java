@@ -20,6 +20,9 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class ListOfObjectsFragment extends Fragment{
 
@@ -27,6 +30,11 @@ public class ListOfObjectsFragment extends Fragment{
     private ConstraintLayout constraintLayout;
     private int buttonCounter = 0;
     private TextView textInfo;
+    private List<Button> listButtons = new ArrayList<>();
+
+    private int getListButtonCount() {
+        return listButtons.size();
+    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -43,10 +51,13 @@ public class ListOfObjectsFragment extends Fragment{
 //    }
     @SuppressLint("ResourceAsColor")
     public void addButtonToList(String name) {
-        textInfo.setVisibility(View.GONE);
+        // Инициализируем textInfo, если ещё не создан
+        if (textInfo == null) {
+            initializeTextInfo();
+        }
+
         Button newButton = new Button(requireContext());
         newButton.setId(View.generateViewId());
-
         newButton.setText(name);
         newButton.setWidth(330);
         newButton.setHeight(65);
@@ -59,40 +70,90 @@ public class ListOfObjectsFragment extends Fragment{
 
         // Позиционируем через ConstraintSet
         ConstraintSet constraintSet = new ConstraintSet();
-        constraintSet.clone(constraintLayout); // копируем текущие ограничения
+        constraintSet.clone(constraintLayout);
         int parentId = ConstraintLayout.LayoutParams.PARENT_ID;
         int newButtonId = newButton.getId();
-        // Горизонтальное позиционирование: левая граница кнопки к левой границе родителя
+
+        // Горизонтальное позиционирование
         constraintSet.connect(
                 newButtonId, ConstraintSet.START,
                 parentId, ConstraintSet.START, 32
         );
-        // Вертикальное позиционирование: верхняя граница кнопки относительно верха родителя
-        // Смещение зависит от счётчика — каждая следующая кнопка ниже
+        // Вертикальное позиционирование
         constraintSet.connect(
                 newButtonId, ConstraintSet.TOP,
                 parentId, ConstraintSet.TOP, 100 + buttonCounter * 300
         );
+
         buttonCounter++;
         newButton.setTag(buttonCounter);
-        Toast.makeText(requireContext(), "Tag on list"+newButton.getTag(), Toast.LENGTH_SHORT).show();
+        listButtons.add(newButton); // Добавляем в список
+
+        Toast.makeText(requireContext(), "Tag on list: " + newButton.getTag(), Toast.LENGTH_SHORT).show();
+
         // Применяем ограничения
         constraintSet.applyTo(constraintLayout);
         newButton.setOnClickListener(v -> replaceFragment(new CustomFragment()));
 
-
+        // Обновляем видимость textInfo
+        updateTextInfoVisibility();
     }
+    private void initializeTextInfo() {
+        textInfo = new TextView(requireContext());
+        textInfo.setId(View.generateViewId());
+        textInfo.setText("Объекты не добавлены");
+        ConstraintLayout.LayoutParams params = new ConstraintLayout.LayoutParams(
+                ConstraintLayout.LayoutParams.WRAP_CONTENT,
+                ConstraintLayout.LayoutParams.WRAP_CONTENT
+        );
+        textInfo.setLayoutParams(params);
+        constraintLayout.addView(textInfo);
 
+        ConstraintSet constraintSet = new ConstraintSet();
+        constraintSet.clone(constraintLayout);
+        // Центрирование textInfo
+        constraintSet.connect(textInfo.getId(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START);
+        constraintSet.connect(textInfo.getId(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END);
+        constraintSet.connect(textInfo.getId(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP);
+        constraintSet.connect(textInfo.getId(), ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM);
+        constraintSet.applyTo(constraintLayout);
+
+        textInfo.setGravity(Gravity.CENTER);
+        textInfo.setTextSize(16);
+        textInfo.setTextColor(ContextCompat.getColor(requireContext(), R.color.navbar));
+    }
+    private void updateTextInfoVisibility() {
+        if (getListButtonCount() == 0) {
+            textInfo.setVisibility(View.VISIBLE);
+        } else {
+            textInfo.setVisibility(View.GONE);
+        }
+    }
     public void editButtonOnList(){
         Toast.makeText(requireContext(), "Метод вызвался", Toast.LENGTH_SHORT).show();
-        InteractiveMapFragment mapFragment = HomeFragment.newInstance().getInteractiveMapFragment();
-        for (int i = 0; i < constraintLayout.getChildCount(); i++) {
-            View child = constraintLayout.getChildAt(i);
-            if (child instanceof Button && mapFragment.selectedButtonId.equals(child.getTag())) {
-                ((Button) child).setText(mapFragment.newButtonName);
-                Toast.makeText(requireContext(), "newName"+mapFragment.newButtonName, Toast.LENGTH_SHORT).show();
+
+        HomeFragment homeFragment = (HomeFragment) requireParentFragment();
+        InteractiveMapFragment mapFragment = homeFragment.getMapFragment();
+
+        if (mapFragment == null || mapFragment.selectedButtonId == null) {
+            Toast.makeText(requireContext(), "Не удалось получить данные для редактирования", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        boolean buttonFound = false;
+        for (Button listButton : listButtons) {
+            if (listButton.getTag() != null && listButton.getTag().equals(mapFragment.selectedButtonId)) {
+                listButton.setText(mapFragment.newButtonName);
+                buttonFound = true;
+                Toast.makeText(requireContext(), "Название обновлено: " + mapFragment.newButtonName, Toast.LENGTH_SHORT).show();
+                break;
             }
         }
+
+        if (!buttonFound) {
+            Toast.makeText(requireContext(), "Кнопка для редактирования не найдена", Toast.LENGTH_SHORT).show();
+        }
+
         constraintLayout.requestLayout();
         constraintLayout.invalidate();
 
@@ -179,6 +240,24 @@ public class ListOfObjectsFragment extends Fragment{
 
 
 
+    }
+    public void updateButtonInList(Object buttonTag, String newName) {
+        boolean buttonFound = false;
+        for (Button listButton : listButtons) {
+            if (listButton.getTag() != null && listButton.getTag().equals(buttonTag)) {
+                listButton.setText(newName);
+                buttonFound = true;
+                Toast.makeText(requireContext(), "Название обновлено: " + newName, Toast.LENGTH_SHORT).show();
+                break;
+            }
+        }
+
+        if (!buttonFound) {
+            Toast.makeText(requireContext(), "Кнопка для редактирования не найдена", Toast.LENGTH_SHORT).show();
+        }
+
+        constraintLayout.requestLayout();
+        constraintLayout.invalidate();
     }
     private void replaceFragment(Fragment fragment){
         FragmentManager fragmentManager = getParentFragmentManager();

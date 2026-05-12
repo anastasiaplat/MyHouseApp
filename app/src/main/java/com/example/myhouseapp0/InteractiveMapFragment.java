@@ -77,15 +77,25 @@ public class InteractiveMapFragment extends Fragment implements OnObjectAddedLis
                     public void onObjectEdited(String newName, int newWidth, int newHeight,  List<String> selectedDevices) {
 
                         // Обновляем текст кнопки
-                        selectedButtonForEdit.setText(newName);
-                        newButtonName= newName;
-                        // Обновляем размеры
-                        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) selectedButtonForEdit.getLayoutParams();
-                        params.width = newWidth;
-                        params.height = newHeight;
-                        selectedButtonForEdit.setLayoutParams(params);
-                        relativeLayout.requestLayout();
-                        relativeLayout.invalidate();
+//                        selectedButtonForEdit.setText(newName);
+//                        newButtonName= newName;
+//                        // Обновляем размеры
+//                        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) selectedButtonForEdit.getLayoutParams();
+//                        params.width = newWidth;
+//                        params.height = newHeight;
+//                        selectedButtonForEdit.setLayoutParams(params);
+//                        relativeLayout.requestLayout();
+//                        relativeLayout.invalidate();
+
+                        newButtonName = newName;
+                        int newOriginalWidth = newWidth; // конвертируем обратно в исходные размеры
+                        int newOriginalHeight = newHeight;
+
+                        // Передаём данные в HomeFragment для синхронизации с ListOfObjectsFragment
+                        HomeFragment homeFragment = (HomeFragment) requireParentFragment();
+                        homeFragment.onObjectEditedInDialog(selectedButtonForEdit.getTag(), newName, newOriginalWidth, newOriginalHeight);
+
+
 
                         // Выходим из режима редактирования
                         exitEditMode();
@@ -109,6 +119,7 @@ public class InteractiveMapFragment extends Fragment implements OnObjectAddedLis
     private void removeSelectedButton() {
         if (selectedButtonForEdit != null && relativeLayout != null) {
             relativeLayout.removeView(selectedButtonForEdit);
+            updateTextInfoVisibility();
             selectedButtonForEdit = null; // Обнуляем ссылку
             Toast.makeText(getContext(), "Объект удален", Toast.LENGTH_SHORT).show();
         }
@@ -426,13 +437,7 @@ public class InteractiveMapFragment extends Fragment implements OnObjectAddedLis
         int originalWidth = (int) (widthPx / getResources().getDisplayMetrics().density);
         int originalHeight = (int) (heightPx / getResources().getDisplayMetrics().density);
 
-        ButtonData buttonData = new ButtonData(
-                pendingButtonConfig.text,
-                originalWidth,
-                originalHeight,
-                pendingButtonConfig.color,
-                newButton
-        );
+
 
         buttons.add(newButton);
         relativeLayout.addView(newButton);
@@ -566,32 +571,57 @@ public class InteractiveMapFragment extends Fragment implements OnObjectAddedLis
     }
 
 
+    private int getButtonCount() {
+        int count = 0;
+        for (int i = 0; i < relativeLayout.getChildCount(); i++) {
+            View child = relativeLayout.getChildAt(i);
+            if (child instanceof Button && child != textInfo) {
+                count++;
+            }
+        }
+        return count;
+    }
+    private void updateTextInfoVisibility() {
+        if (getButtonCount() == 0) {
+            textInfo.setVisibility(View.VISIBLE);
+        } else {
+            textInfo.setVisibility(View.GONE);
+        }
+    }
 
+    public void updateButtonInMap(Object buttonTag, String newName, int newOriginalWidth, int newOriginalHeight) {
+        Button targetButton = findButtonByTag(buttonTag);
+        if (targetButton != null) {
+            targetButton.setText(newName);
 
+            float density = getResources().getDisplayMetrics().density;
+            int widthPx = (int) (newOriginalWidth * density);
+            int heightPx = (int) (newOriginalHeight * density);
 
+            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) targetButton.getLayoutParams();
+            params.width = widthPx;
+            params.height = heightPx;
+            targetButton.setLayoutParams(params);
 
+            relativeLayout.requestLayout();
+            relativeLayout.invalidate();
+        }
+    }
+
+    private Button findButtonByTag(Object tag) {
+        for (Button button : buttons) {
+            if (button.getTag() != null && button.getTag().equals(tag)) {
+                return button;
+            }
+        }
+        return null;
+    }
 
     @Override
     public void onObjectAdded(String objectName, Integer sizeX, Integer sizeY) {
 //        addButtonToMap(objectName);
     }
-    private static class ButtonData {
-        String name;
-        int originalWidth;  // исходное значение (до /5)
-        int originalHeight; // исходное значение (до /5)
-        int displayWidth;   // отображаемое значение (/5)
-        int displayHeight;  // отображаемое значение (/5)
-        int color;
-        Button buttonView;
 
-        ButtonData(String name, int originalWidth, int originalHeight, int color, Button buttonView) {
-            this.name = name;
-            this.originalWidth = originalWidth;
-            this.originalHeight = originalHeight;
-            this.displayWidth = originalWidth / 5;
-            this.displayHeight = originalHeight / 5;
-            this.color = color;
-            this.buttonView = buttonView;
-        }
-    }
+
+
 }

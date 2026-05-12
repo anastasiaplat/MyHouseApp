@@ -151,10 +151,10 @@ public class HomeFragment extends Fragment {
         btn_edit = view.findViewById(R.id.btn_edit);
 
         btnAdd.setOnClickListener(v -> showAddButtonDialog());
-        btn_edit.setOnClickListener(v -> {
-            mapFragment.enterEditMode();
-            listFragment.editButtonOnList();
-        });
+//        btn_edit.setOnClickListener(v -> {
+//            mapFragment.enterEditMode();
+//            listFragment.editButtonOnList();
+//        });
 
 //        btn_ok = view.findViewById(R.id.btn_ok);
 //        btn_stop = view.findViewById(R.id.btn_stop);
@@ -185,6 +185,10 @@ public class HomeFragment extends Fragment {
         requestQueue.add(request);
     }
 
+    public InteractiveMapFragment getMapFragment() {
+        return mapFragment;
+    }
+
     // Получить ListOfObjectsFragment
     public ListOfObjectsFragment getListOfObjectsFragment() {
         Fragment fragment = viewPagerAdapter.getFragment(0); // позиция 0
@@ -207,6 +211,7 @@ public class HomeFragment extends Fragment {
                 // Кнопка "Редактировать"
         btn_edit.setOnClickListener(v -> {
             getInteractiveMapFragment().enterEditMode();
+//            getListOfObjectsFragment().editButtonOnList();
         });
     }
 
@@ -285,20 +290,19 @@ public class HomeFragment extends Fragment {
             int originalSizeX, originalSizeY; // исходные значения для проверок
             int finalSizeX = 0, finalSizeY = 0; // итоговые размеры для кнопки
 
-            int sizeX, sizeY;
             // Проверка sizeX
             if (width.isEmpty()) {
                 editWidth.setError("Поле обязательно для заполнения");
                 isValid = false;
             } else {
                 try {
-                    originalSizeX = Integer.parseInt(width);
-                    if (originalSizeX < 100 || originalSizeX > 1000) {
+                    originalSizeY = Integer.parseInt(width);
+                    if (originalSizeY < 100 || originalSizeY > 1000) {
                         editWidth.setError("Значение допустимо от 100 до 1000");
                         isValid = false;
                     } else {
                         editWidth.setError(null);
-                        finalSizeX = originalSizeX / 5; // конвертация в масштабе 5:1
+                        finalSizeY = originalSizeY / 5; // конвертация в масштабе 5:1
                     }
                 } catch (NumberFormatException e) {
                     editWidth.setError("Введите корректное число");
@@ -312,13 +316,13 @@ public class HomeFragment extends Fragment {
                 isValid = false;
             } else {
                 try {
-                    originalSizeY = Integer.parseInt(length);
-                    if (originalSizeY < 100 || originalSizeY > 1000) {
+                    originalSizeX = Integer.parseInt(length);
+                    if (originalSizeX < 100 || originalSizeX > 1000) {
                         editLength.setError("Значение допустимо от 100 до 1000");
                         isValid = false;
                     } else {
                         editLength.setError(null);
-                        finalSizeY = originalSizeY / 5; // конвертация в масштабе 5:1
+                        finalSizeX = originalSizeX / 5; // конвертация в масштабе 5:1
                     }
                 } catch (NumberFormatException e) {
                     editLength.setError("Введите корректное число");
@@ -486,6 +490,17 @@ public class HomeFragment extends Fragment {
 //            // Логика на случай, если фрагмент не найден
 //            Toast.makeText(requireContext(), "Не удалось найти текущий фрагмент во ViewPager2", Toast.LENGTH_SHORT).show();
 //        }
+    }
+    public void onObjectEditedInDialog(Object buttonTag, String newName, int newOriginalWidth, int newOriginalHeight) {
+        InteractiveMapFragment mapFragment = getInteractiveMapFragment();
+        ListOfObjectsFragment listFragment = getListOfObjectsFragment();
+
+        if (mapFragment != null && listFragment != null) {
+            // Обновляем кнопку на карте
+            mapFragment.updateButtonInMap(buttonTag, newName, newOriginalWidth, newOriginalHeight);
+            // Обновляем кнопку в списке
+            listFragment.updateButtonInList(buttonTag, newName);
+        }
     }
     private void replaceFragment(Fragment fragment){
         FragmentManager fragmentManager = getParentFragmentManager();
