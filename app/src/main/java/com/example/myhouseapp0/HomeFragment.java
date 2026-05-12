@@ -502,6 +502,15 @@ public class HomeFragment extends Fragment {
             listFragment.updateButtonInList(buttonTag, newName);
         }
     }
+    public void onObjectDeletedInDialog(Object buttonTag) {
+        InteractiveMapFragment mapFragment = getInteractiveMapFragment();
+        ListOfObjectsFragment listFragment = getListOfObjectsFragment();
+
+        if (mapFragment != null && listFragment != null) {
+            mapFragment.removeButtonFromMap(buttonTag);
+            listFragment.removeButtonFromList(buttonTag);
+        }
+    }
     private void replaceFragment(Fragment fragment){
         FragmentManager fragmentManager = getParentFragmentManager();
         FragmentTransaction fragmentTransaction=fragmentManager.beginTransaction();

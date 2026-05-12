@@ -102,7 +102,8 @@ public class InteractiveMapFragment extends Fragment implements OnObjectAddedLis
                     }
                     @Override
                     public void onObjectDeleted() {
-                        removeSelectedButton(); // Вызываем метод удаления кнопки
+                        HomeFragment homeFragment = (HomeFragment) requireParentFragment();
+                        homeFragment.onObjectDeletedInDialog(selectedButtonForEdit.getTag());
                         exitEditMode();
                     }
 //                    @Override
@@ -112,7 +113,17 @@ public class InteractiveMapFragment extends Fragment implements OnObjectAddedLis
                 });
         dialog.show(getParentFragmentManager(), "EditObjectDialog");
     }
-
+    public void removeButtonFromMap(Object buttonTag) {
+        Button targetButton = findButtonByTag(buttonTag);
+        if (targetButton != null) {
+            relativeLayout.removeView(targetButton);
+            buttons.remove(targetButton); // удаляем из списка кнопок
+            updateTextInfoVisibility();
+            Toast.makeText(requireContext(), "Объект удалён с карты", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(requireContext(), "Кнопка для удаления не найдена на карте", Toast.LENGTH_SHORT).show();
+        }
+    }
     /**
      * Удаляет выбранную для редактирования кнопку из RelativeLayout
      */

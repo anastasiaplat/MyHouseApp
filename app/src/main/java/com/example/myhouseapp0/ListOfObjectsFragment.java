@@ -241,6 +241,60 @@ public class ListOfObjectsFragment extends Fragment{
 
 
     }
+    public void removeButtonFromList(Object buttonTag) {
+        boolean buttonFound = false;
+        Button buttonToRemove = null;
+
+        // Ищем кнопку по тегу
+        for (Button listButton : listButtons) {
+            if (listButton.getTag() != null && listButton.getTag().equals(buttonTag)) {
+                buttonToRemove = listButton;
+                buttonFound = true;
+                break;
+            }
+        }
+
+        if (buttonFound && buttonToRemove != null) {
+            // Удаляем кнопку из ConstraintLayout
+            constraintLayout.removeView(buttonToRemove);
+            // Удаляем из списка кнопок
+            listButtons.remove(buttonToRemove);
+
+            Toast.makeText(requireContext(), "Объект удалён из списка", Toast.LENGTH_SHORT).show();
+
+            // Обновляем видимость textInfo
+            updateTextInfoVisibility();
+
+            // Перепозиционируем оставшиеся кнопки
+            repositionButtons();
+        } else {
+            Toast.makeText(requireContext(), "Кнопка для удаления не найдена в списке", Toast.LENGTH_SHORT).show();
+        }
+    }
+    private void repositionButtons() {
+        ConstraintSet constraintSet = new ConstraintSet();
+        constraintSet.clone(constraintLayout);
+
+        int parentId = ConstraintLayout.LayoutParams.PARENT_ID;
+
+        for (int i = 0; i < listButtons.size(); i++) {
+            Button currentButton = listButtons.get(i);
+            int buttonId = currentButton.getId();
+
+            // Горизонтальное позиционирование
+            constraintSet.connect(
+                    buttonId, ConstraintSet.START,
+                    parentId, ConstraintSet.START, 32
+            );
+            // Вертикальное позиционирование с отступом 300 px между кнопками
+            constraintSet.connect(
+                    buttonId, ConstraintSet.TOP,
+                    parentId, ConstraintSet.TOP, 100 + i * 300
+            );
+        }
+
+        constraintSet.applyTo(constraintLayout);
+    }
     public void updateButtonInList(Object buttonTag, String newName) {
         boolean buttonFound = false;
         for (Button listButton : listButtons) {
