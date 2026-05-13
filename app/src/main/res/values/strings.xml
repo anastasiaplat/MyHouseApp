@@ -13,6 +13,12 @@
     <string name="temp">%%</string>
     <string name="date">21 марта, 2024</string>
     <string name="city">Казань</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="hallroom">Гостиная</string>
+    <string name="bedroom">Спальня</string>
+    <string name="bathroom">Ванная</string>
+    <string name="kitchen">Кухня</string>
+    <string name="garage">Гараж</string>
+    <string name="greenhouse">Теплица</string>
+    <string name="storeroom">Кладовая</string>
 </resources>

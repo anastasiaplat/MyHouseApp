@@ -6,14 +6,20 @@
     android:layout_height="match_parent"
     tools:context=".HomeFragment">
 
-    <!-- TODO: Update blank fragment layout -->
 
+    <FrameLayout
+        android:id="@+id/frame_layout_devices"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"></FrameLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-
+        <!--главная-->
         <View
             android:id="@+id/view_main"
             android:layout_width="150dp"
@@ -26,30 +32,19 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <View
-            android:id="@+id/view_objects"
-            android:layout_width="90dp"
-            android:layout_height="25dp"
-            android:layout_gravity="clip_horizontal|center_horizontal"
-            android:layout_marginTop="24dp"
-            android:background="@drawable/view_objects"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.143"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/view_rectangle_for_weather" />
-
+        <!--панель АПИ-->
         <View
             android:id="@+id/view_rectangle_for_weather"
             android:layout_width="325dp"
             android:layout_height="125dp"
             android:layout_gravity="clip_horizontal|center_horizontal"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="16dp"
             android:background="@drawable/view_rectangle_for_temp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.488"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/view_main" />
 
+        <!--        температура-->
         <TextView
             android:id="@+id/textview_temp"
             android:layout_width="117dp"
@@ -63,6 +58,7 @@
             app:layout_constraintStart_toStartOf="@+id/view_rectangle_for_weather"
             app:layout_constraintTop_toTopOf="@+id/view_rectangle_for_weather" />
 
+        <!--        дата в формате "ДД месяц, год"-->
         <TextView
             android:id="@+id/textview_date"
             android:layout_width="148dp"
@@ -78,6 +74,7 @@
             app:layout_constraintTop_toTopOf="@+id/view_rectangle_for_weather"
             app:layout_constraintVertical_bias="0.265" />
 
+        <!--        местоположение (город)-->
         <TextView
             android:id="@+id/textview_city"
             android:layout_width="148dp"
@@ -92,324 +89,121 @@
             app:layout_constraintTop_toTopOf="@+id/view_rectangle_for_weather"
             app:layout_constraintVertical_bias="0.65" />
 
-        <Button
-            android:id="@+id/btn_hallroom"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+<!--        переключатели-->
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/switch_mode"
+            android:layout_width="320dp"
+            android:layout_height="50dp"
             android:layout_gravity="clip_horizontal|center_horizontal"
-            android:layout_marginTop="16dp"
-            android:background="@android:color/transparent"
-            android:text="@string/_1"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.139"
+            app:tabIconTint="@color/navbar"
+            app:tabIndicatorColor="@color/navbar"
+            app:tabIndicatorFullWidth="true"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/view_objects" />
+            app:layout_constraintTop_toBottomOf="@+id/view_rectangle_for_weather"
+            tools:ignore="MissingConstraints">
 
-        <View
-            android:id="@+id/view_object"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_gravity="clip_horizontal|center_horizontal"
-            android:layout_marginTop="16dp"
-            android:background="@drawable/view_square"
+            <com.google.android.material.tabs.TabItem
+                android:layout_width="380dp"
+                android:layout_height="wrap_content"
+                android:contentDescription="Список"
+
+                android:icon="@drawable/icon_list"
+                tools:layout_editor_absoluteX="58dp"
+                tools:layout_editor_absoluteY="221dp" />
+
+            <com.google.android.material.tabs.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="Карта"
+                android:icon="@drawable/icon_map"
+                tools:layout_editor_absoluteX="212dp"
+                tools:layout_editor_absoluteY="295dp" />
+        </com.google.android.material.tabs.TabLayout>
+
+<!--переключаемая область-->
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/view_mode"
+            android:layout_width="316dp"
+            android:layout_height="376dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.14"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/view_objects" />
+            app:layout_constraintTop_toBottomOf="@+id/switch_mode"
+            app:layout_constraintVertical_bias="0.0"
 
-        <View
-            android:id="@+id/view_add"
-            android:layout_width="80dp"
-            android:layout_height="15dp"
-            android:textColor="#073509"
-            android:layout_gravity="clip_horizontal|center_horizontal"
-            android:background="@drawable/view_room_hall"
-            app:layout_constraintBottom_toBottomOf="@+id/view_object"
-            app:layout_constraintEnd_toEndOf="@+id/view_object"
-            app:layout_constraintHorizontal_bias="0.636"
-            app:layout_constraintStart_toStartOf="@+id/view_object"
-            app:layout_constraintTop_toTopOf="@+id/view_object"
-            app:layout_constraintVertical_bias="0.485" />
+            tools:ignore="MissingConstraints" />
 
         <Button
-            android:id="@+id/btn_bedroom"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:id="@+id/btn_add"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
             android:layout_gravity="clip_horizontal|center_horizontal"
-            android:layout_marginTop="16dp"
-            android:background="@android:color/transparent"
-            android:text="@string/_1"
-            app:layout_constraintEnd_toStartOf="@+id/view_object2"
-            app:layout_constraintHorizontal_bias="0.521"
-            app:layout_constraintStart_toEndOf="@+id/btn_hallroom"
-            app:layout_constraintTop_toBottomOf="@+id/view_objects" />
-
-        <View
-            android:id="@+id/view_object1"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_gravity="clip_horizontal|center_horizontal"
-            android:layout_marginTop="16dp"
-            android:background="@drawable/view_square"
+            android:background="@drawable/view_ellipse"
+            android:backgroundTint="@color/white_green"
+            android:contentDescription="Добавить"
+            app:icon="@drawable/icon_plus"
+            app:iconTint="@color/navbar"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/btn_bedroom"
-            app:layout_constraintTop_toBottomOf="@+id/view_objects" />
-
-        <View
-            android:id="@+id/view_bedroom"
-            android:layout_width="75dp"
-            android:layout_height="15dp"
-            android:textColor="#073509"
-            android:layout_gravity="clip_horizontal|center_horizontal"
-            android:background="@drawable/view_bedroom"
-            app:layout_constraintBottom_toBottomOf="@+id/btn_bedroom"
-            app:layout_constraintEnd_toEndOf="@+id/btn_bedroom"
-            app:layout_constraintHorizontal_bias="0.466"
-            app:layout_constraintStart_toStartOf="@+id/btn_bedroom"
-            app:layout_constraintTop_toTopOf="@+id/btn_bedroom"
-            app:layout_constraintVertical_bias="0.494" />
-
-        <Button
-            android:id="@+id/btn_bathroom"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_gravity="clip_horizontal|center_horizontal"
-            android:layout_marginTop="16dp"
-            android:background="@android:color/transparent"
-            android:text="@string/_1"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/view_object2"
-            app:layout_constraintTop_toBottomOf="@+id/view_objects" />
-
-        <View
-            android:id="@+id/view_object2"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_gravity="clip_horizontal|center_horizontal"
-            android:layout_marginTop="16dp"
-            android:background="@drawable/view_square"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.858"
+            app:layout_constraintHorizontal_bias="0.843"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/view_objects" />
-
-        <View
-            android:id="@+id/view_bathroom"
-            android:layout_width="63dp"
-            android:layout_height="15dp"
-            android:layout_gravity="clip_horizontal|center_horizontal"
-            android:layout_marginStart="18dp"
-            android:layout_marginTop="40dp"
-            android:textColor="#073509"
-            android:background="@drawable/view_bathroom"
-            app:layout_constraintBottom_toBottomOf="@+id/btn_bathroom"
-            app:layout_constraintEnd_toEndOf="@+id/btn_bathroom"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/btn_bathroom"
-            app:layout_constraintTop_toTopOf="@+id/btn_bathroom"
-            app:layout_constraintVertical_bias="0.044" />
+            app:layout_constraintTop_toBottomOf="@+id/view_mode"
+            app:layout_constraintVertical_bias="0.178"
+            tools:ignore="MissingConstraints" />
 
         <Button
-            android:id="@+id/btn_kitchen"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:id="@+id/btn_edit"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
             android:layout_gravity="clip_horizontal|center_horizontal"
-            android:layout_marginTop="32dp"
-            android:background="@android:color/transparent"
-            android:text="@string/_1"
-            app:layout_constraintBottom_toBottomOf="@+id/view_object3"
-            app:layout_constraintEnd_toEndOf="@+id/view_object3"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toStartOf="@+id/view_object3"
-            app:layout_constraintTop_toBottomOf="@+id/btn_hallroom"
-            app:layout_constraintVertical_bias="1.0" />
-
-        <View
-            android:id="@+id/view_object3"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_gravity="clip_horizontal|center_horizontal"
-            android:layout_marginTop="5dp"
-            android:background="@drawable/view_square"
+            android:background="@drawable/view_ellipse"
+            android:backgroundTint="@color/white_green"
+            android:contentDescription="Редактировать"
+            android:ellipsize="start"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            app:icon="@drawable/icon_edit"
+            app:iconGravity="textEnd"
+            app:iconSize="28dp"
+            app:iconTint="@color/navbar"
+            app:iconTintMode="multiply"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.138"
+            app:layout_constraintHorizontal_bias="0.626"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btn_hallroom" />
+            app:layout_constraintTop_toBottomOf="@+id/view_mode"
+            app:layout_constraintVertical_bias="0.178"
+            tools:ignore="MissingConstraints" />
 
-        <View
-            android:id="@+id/view_kitchen"
-            android:layout_width="50dp"
-            android:layout_height="18dp"
-            android:textColor="#073509"
-            android:layout_gravity="clip_horizontal|center_horizontal"
-            android:background="@drawable/view_kitchen"
-            app:layout_constraintBottom_toBottomOf="@+id/btn_kitchen"
-            app:layout_constraintEnd_toEndOf="@+id/btn_kitchen"
-            app:layout_constraintHorizontal_bias="0.48"
-            app:layout_constraintStart_toStartOf="@+id/btn_kitchen"
-            app:layout_constraintTop_toTopOf="@+id/btn_kitchen"
-            app:layout_constraintVertical_bias="0.542" />
+<!--        <Button-->
+<!--            android:id="@+id/btn_ok"-->
+<!--            android:layout_width="79dp"-->
+<!--            android:layout_height="51dp"-->
+<!--            android:background="@android:color/transparent"-->
+<!--            android:text="ОК"-->
+<!--            android:textColor="@color/navbar"-->
+<!--            android:textSize="20dp"-->
+<!--            android:visibility="invisible"-->
+<!--            app:layout_constraintBottom_toBottomOf="parent"-->
+<!--            app:layout_constraintEnd_toStartOf="@+id/btn_edit"-->
+<!--            app:layout_constraintHorizontal_bias="0.9"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toBottomOf="@+id/view_mode"-->
+<!--            app:layout_constraintVertical_bias="0.2" />-->
 
-        <Button
-            android:id="@+id/btn_carroom"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_gravity="clip_horizontal|center_horizontal"
-            android:layout_marginTop="107dp"
-            android:background="@android:color/transparent"
-            android:text="@string/_1"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.077"
-            app:layout_constraintStart_toEndOf="@+id/btn_kitchen"
-            app:layout_constraintTop_toTopOf="@+id/btn_bedroom" />
-
-        <View
-            android:id="@+id/view_object4"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_gravity="clip_horizontal|center_horizontal"
-            android:background="@drawable/view_square"
-            app:layout_constraintBottom_toTopOf="@+id/btn_storeroom"
-            app:layout_constraintEnd_toStartOf="@+id/btn_yard"
-            app:layout_constraintHorizontal_bias="0.541"
-            app:layout_constraintStart_toEndOf="@+id/btn_kitchen"
-            app:layout_constraintTop_toBottomOf="@+id/btn_bedroom"
-            app:layout_constraintVertical_bias="0.416" />
-
-        <View
-            android:id="@+id/view_carroom"
-            android:layout_width="53dp"
-            android:layout_height="18dp"
-            android:textColor="#073509"
-            android:layout_gravity="clip_horizontal|center_horizontal"
-            android:background="@drawable/view_carroom"
-            app:layout_constraintBottom_toBottomOf="@+id/btn_carroom"
-            app:layout_constraintEnd_toEndOf="@+id/btn_carroom"
-            app:layout_constraintHorizontal_bias="0.404"
-            app:layout_constraintStart_toStartOf="@+id/btn_carroom"
-            app:layout_constraintTop_toTopOf="@+id/btn_carroom"
-            app:layout_constraintVertical_bias="0.524" />
-
-        <Button
-            android:id="@+id/btn_yard"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_gravity="clip_horizontal|center_horizontal"
-            android:background="@android:color/transparent"
-            android:text="@string/_1"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/view_object5"
-            app:layout_constraintTop_toTopOf="@+id/view_object5" />
-
-        <View
-            android:id="@+id/view_object5"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_gravity="clip_horizontal|center_horizontal"
-            android:layout_marginTop="5dp"
-            android:layout_marginEnd="44dp"
-            android:background="@drawable/view_square"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toEndOf="@+id/btn_carroom"
-            app:layout_constraintTop_toBottomOf="@+id/btn_bathroom" />
-
-        <View
-            android:id="@+id/view_yard"
-            android:layout_width="45dp"
-            android:layout_height="18dp"
-            android:textColor="#073509"
-            android:layout_gravity="clip_horizontal|center_horizontal"
-            android:background="@drawable/view_yard"
-            app:layout_constraintBottom_toBottomOf="@+id/btn_yard"
-            app:layout_constraintEnd_toEndOf="@+id/btn_yard"
-            app:layout_constraintHorizontal_bias="0.472"
-            app:layout_constraintStart_toStartOf="@+id/btn_yard"
-            app:layout_constraintTop_toTopOf="@+id/view_object5"
-            app:layout_constraintVertical_bias="0.548" />
-
-        <Button
-            android:id="@+id/btn_greenhouse"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_gravity="clip_horizontal|center_horizontal"
-            android:background="@android:color/transparent"
-            android:text="@string/_1"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/view_object6"
-            app:layout_constraintTop_toTopOf="@+id/view_object6" />
-
-        <View
-            android:id="@+id/view_object6"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_gravity="clip_horizontal|center_horizontal"
-            android:layout_marginTop="5dp"
-            android:background="@drawable/view_square"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.138"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btn_kitchen" />
-
-        <View
-            android:id="@+id/view_greenhouse"
-            android:layout_width="72dp"
-            android:layout_height="19dp"
-            android:textColor="#073509"
-            android:layout_gravity="clip_horizontal|center_horizontal"
-            android:background="@drawable/view_greenhouse"
-            app:layout_constraintBottom_toBottomOf="@+id/btn_greenhouse"
-            app:layout_constraintEnd_toEndOf="@+id/btn_greenhouse"
-            app:layout_constraintHorizontal_bias="0.566"
-            app:layout_constraintStart_toStartOf="@+id/btn_greenhouse"
-            app:layout_constraintTop_toTopOf="@+id/btn_greenhouse"
-            app:layout_constraintVertical_bias="0.482" />
-
-        <Button
-            android:id="@+id/btn_storeroom"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_gravity="clip_horizontal|center_horizontal"
-            android:layout_marginTop="105dp"
-            android:layout_marginEnd="156dp"
-            android:background="@android:color/transparent"
-            android:text="@string/_1"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toEndOf="@+id/btn_greenhouse"
-            app:layout_constraintTop_toTopOf="@+id/btn_carroom" />
-
-        <View
-            android:id="@+id/view_object7"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_gravity="clip_horizontal|center_horizontal"
-            android:background="@drawable/view_square"
-            app:layout_constraintBottom_toBottomOf="@+id/btn_storeroom"
-            app:layout_constraintEnd_toEndOf="@+id/btn_carroom"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/btn_greenhouse"
-            app:layout_constraintTop_toTopOf="@+id/btn_storeroom"
-            app:layout_constraintVertical_bias="1.0" />
-
-        <View
-            android:id="@+id/view_storeroom"
-            android:layout_width="78dp"
-            android:layout_height="17dp"
-            android:textColor="#073509"
-            android:layout_gravity="clip_horizontal|center_horizontal"
-            android:layout_marginStart="13dp"
-            android:background="@drawable/view_storeroom"
-            app:layout_constraintBottom_toBottomOf="@+id/btn_storeroom"
-            app:layout_constraintEnd_toEndOf="@+id/btn_storeroom"
-            app:layout_constraintHorizontal_bias="0.636"
-            app:layout_constraintStart_toStartOf="@+id/btn_storeroom"
-            app:layout_constraintTop_toTopOf="@+id/btn_storeroom"
-            app:layout_constraintVertical_bias="0.487" />
+<!--        <Button-->
+<!--            android:id="@+id/btn_stop"-->
+<!--            android:layout_width="58dp"-->
+<!--            android:layout_height="57dp"-->
+<!--            android:background="@android:color/transparent"-->
+<!--            android:drawableTop="@drawable/icon_close"-->
+<!--            android:visibility="invisible"-->
+<!--            app:layout_constraintBottom_toBottomOf="parent"-->
+<!--            app:layout_constraintEnd_toStartOf="@+id/btn_ok"-->
+<!--            app:layout_constraintHorizontal_bias="1"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toBottomOf="@+id/view_mode" />-->
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

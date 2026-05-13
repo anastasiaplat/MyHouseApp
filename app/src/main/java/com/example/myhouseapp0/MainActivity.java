@@ -9,14 +9,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Button btn_sign_in = (Button) findViewById(R.id.btn_sign_in);
-        Button btn_to_register = (Button) findViewById(R.id.btn_registration);
-        btn_to_register.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, RegistrationActivity.class);
-            startActivity(intent);
-        });
+        Button btn_sign_in = findViewById(R.id.btn_sign_in);
         btn_sign_in.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, EntranceActivity.class);
+            Intent intent = new Intent(MainActivity.this, MajorActivity.class);
             startActivity(intent);
         });
     }

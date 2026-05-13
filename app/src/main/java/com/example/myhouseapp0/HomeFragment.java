@@ -1,25 +1,38 @@
 package com.example.myhouseapp0;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.viewpager2.widget.ViewPager2;
 
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.myhouseapp0.rooms.BathroomFragment;
@@ -30,12 +43,16 @@ import com.example.myhouseapp0.rooms.HallRoomFragment;
 import com.example.myhouseapp0.rooms.KitchenFragment;
 import com.example.myhouseapp0.rooms.StoreroomFragment;
 import com.example.myhouseapp0.rooms.YardFragment;
+import com.google.android.material.tabs.TabLayout;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.Locale;
 
 @RequiresApi(api = Build.VERSION_CODES.O)
@@ -45,12 +62,27 @@ public class HomeFragment extends Fragment {
     public HomeFragment() {
         // Required empty public constructor
     }
+
+    TabLayout tabLayout;
+    ViewPager2 viewPager2;
+    ViewPagerAdapter viewPagerAdapter;
+    Button btnAdd, btn_edit;
+    private DialogAddObject.OnDevicesSelectedListener listener;
+    private boolean[] checkedDevices;
+    private String[] deviceList = {"Устройство 1", "Устройство 2", "Устройство 3", "Устройство 4", "Устройство 5"};
+    private boolean isInEditMode = false; // Флаг режима редактирования
+    private Button selectedButtonForEdit; // Выбранная для редактирования кнопка
+
+    private DB_helper dbHelper;
+
+    private InteractiveMapFragment mapFragment;
+    private  ListOfObjectsFragment listFragment;
+
     public String APIKey = "5805dd66a332dedde152edfe026bb26f";
     private static final String site = "https://api.openweathermap.org/data/2.5/weather?q=Kazan&units=metric&appid=5805dd66a332dedde152edfe026bb26f&lang=ru";
 
     RequestQueue requestQueue;
     double temp = 0;
-    String city = "";
 
     final Calendar calendar = GregorianCalendar.getInstance();
     int year = calendar.get(Calendar.YEAR);
@@ -62,50 +94,65 @@ public class HomeFragment extends Fragment {
     }
     @Override
     public void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        dbHelper = new DB_helper(requireContext());
         return inflater.inflate(R.layout.fragment_home, container, false);
     }
 
-    @SuppressLint("SetTextI18n")
+    @SuppressLint({"SetTextI18n", "CutPasteId"})
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        Button btn_to_hallroom = view.findViewById(R.id.btn_hallroom);
-        btn_to_hallroom.setOnClickListener(v -> replaceFragment(new HallRoomFragment()));
+        tabLayout = view.findViewById(R.id.switch_mode);
+        viewPager2 = view.findViewById(R.id.view_mode);
+        viewPager2.setUserInputEnabled(false);
+        viewPagerAdapter = new ViewPagerAdapter(this);
+        viewPager2.setAdapter(viewPagerAdapter);
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                viewPager2.setCurrentItem(tab.getPosition());
+            }
 
-        Button btn_to_bedroom = view.findViewById(R.id.btn_bedroom);
-        btn_to_bedroom.setOnClickListener(v -> replaceFragment(new BedroomFragment()));
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
 
-        Button btn_to_bathroom = view.findViewById(R.id.btn_bathroom);
-        btn_to_bathroom.setOnClickListener(v -> replaceFragment(new BathroomFragment()));
+            }
 
-        Button btn_to_kitchen = view.findViewById(R.id.btn_kitchen);
-        btn_to_kitchen.setOnClickListener(v -> replaceFragment(new KitchenFragment()));
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
 
-        Button btn_to_carroom = view.findViewById(R.id.btn_carroom);
-        btn_to_carroom.setOnClickListener(v -> replaceFragment(new CarRoomFragment()));
+            }
+        });
 
-        Button btn_to_yard = view.findViewById(R.id.btn_yard);
-        btn_to_yard.setOnClickListener(v -> replaceFragment(new YardFragment()));
+        viewPager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageSelected(int position) {
+                super.onPageSelected(position);
+                tabLayout.getTabAt(position).select();
+            }
+        });
 
-        Button btn_to_greenhouse = view.findViewById(R.id.btn_greenhouse);
-        btn_to_greenhouse.setOnClickListener(v -> replaceFragment(new GreenhouseFragment()));
 
-        Button btn_to_storeroom = view.findViewById(R.id.btn_storeroom);
-        btn_to_storeroom.setOnClickListener(v -> replaceFragment(new StoreroomFragment()));
-
+        mapFragment = (InteractiveMapFragment) viewPagerAdapter.createFragment(1);
+        listFragment = (ListOfObjectsFragment) viewPagerAdapter.createFragment(0);
+        btnAdd  = view.findViewById(R.id.btn_add);
+        btn_edit = view.findViewById(R.id.btn_edit);
+        btnAdd.setOnClickListener(v -> showAddButtonDialog());
+// Инициализируем массив здесь — после загрузки разметки
+        checkedDevices = new boolean[deviceList.length];
+        Arrays.fill(checkedDevices, false); // Явно задаём все значения как false
         TextView temptext = view.findViewById(R.id.textview_temp);
         TextView datetext = view.findViewById(R.id.textview_date);
         datetext.setText(day + " " + month + " " + year);
-
         requestQueue = Volley.newRequestQueue(requireContext());
-
         // в случае возникновеня ошибки
         final JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, //GET - API-запрос для получение данных
                 site, null, response -> {
@@ -113,7 +160,6 @@ public class HomeFragment extends Fragment {
                         JSONObject weather = response.getJSONObject("main"); //получаем JSON-обьекты main и wind (в фигурных скобках - объекты, в квадратных - массивы (JSONArray).
                         temp = weather.getDouble("temp");
                         // присваеваем переменным соответствующие значения из API
-
                         temptext.setText(temp + "°");
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -122,10 +168,306 @@ public class HomeFragment extends Fragment {
         requestQueue.add(request);
     }
 
+    public InteractiveMapFragment getMapFragment() {
+        return mapFragment;
+    }
+
+    // Получить ListOfObjectsFragment
+    public ListOfObjectsFragment getListOfObjectsFragment() {
+        Fragment fragment = viewPagerAdapter.getFragment(0); // позиция 0
+        if (fragment instanceof ListOfObjectsFragment) {
+            return (ListOfObjectsFragment) fragment;
+        }
+        return null;
+    }
+
+    // Получить InteractiveMapFragment
+    public InteractiveMapFragment getInteractiveMapFragment() {
+        Fragment fragment = viewPagerAdapter.getFragment(1); // позиция 1
+        if (fragment instanceof InteractiveMapFragment) {
+            return (InteractiveMapFragment) fragment;
+        }
+        return null;
+    }
+
+    private void setupButtonListeners() {
+                // Кнопка "Редактировать"
+        btn_edit.setOnClickListener(v -> {
+            getInteractiveMapFragment().enterEditMode();
+//            getListOfObjectsFragment().editButtonOnList();
+        });
+    }
+
+    private void showAddButtonDialog() {
+// Защита от null
+        if (checkedDevices == null) {
+            Toast.makeText(requireContext(), "Ошибка инициализации диалога", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Обработчики кнопок
+        setupButtonListeners();
+        Dialog dialog = new Dialog(requireContext());
+        dialog.setContentView(R.layout.dialog_add_object);
+        dialog.setTitle("Добавление объекта");
+
+        EditText editName = dialog.findViewById(R.id.etObjectName);
+        ListView devices = dialog.findViewById(R.id.spinnerDevices);
+        EditText editWidth = dialog.findViewById(R.id.etWidth);
+        EditText editLength = dialog.findViewById(R.id.etLength);
+        Button btnSave = dialog.findViewById(R.id.btnConfirm);
+        Button btnCancel = dialog.findViewById(R.id.btnCancel);
+
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(
+                requireContext(),
+                android.R.layout.simple_list_item_multiple_choice,
+                deviceList
+        );
+//
+//        List<String> devicesList = dbHelper.getDevices();
+//        DeviceMultiSelectAdapter arrayAdapter = new DeviceMultiSelectAdapter(
+//                requireContext(),
+//                devicesList
+//        );
+//        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        devices.setAdapter(arrayAdapter);
+        devices.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+
+        for (int i = 0; i < deviceList.length; i++) {
+            if (checkedDevices[i]) {
+                devices.setItemChecked(i, true);
+            }
+        }
+
+        btnSave.setOnClickListener(v -> {
+            String name = editName.getText().toString();
+//            int sizeX = Integer.parseInt(String.valueOf(editWidth.getText())) / 5;
+//            int sizeY = Integer.parseInt(String.valueOf(editLength.getText())) / 5;
+            String length = editLength.getText().toString();
+            String width = editWidth.getText().toString();
+//
+            List<String> selectedDevices = new ArrayList<>();
+            for (int i = 0; i < deviceList.length; i++) {
+                if (devices.isItemChecked(i)) {
+                    selectedDevices.add(deviceList[i]);
+                    checkedDevices[i] = true;
+                } else {
+                    checkedDevices[i] = false;
+                }
+            }
+            boolean isValid = true;
+
+            // Проверка на заполнение имени
+            if (name.isEmpty()) {
+                editName.setError("Поле обязательно для заполнения");
+                isValid = false;
+            } else if (!isNameUnique(name)) {
+                editName.setError("Название должно быть уникальным");
+                isValid = false;
+            } else {
+                editName.setError(null);
+            }
+            int originalSizeX, originalSizeY; // исходные значения для проверок
+            int finalSizeX = 0, finalSizeY = 0; // итоговые размеры для кнопки
+
+            // Проверка sizeX
+            if (width.isEmpty()) {
+                editWidth.setError("Поле обязательно для заполнения");
+                isValid = false;
+            } else {
+                try {
+                    originalSizeY = Integer.parseInt(width);
+                    if (originalSizeY < 100 || originalSizeY > 1000) {
+                        editWidth.setError("Значение допустимо от 100 до 1000");
+                        isValid = false;
+                    } else {
+                        editWidth.setError(null);
+                        finalSizeY = originalSizeY / 5; // конвертация в масштабе 5:1
+                    }
+                } catch (NumberFormatException e) {
+                    editWidth.setError("Введите корректное число");
+                    isValid = false;
+                }
+            }
+
+            // Проверка sizeY
+            if (length.isEmpty()) {
+                editLength.setError("Поле обязательно для заполнения");
+                isValid = false;
+            } else {
+                try {
+                    originalSizeX = Integer.parseInt(length);
+                    if (originalSizeX < 100 || originalSizeX > 1000) {
+                        editLength.setError("Значение допустимо от 100 до 1000");
+                        isValid = false;
+                    } else {
+                        editLength.setError(null);
+                        finalSizeX = originalSizeX / 5; // конвертация в масштабе 5:1
+                    }
+                } catch (NumberFormatException e) {
+                    editLength.setError("Введите корректное число");
+                    isValid = false;
+                }
+            }
+
+            if (selectedDevices.isEmpty()) {
+                Toast.makeText(requireContext(), "Выберите хотя бы одно устройство", Toast.LENGTH_SHORT).show();
+                isValid = false;
+            }
+            if (isValid) {
+                // Все проверки пройдены — выполняем основное действие
+                if (viewPager2.getCurrentItem() != 1) {viewPager2.setCurrentItem(1, true);}
+
+                handleSelectedDevices(String.valueOf(editName), selectedDevices);
+                passNameToCurrentFragment(name, finalSizeX, finalSizeY);
+                dialog.dismiss();
+
+            }
+
+//            listener.onDevicesSelected(selectedDevices);
+//            String selectedDevice = devices.getSelectedItem().toString();
+//            createNewFragment(name, selectedDevice);
+//            createDynamicFragment(name, devicesList);
+        });
+
+        btnCancel.setOnClickListener(v -> dialog.dismiss());
+        dialog.show();
+    }
+    private boolean isNameUnique(String name) {
+        // Здесь может быть проверка в базе данных, SharedPreferences или списке
+        // Пример с простым списком:
+        List<String> existingNames = getExistingNames(); // ваш источник данных
+        return !existingNames.contains(name);
+    }
+
+    private List<String> getExistingNames() {
+        // Реализация получения существующих имён
+        // Может быть запрос к БД, чтение из файла и т. д.
+        return new ArrayList<>(); // замените на реальную реализацию
+    }
+
+    private void handleSelectedDevices(String name, List<String> selectedDevices) {
+        String message = String.format("Объект: %s\nУстройства: %s",
+                name, String.join(", ", selectedDevices));
+//        Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show();
+        // Здесь можно добавить логику сохранения данных
+    }
+    public void showEditDialog(Button buttonToEdit) {
+        Dialog dialog_edit = new Dialog(requireContext());
+        dialog_edit.setTitle("Редактирование кнопки");
+        dialog_edit.setContentView(R.layout.dialog_edit_object);
+
+        EditText editName_edit = dialog_edit.findViewById(R.id.etObjectName_edit);
+        Spinner devices_edit = dialog_edit.findViewById(R.id.spinnerDevices_edit);
+
+        List<String> devicesList = dbHelper.getDevices();
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(
+                requireContext(),
+                android.R.layout.simple_spinner_item,
+                devicesList
+        );
+        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        devices_edit.setAdapter(arrayAdapter);
+        EditText editWidth_edit = dialog_edit.findViewById(R.id.etWidth_edit);
+        EditText editLength_edit = dialog_edit.findViewById(R.id.etLength_edit);
+        Button btnSave_edit = dialog_edit.findViewById(R.id.btnConfirm_edit);
+        Button btnCancel_edit = dialog_edit.findViewById(R.id.btnCancel_edit);
+        Button btnDelete = dialog_edit.findViewById(R.id.btnDelete_edit);
+
+        btnSave_edit.setOnClickListener(v -> {
+            String new_name = editName_edit.getText().toString();
+//            String devices = editDevices.getText().toString();
+            int sizeX_new = Integer.parseInt(String.valueOf(editWidth_edit.getText())) / 5;
+            int sizeY_new = Integer.parseInt(String.valueOf(editLength_edit.getText())) / 5;
+
+            // Передаём изменения в MainFragment для применения
+            mapFragment.applyButtonEdit(buttonToEdit, new_name, sizeX_new, sizeY_new);
+
+            dialog_edit.dismiss();
+        });
+
+        btnCancel_edit.setOnClickListener(v -> dialog_edit.dismiss());
+        dialog_edit.show();
+    }
+
+    private void createDynamicFragment(String name, List<String> devices) {
+        // Создаём класс фрагмента динамически
+        Class<?> fragmentClass = createFragmentClass(name);
+
+        try {
+            Fragment newFragment = (Fragment) fragmentClass.newInstance();
+            // Здесь можно передать данные через Bundle
+            Bundle args = new Bundle();
+            args.putStringArrayList("devices", new ArrayList<>(devices));
+            newFragment.setArguments(args);
+
+
+            // Сохраняем ссылку на фрагмент для дальнейшего использования
+            FragmentManager fm = getParentFragmentManager();
+            fm.beginTransaction()
+                    .add(R.id.frame_layout_devices, newFragment, name + "Fragment")
+                    .addToBackStack(null)
+                    .commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private Class<?> createFragmentClass(String name) {
+        return CustomFragment.class;
+    }
+
+    private void passNameToCurrentFragment(String name, int sizeX, int sizeY) {
+
+        ListOfObjectsFragment listFragment = getListOfObjectsFragment();
+        listFragment.addButtonToList(name);
+
+        InteractiveMapFragment mapFragment = getInteractiveMapFragment();
+        mapFragment.createButton(name, sizeX, sizeY, ContextCompat.getColor(requireContext(), R.color.white_green));
+
+//        Fragment currentFragment = getChildFragmentManager().findFragmentByTag(
+//                "android:switcher:" + viewPager2.getId() + ":" + "0");
+
+//        if (currentFragment instanceof DialogAddObject.OnObjectAddedListener) {
+//            ((DialogAddObject.OnObjectAddedListener) currentFragment).onObjectAdded(name, sizeX, sizeY);
+//        }
+//        if (currentFragment != null) {
+//            if (currentFragment instanceof OnObjectAddedListener) {
+//                Toast.makeText(requireContext(), "object adding is going", Toast.LENGTH_SHORT).show();
+//                                ((OnObjectAddedListener) currentFragment).onObjectAdded(name, sizeX, sizeY);
+//            } else {
+//                // Логика на случай, если фрагмент найден, но не реализует интерфейс
+//                Toast.makeText(requireContext(), "кущий фрагмент не реализует OnObjectAddedListener", Toast.LENGTH_SHORT).show();
+//            }
+//        } else {
+//            // Логика на случай, если фрагмент не найден
+//            Toast.makeText(requireContext(), "Не удалось найти текущий фрагмент во ViewPager2", Toast.LENGTH_SHORT).show();
+//        }
+    }
+    public void onObjectEditedInDialog(Object buttonTag, String newName, int newOriginalWidth, int newOriginalHeight) {
+        InteractiveMapFragment mapFragment = getInteractiveMapFragment();
+        ListOfObjectsFragment listFragment = getListOfObjectsFragment();
+
+        if (mapFragment != null && listFragment != null) {
+            // Обновляем кнопку на карте
+            mapFragment.updateButtonInMap(buttonTag, newName, newOriginalWidth, newOriginalHeight);
+            // Обновляем кнопку в списке
+            listFragment.updateButtonInList(buttonTag, newName);
+        }
+    }
+    public void onObjectDeletedInDialog(Object buttonTag) {
+        InteractiveMapFragment mapFragment = getInteractiveMapFragment();
+        ListOfObjectsFragment listFragment = getListOfObjectsFragment();
+
+        if (mapFragment != null && listFragment != null) {
+            mapFragment.removeButtonFromMap(buttonTag);
+            listFragment.removeButtonFromList(buttonTag);
+        }
+    }
     private void replaceFragment(Fragment fragment){
         FragmentManager fragmentManager = getParentFragmentManager();
         FragmentTransaction fragmentTransaction=fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.frame_layout, fragment);
+        fragmentTransaction.replace(R.id.frame_layout_devices, fragment);
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
     }

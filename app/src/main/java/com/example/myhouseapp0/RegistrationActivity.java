@@ -4,22 +4,19 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 public class RegistrationActivity extends AppCompatActivity {
-    EditText etUser, etPwd, etRepwd, etName;
+    EditText etUser, etPwd, etRepwd;
     Button btnRegister, btnGoToLogin, btn_back;
     DB_helper db_helper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_registration);
-        btnGoToLogin = findViewById(R.id.btn_to_login1);
-        btn_back = findViewById(R.id.btn_back);
+
         btn_back.setOnClickListener(v -> {
             Intent intent = new Intent(RegistrationActivity.this, MainActivity.class);
             startActivity(intent);
@@ -28,16 +25,10 @@ public class RegistrationActivity extends AppCompatActivity {
             Intent intent = new Intent(RegistrationActivity.this, EntranceActivity.class);
             startActivity(intent);
         });
-        etUser = findViewById(R.id.ET_login);
-        etPwd=findViewById(R.id.ET_password0);
-        etRepwd = findViewById(R.id.ET_password1);
-        //etName = findViewById(R.id.ET_name);
-        btnRegister = findViewById(R.id.btn_to_register);
         db_helper = new DB_helper(this);
         btnRegister.setOnClickListener(view -> {
             String user, pwd, repwd;
             user = etUser.getText().toString();
-            //name = etName.getText().toString();
             pwd = etPwd.getText().toString();
             repwd = etRepwd.getText().toString();
 //                нужно поменять нулл на пустую строку чтоб пустые проблеы нельзя было ставить!
