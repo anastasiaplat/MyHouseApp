@@ -21,6 +21,11 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+
+import com.example.myhouseapp0.rooms.BedroomFragment;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -387,6 +392,7 @@ public class InteractiveMapFragment extends Fragment implements OnObjectAddedLis
         buttonCounter++;
         newButton.setId(View.generateViewId());
         newButton.setTag(buttonCounter);
+        newButton.setOnClickListener(v -> replaceWithNewFragment(pendingButtonConfig.text));
         // Сохраняем исходные размеры (до /5) и отображаемые
         int originalWidth = (int) (widthPx / getResources().getDisplayMetrics().density);
         int originalHeight = (int) (heightPx / getResources().getDisplayMetrics().density);
@@ -566,5 +572,16 @@ public class InteractiveMapFragment extends Fragment implements OnObjectAddedLis
     public void onObjectAdded(String objectName, Integer sizeX, Integer sizeY) {
 //        addButtonToMap(objectName);
     }
+    private void replaceWithNewFragment(String buttonName) {
+        FragmentManager fragmentManager = getParentFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
+        // Создаём новый фрагмент и передаём ему данные
+        CustomFragment newFragment = new CustomFragment();
+        Bundle args = new Bundle();
+        args.putString("button_name", buttonName);
+        newFragment.setArguments(args);
+
+        ((MajorActivity) requireActivity()).replaceFragment(newFragment);
+    }
 }

@@ -54,7 +54,7 @@ void onObjectDeleted(); // Новый метод для обработки уд�
             ListView devices = dialog.findViewById(R.id.spinnerDevices_edit);
             Button btnSave = dialog.findViewById(R.id.btnConfirm_edit);
             Button btnCancel = dialog.findViewById(R.id.btnCancel_edit);
-            Button btnChangePosition = dialog.findViewById(R.id.btn_change_position);
+//            Button btnChangePosition = dialog.findViewById(R.id.btn_change_position);
             Button btnDelete = dialog.findViewById(R.id.btnDelete_edit);
             ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(
                     requireContext(),
@@ -77,14 +77,14 @@ void onObjectDeleted(); // Новый метод для обработки уд�
             etLength.setText(String.valueOf(initialLength));
             etWidth.setText(String.valueOf(initialWidth));
 
-            btnChangePosition.setOnClickListener(v -> {
-                        // Закрываем диалог
-                        dialog.dismiss();
-                        // Уведомляем о необходимости включить режим редактирования позиции
-                        if (listener != null) {
-//                            listener.onPositionEditRequested();
-                        }
-                    });
+//            btnChangePosition.setOnClickListener(v -> {
+//                        // Закрываем диалог
+//                        dialog.dismiss();
+//                        // Уведомляем о необходимости включить режим редактирования позиции
+//                        if (listener != null) {
+////                            listener.onPositionEditRequested();
+//                        }
+//                    });
             btnSave.setOnClickListener(v -> {
                 String newName = etName.getText().toString();
                 String newWidth = etWidth.getText().toString();

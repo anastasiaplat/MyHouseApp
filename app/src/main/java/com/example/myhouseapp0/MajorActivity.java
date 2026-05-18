@@ -43,10 +43,16 @@ public class MajorActivity extends AppCompatActivity {
             binding.bottomNavigationView.setOutlineAmbientShadowColor(getColor(R.color.white_green));
         }
     }
-    private void replaceFragment(Fragment fragment){
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction=fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.frame_layout, fragment);
-        fragmentTransaction.commit();
+//    private void replaceFragment(Fragment fragment){
+//        FragmentManager fragmentManager = getSupportFragmentManager();
+//        FragmentTransaction fragmentTransaction=fragmentManager.beginTransaction();
+//        fragmentTransaction.replace(R.id.frame_layout, fragment);
+//        fragmentTransaction.commit();
+//    }
+    public void replaceFragment(Fragment fragment) {
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.frame_layout, fragment)
+                .commitNow(); // commitNow() вместо commit() для немедленного выполнения
     }
 }

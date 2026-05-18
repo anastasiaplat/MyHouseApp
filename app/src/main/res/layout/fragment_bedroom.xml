@@ -121,19 +121,6 @@
             tools:ignore="UseSwitchCompatOrMaterialXml" />
 
         <View
-            android:id="@+id/view_light"
-            android:layout_width="90dp"
-            android:layout_height="16dp"
-            android:layout_marginStart="8dp"
-            android:textColor="#073509"
-            android:background="@drawable/view_heating"
-            app:layout_constraintBottom_toBottomOf="@+id/view_device_bedroom"
-            app:layout_constraintEnd_toStartOf="@+id/switch_light_bedroom"
-            app:layout_constraintHorizontal_bias="0.237"
-            app:layout_constraintStart_toStartOf="@+id/view_device_bedroom"
-            app:layout_constraintTop_toTopOf="@+id/view_device_bedroom" />
-
-        <View
             android:id="@+id/view_devices_bedroom"
             android:layout_width="90dp"
             android:layout_height="27dp"
@@ -144,84 +131,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/view_rectangle_for_temp_bedroom"
             app:layout_constraintVertical_bias="0.043" />
-        <View
-            android:id="@+id/view_device1_bedroom"
-            android:layout_width="327dp"
-            android:layout_height="61dp"
-            android:layout_gravity="clip_horizontal|center_horizontal"
-            android:background="@drawable/view_rectangle_object"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.464"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/view_device_bedroom"
-            app:layout_constraintVertical_bias="0.06" />
-
-        <Switch
-            android:id="@+id/switch_heating_bedroom"
-            android:layout_width="82dp"
-            android:layout_height="53dp"
-            android:text=""
-            app:layout_constraintBottom_toBottomOf="@+id/view_device1_bedroom"
-            app:layout_constraintEnd_toEndOf="@+id/view_device1_bedroom"
-            app:layout_constraintHorizontal_bias="0.869"
-            app:layout_constraintStart_toStartOf="@+id/view_device1_bedroom"
-            app:layout_constraintTop_toTopOf="@+id/view_device1_bedroom"
-            app:layout_constraintVertical_bias="1.0"
-            tools:ignore="UseSwitchCompatOrMaterialXml" />
-
-        <View
-            android:id="@+id/view_heating_bedroom"
-            android:layout_width="40dp"
-            android:layout_height="15dp"
-            android:layout_marginStart="8dp"
-            android:textColor="#073509"
-            android:background="@drawable/view_light"
-            app:layout_constraintBottom_toBottomOf="@+id/view_device1_bedroom"
-            app:layout_constraintEnd_toStartOf="@+id/switch_heating_bedroom"
-            app:layout_constraintHorizontal_bias="0.169"
-            app:layout_constraintStart_toStartOf="@+id/view_device1_bedroom"
-            app:layout_constraintTop_toTopOf="@+id/view_device1_bedroom" />
-
-        <View
-            android:id="@+id/view_device2_bedroom"
-            android:layout_width="327dp"
-            android:layout_height="61dp"
-            android:layout_gravity="clip_horizontal|center_horizontal"
-            android:background="@drawable/view_rectangle_object"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.464"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/view_device1_bedroom"
-            app:layout_constraintVertical_bias="0.077" />
-
-        <Switch
-            android:id="@+id/switch_condik_bedroom"
-            android:layout_width="82dp"
-            android:layout_height="53dp"
-            android:text=""
-            app:layout_constraintBottom_toBottomOf="@+id/view_device2_bedroom"
-            app:layout_constraintEnd_toEndOf="@+id/view_device2_bedroom"
-            app:layout_constraintHorizontal_bias="0.869"
-            app:layout_constraintStart_toStartOf="@+id/view_device2_bedroom"
-            app:layout_constraintTop_toTopOf="@+id/view_device2_bedroom"
-            app:layout_constraintVertical_bias="1.0"
-            tools:ignore="UseSwitchCompatOrMaterialXml" />
-
-        <View
-            android:id="@+id/view_condik_bedroom"
-            android:layout_width="114dp"
-            android:layout_height="19dp"
-            android:layout_marginStart="8dp"
-            android:textColor="#073509"
-            android:background="@drawable/view_condik"
-            app:layout_constraintBottom_toBottomOf="@+id/view_device2_bedroom"
-            app:layout_constraintEnd_toStartOf="@+id/switch_condik_bedroom"
-            app:layout_constraintHorizontal_bias="0.242"
-            app:layout_constraintStart_toStartOf="@+id/view_device2_bedroom"
-            app:layout_constraintTop_toTopOf="@+id/view_device2_bedroom"
-            app:layout_constraintVertical_bias="0.581" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

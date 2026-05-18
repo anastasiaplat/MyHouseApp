@@ -62,18 +62,6 @@ public class BedroomFragment extends Fragment {
                 Toast.makeText(getContext(), "Подключите устройство", Toast.LENGTH_SHORT).show();
             }
         });
-        @SuppressLint("UseSwitchCompatOrMaterialCode") Switch btn_switch1_bedroom = (Switch) view.findViewById(R.id.switch_heating_bedroom);
-        btn_switch1_bedroom.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (isChecked) {
-                Toast.makeText(getContext(), "Подключите устройство", Toast.LENGTH_SHORT).show();
-            }
-        });
-        @SuppressLint("UseSwitchCompatOrMaterialCode") Switch btn_switch2_bedroom = (Switch) view.findViewById(R.id.switch_condik_bedroom);
-        btn_switch2_bedroom.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (isChecked) {
-                Toast.makeText(getContext(), "Подключите устройство", Toast.LENGTH_SHORT).show();
-            }
-        });
 
     }
     private void replaceFragment(Fragment fragment){
