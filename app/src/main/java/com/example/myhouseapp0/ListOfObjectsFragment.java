@@ -11,6 +11,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -34,6 +35,7 @@ public class ListOfObjectsFragment extends Fragment{
     private int buttonCounter = 0;
     private TextView textInfo;
     private List<Button> listButtons = new ArrayList<>();
+    private SharedViewModel viewModel;
 
     private int getListButtonCount() {
         return listButtons.size();
@@ -54,50 +56,61 @@ public class ListOfObjectsFragment extends Fragment{
 //    }
     @SuppressLint("ResourceAsColor")
     public void addButtonToList(String name) {
+
+        // Создаём данные кнопки
+        Object tag = "btn_" + System.currentTimeMillis(); // уникальный тег
+        ButtonData buttonData = new ButtonData(name, tag, 330, 65, ContextCompat.getColor(requireContext(), R.color.navbar));
+
+        // Сохраняем в ViewModel
+        viewModel.addButton(buttonData);
+
+        // Создаём кнопку
+//        createButtonFromData(buttonData, listButtons.size());
+
         // Инициализируем textInfo, если ещё не создан
-        if (textInfo == null) {
-            initializeTextInfo();
-        }
-
-        Button newButton = new Button(requireContext());
-        newButton.setId(View.generateViewId());
-        newButton.setText(name);
-        newButton.setWidth(330);
-        newButton.setHeight(65);
-        newButton.setBackgroundResource(R.drawable.btn_rectangle);
-        newButton.setTextColor(ContextCompat.getColor(requireContext(), R.color.navbar));
-        newButton.setTextSize(18);
-        newButton.setAllCaps(false);
-
-        constraintLayout.addView(newButton);
-
-        // Позиционируем через ConstraintSet
-        ConstraintSet constraintSet = new ConstraintSet();
-        constraintSet.clone(constraintLayout);
-        int parentId = ConstraintLayout.LayoutParams.PARENT_ID;
-        int newButtonId = newButton.getId();
-
-        // Горизонтальное позиционирование
-        constraintSet.connect(
-                newButtonId, ConstraintSet.START,
-                parentId, ConstraintSet.START, 32
-        );
-        // Вертикальное позиционирование
-        constraintSet.connect(
-                newButtonId, ConstraintSet.TOP,
-                parentId, ConstraintSet.TOP, 100 + buttonCounter * 300
-        );
-
-        buttonCounter++;
-        newButton.setTag(buttonCounter);
-        listButtons.add(newButton); // Добавляем в список
-
-        // Применяем ограничения
-        constraintSet.applyTo(constraintLayout);
-        newButton.setOnClickListener(v -> replaceWithNewFragment(name));
-
-        // Обновляем видимость textInfo
-        updateTextInfoVisibility();
+//        if (textInfo == null) {
+//            initializeTextInfo();
+//        }
+//
+//        Button newButton = new Button(requireContext());
+//        newButton.setId(View.generateViewId());
+//        newButton.setText(name);
+//        newButton.setWidth(330);
+//        newButton.setHeight(65);
+//        newButton.setBackgroundResource(R.drawable.btn_rectangle);
+//        newButton.setTextColor(ContextCompat.getColor(requireContext(), R.color.navbar));
+//        newButton.setTextSize(18);
+//        newButton.setAllCaps(false);
+//
+//        constraintLayout.addView(newButton);
+//
+//        // Позиционируем через ConstraintSet
+//        ConstraintSet constraintSet = new ConstraintSet();
+//        constraintSet.clone(constraintLayout);
+//        int parentId = ConstraintLayout.LayoutParams.PARENT_ID;
+//        int newButtonId = newButton.getId();
+//
+//        // Горизонтальное позиционирование
+//        constraintSet.connect(
+//                newButtonId, ConstraintSet.START,
+//                parentId, ConstraintSet.START, 32
+//        );
+//        // Вертикальное позиционирование
+//        constraintSet.connect(
+//                newButtonId, ConstraintSet.TOP,
+//                parentId, ConstraintSet.TOP, 100 + buttonCounter * 300
+//        );
+//
+//        buttonCounter++;
+//        newButton.setTag(buttonCounter);
+//        listButtons.add(newButton); // Добавляем в список
+//
+//        // Применяем ограничения
+//        constraintSet.applyTo(constraintLayout);
+//        newButton.setOnClickListener(v -> replaceWithNewFragment(name));
+//
+//        // Обновляем видимость textInfo
+//        updateTextInfoVisibility();
     }
     private void initializeTextInfo() {
         textInfo = new TextView(requireContext());
@@ -159,89 +172,160 @@ public class ListOfObjectsFragment extends Fragment{
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+// Получаем ViewModel
+        viewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
+// Восстанавливаем кнопки из ViewModel
+        viewModel.getButtonsData().observe(getViewLifecycleOwner(), this::restoreButtons);
 
         constraintLayout = view.findViewById(R.id.constraint_layout);
-
-        textInfo = new TextView(requireContext());
-        textInfo.setId(View.generateViewId());
-        textInfo.setText("Объекты не добавлены");
-        // Задаём параметры ширины и высоты
-        ConstraintLayout.LayoutParams params = new ConstraintLayout.LayoutParams(
-                ConstraintLayout.LayoutParams.WRAP_CONTENT,
-                ConstraintLayout.LayoutParams.WRAP_CONTENT
-        );
-        textInfo.setLayoutParams(params);
-
-        // Добавляем TextView в родительский ConstraintLayout
-        constraintLayout.addView(textInfo);
-
-        // Получаем ConstraintSet для настройки ограничений
-        ConstraintSet constraintSet = new ConstraintSet();
-        constraintSet.clone(constraintLayout);
-
-        // Устанавливаем ограничения для центрирования
-        constraintSet.connect(
-                textInfo.getId(),
-                ConstraintSet.START,
-                ConstraintSet.PARENT_ID,
-                ConstraintSet.START
-        );
-        constraintSet.connect(
-                textInfo.getId(),
-                ConstraintSet.END,
-                ConstraintSet.PARENT_ID,
-                ConstraintSet.END
-        );
-        constraintSet.connect(
-                textInfo.getId(),
-                ConstraintSet.TOP,
-                ConstraintSet.PARENT_ID,
-                ConstraintSet.TOP
-        );
-        constraintSet.connect(
-                textInfo.getId(),
-                ConstraintSet.BOTTOM,
-                ConstraintSet.PARENT_ID,
-                ConstraintSet.BOTTOM
-        );
-
-        // Применяем ограничения к ConstraintLayout
-        constraintSet.applyTo(constraintLayout);
-
-        // Дополнительно настраиваем внешний вид
-        textInfo.setGravity(Gravity.CENTER);
-        textInfo.setTextSize(16);
-        textInfo.setTextColor(ContextCompat.getColor(requireContext(), R.color.navbar));
+// Инициализируем textInfo
+        initializeTextInfo();
+//        textInfo = new TextView(requireContext());
+//        textInfo.setId(View.generateViewId());
+//        textInfo.setText("Объекты не добавлены");
+//        // Задаём параметры ширины и высоты
+//        ConstraintLayout.LayoutParams params = new ConstraintLayout.LayoutParams(
+//                ConstraintLayout.LayoutParams.WRAP_CONTENT,
+//                ConstraintLayout.LayoutParams.WRAP_CONTENT
+//        );
+//        textInfo.setLayoutParams(params);
+//
+//        // Добавляем TextView в родительский ConstraintLayout
+//        constraintLayout.addView(textInfo);
+//
+//        // Получаем ConstraintSet для настройки ограничений
+//        ConstraintSet constraintSet = new ConstraintSet();
+//        constraintSet.clone(constraintLayout);
+//
+//        // Устанавливаем ограничения для центрирования
+//        constraintSet.connect(
+//                textInfo.getId(),
+//                ConstraintSet.START,
+//                ConstraintSet.PARENT_ID,
+//                ConstraintSet.START
+//        );
+//        constraintSet.connect(
+//                textInfo.getId(),
+//                ConstraintSet.END,
+//                ConstraintSet.PARENT_ID,
+//                ConstraintSet.END
+//        );
+//        constraintSet.connect(
+//                textInfo.getId(),
+//                ConstraintSet.TOP,
+//                ConstraintSet.PARENT_ID,
+//                ConstraintSet.TOP
+//        );
+//        constraintSet.connect(
+//                textInfo.getId(),
+//                ConstraintSet.BOTTOM,
+//                ConstraintSet.PARENT_ID,
+//                ConstraintSet.BOTTOM
+//        );
+//
+//        // Применяем ограничения к ConstraintLayout
+//        constraintSet.applyTo(constraintLayout);
+//
+//        // Дополнительно настраиваем внешний вид
+//        textInfo.setGravity(Gravity.CENTER);
+//        textInfo.setTextSize(16);
+//        textInfo.setTextColor(ContextCompat.getColor(requireContext(), R.color.navbar));
 
 
     }
-    public void removeButtonFromList(Object buttonTag) {
-        boolean buttonFound = false;
-        Button buttonToRemove = null;
+    private void restoreButtons(List<ButtonData> buttonsData) {
+        if (buttonsData == null) return;
 
-        // Ищем кнопку по тегу
-        for (Button listButton : listButtons) {
-            if (listButton.getTag() != null && listButton.getTag().equals(buttonTag)) {
-                buttonToRemove = listButton;
-                buttonFound = true;
+        // Очищаем текущий список кнопок
+        for (Button button : listButtons) {
+            constraintLayout.removeView(button);
+        }
+        listButtons.clear();
+
+        // Создаём кнопки заново
+        for (int i = 0; i < buttonsData.size(); i++) {
+            ButtonData buttonData = buttonsData.get(i);
+            createButtonFromData(buttonData, i);
+        }
+
+        updateTextInfoVisibility();
+    }
+    private void createButtonFromData(ButtonData buttonData, int position) {
+        Button newButton = new Button(requireContext());
+        newButton.setId(View.generateViewId());
+        newButton.setText(buttonData.getName());
+        newButton.setTag(buttonData.getTag());
+        newButton.setWidth(330);
+        newButton.setHeight(65);
+        newButton.setBackgroundResource(R.drawable.btn_rectangle);
+        newButton.setTextColor(ContextCompat.getColor(requireContext(), R.color.navbar));
+        newButton.setTextSize(18);
+        newButton.setAllCaps(false);
+
+        constraintLayout.addView(newButton);
+
+        // Позиционируем через ConstraintSet
+        ConstraintSet constraintSet = new ConstraintSet();
+        constraintSet.clone(constraintLayout);
+        int parentId = ConstraintLayout.LayoutParams.PARENT_ID;
+        int newButtonId = newButton.getId();
+
+        constraintSet.connect(newButtonId, ConstraintSet.START, parentId, ConstraintSet.START, 32);
+        constraintSet.connect(newButtonId, ConstraintSet.TOP, parentId, ConstraintSet.TOP, 100 + position * 300);
+
+        constraintSet.applyTo(constraintLayout);
+
+        // Обработчик клика
+        newButton.setOnClickListener(v -> replaceWithNewFragment(buttonData.getName()));
+
+        listButtons.add(newButton);
+    }
+
+    public void removeButtonFromList(Object buttonTag) {
+        viewModel.removeButton(buttonTag);
+        // Удаляем кнопку из интерфейса
+        Button buttonToRemove = null;
+        for (Button button : listButtons) {
+            if (button.getTag() != null && button.getTag().equals(buttonTag)) {
+                buttonToRemove = button;
                 break;
             }
         }
 
-        if (buttonFound && buttonToRemove != null) {
-            // Удаляем кнопку из ConstraintLayout
+        if (buttonToRemove != null) {
             constraintLayout.removeView(buttonToRemove);
-            // Удаляем из списка кнопок
             listButtons.remove(buttonToRemove);
-
-            // Обновляем видимость textInfo
             updateTextInfoVisibility();
-
-            // Перепозиционируем оставшиеся кнопки
             repositionButtons();
-        } else {
-            Toast.makeText(requireContext(), "Кнопка для удаления не найдена в списке", Toast.LENGTH_SHORT).show();
         }
+
+
+//        boolean buttonFound = false;
+//        Button buttonToRemove = null;
+//
+//        // Ищем кнопку по тегу
+//        for (Button listButton : listButtons) {
+//            if (listButton.getTag() != null && listButton.getTag().equals(buttonTag)) {
+//                buttonToRemove = listButton;
+//                buttonFound = true;
+//                break;
+//            }
+//        }
+//
+//        if (buttonFound && buttonToRemove != null) {
+//            // Удаляем кнопку из ConstraintLayout
+//            constraintLayout.removeView(buttonToRemove);
+//            // Удаляем из списка кнопок
+//            listButtons.remove(buttonToRemove);
+//
+//            // Обновляем видимость textInfo
+//            updateTextInfoVisibility();
+//
+//            // Перепозиционируем оставшиеся кнопки
+//            repositionButtons();
+//        } else {
+//            Toast.makeText(requireContext(), "Кнопка для удаления не найдена в списке", Toast.LENGTH_SHORT).show();
+//        }
     }
     private void repositionButtons() {
         ConstraintSet constraintSet = new ConstraintSet();
@@ -298,6 +382,7 @@ public class ListOfObjectsFragment extends Fragment{
         FragmentManager fragmentManager = getParentFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
+        fragmentTransaction.addToBackStack(null);
         // Создаём новый фрагмент и передаём ему данные
         CustomFragment newFragment = new CustomFragment();
         Bundle args = new Bundle();

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
@@ -16,7 +17,6 @@ public class CustomFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_custom, container, false);
-
         // Получаем данные из аргументов
         Bundle args = getArguments();
         if (args != null) {
@@ -24,9 +24,17 @@ public class CustomFragment extends Fragment {
             // Отображаем устройства в RecyclerView/ListView
             displayDevices(devices, view);
         }
-
+        Button btnBack = view.findViewById(R.id.btn_back_custom);
+        btnBack.setOnClickListener(v -> goBackToHome());
 
         return view;
+    }
+    // Метод для возврата к HomeFragment
+    private void goBackToHome() {
+        // Получаем активность и вызываем метод замены фрагмента
+        if (getActivity() instanceof MajorActivity) {
+            ((MajorActivity) getActivity()).replaceFragment(new HomeFragment());
+        }
     }
     private void displayDevices(ArrayList<String> devices, View rootView) {
         TextView tvDevices = rootView.findViewById(R.id.title_text);
