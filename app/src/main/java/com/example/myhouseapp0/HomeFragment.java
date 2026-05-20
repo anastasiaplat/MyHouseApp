@@ -240,6 +240,7 @@ public class HomeFragment extends Fragment {
         }
 
         btnSave.setOnClickListener(v -> {
+
             String name = editName.getText().toString();
 //            int sizeX = Integer.parseInt(String.valueOf(editWidth.getText())) / 5;
 //            int sizeY = Integer.parseInt(String.valueOf(editLength.getText())) / 5;

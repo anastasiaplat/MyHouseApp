@@ -23,17 +23,22 @@ import android.widget.Toast;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.myhouseapp0.rooms.BedroomFragment;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 public class InteractiveMapFragment extends Fragment implements OnObjectAddedListener {
 
     private RelativeLayout relativeLayout;
     private TextView textInfo;
+    private SharedViewModel viewModel;
+    private Map<Object, Button> buttonMap = new HashMap<>(); // для быстрого поиска кнопок по тегу
     private int buttonCounter = 0; // счётчик для позиционирования кнопок
     public Object selectedButtonId;
     public String newButtonName;
@@ -68,6 +73,7 @@ public class InteractiveMapFragment extends Fragment implements OnObjectAddedLis
 
     }
     private void showEditObjectDialog() {
+        if (selectedButtonForEdit == null) return;
         String name = selectedButtonForEdit.getText().toString();
         int width = selectedButtonForEdit.getWidth();
         int height = selectedButtonForEdit.getHeight();
@@ -99,64 +105,14 @@ public class InteractiveMapFragment extends Fragment implements OnObjectAddedLis
         if (targetButton != null) {
             relativeLayout.removeView(targetButton);
             buttons.remove(targetButton); // удаляем из списка кнопок
+            buttonMap.remove(buttonTag); // удаляем из карты
+            // Удаляем из ViewModel
+            viewModel.removeButton(buttonTag);
             updateTextInfoVisibility();
             Toast.makeText(requireContext(), "Объект удалён", Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(requireContext(), "Кнопка для удаления не найдена на карте", Toast.LENGTH_SHORT).show();
         }
-    }
-    /**
-     * Удаляет выбранную для редактирования кнопку из RelativeLayout
-     */
-    private void removeSelectedButton() {
-        if (selectedButtonForEdit != null && relativeLayout != null) {
-            relativeLayout.removeView(selectedButtonForEdit);
-            updateTextInfoVisibility();
-            selectedButtonForEdit = null; // Обнуляем ссылку
-        }
-    }
-    public void enterPositionEditMode() {
-        if (selectedButtonForEdit != null) {
-            isInPositionEditMode = true;
-
-            // Показываем кнопку «Применить» на фрагменте
-//            btnApplyPosition.setVisibility(View.VISIBLE);
-
-            selectedButtonForEdit.setOnTouchListener((v, event) -> {
-                if (event.getAction() == MotionEvent.ACTION_MOVE) {
-                    RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) v.getLayoutParams();
-                    params.leftMargin = (int) event.getRawX() - v.getWidth() / 2;
-                    params.topMargin = (int) event.getRawY() - v.getHeight() / 2 - getStatusBarHeight();
-                    v.setLayoutParams(params);
-                    return true;
-                }
-                return false;
-            });
-        }
-    }
-
-    /**
-     * Выходит из режима редактирования позиции
-     */
-    public void exitPositionEditMode() {
-        if (selectedButtonForEdit != null) {
-            selectedButtonForEdit.setOnTouchListener(null);
-            isInPositionEditMode = false;
-
-            // Скрываем кнопку «Применить»
-//            btnApplyPosition.setVisibility(View.GONE);
-
-            // Здесь можно добавить логику сохранения новой позиции в базу данных
-            // или обновления других связанных данных
-        }
-    }
-    private int getStatusBarHeight() {
-        int result = 0;
-        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
-        if (resourceId > 0) {
-            result = getResources().getDimensionPixelSize(resourceId);
-        }
-        return result;
     }
     private void exitEditMode() {
         isInEditMode = false;
@@ -176,6 +132,10 @@ public class InteractiveMapFragment extends Fragment implements OnObjectAddedLis
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_interactive_map, container, false);
         relativeLayout = view.findViewById(R.id.map_view);
+
+        viewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
+        viewModel.getButtonsData().observe(getViewLifecycleOwner(), this::restoreButtonsOnMap);
+
         textInfo = new TextView(requireContext());
         textInfo.setId(View.generateViewId());
         textInfo.setText("Объекты не добавлены");
@@ -229,6 +189,107 @@ public class InteractiveMapFragment extends Fragment implements OnObjectAddedLis
         }
         return view;
     }
+
+    private void restoreButtonsOnMap(List<ButtonData> buttonsData) {
+        if (buttonsData == null) return;
+
+        // Очищаем текущую карту
+        buttonMap.values().forEach(button -> relativeLayout.removeView(button));
+        buttonMap.clear();
+
+        // Восстанавливаем кнопки из данных ViewModel
+        for (ButtonData buttonData : buttonsData) {
+            createButtonOnMap(buttonData);
+        }
+
+        updateTextInfoVisibility();
+    }
+    private void createButtonOnMap(ButtonData buttonData) {
+
+
+
+
+
+
+
+        Button newButton = new Button(requireContext());
+        newButton.setId(View.generateViewId());
+        newButton.setText(buttonData.getName());
+        newButton.setTag(buttonData.getTag());
+        newButton.setLayoutParams(new RelativeLayout.LayoutParams(buttonData.getWidth(), buttonData.getHeight()));
+        newButton.setBackgroundColor(buttonData.getColor());
+        newButton.setTextSize(18);
+        newButton.setAllCaps(false);
+        // Убираем стандартные отступы кнопки
+        newButton.setMinWidth(0);
+        newButton.setMinHeight(0);
+        newButton.setPadding(0, 0, 0, 0);
+
+
+
+        float density = getResources().getDisplayMetrics().density;
+        int widthPx = (int) (buttonData.getWidth() * density);
+        int heightPx = (int) (buttonData.getHeight() * density);
+
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(widthPx, heightPx);
+
+        // Устанавливаем позицию из данных
+        params.leftMargin = buttonData.getPositionX();
+        params.topMargin = buttonData.getPositionY();
+
+        newButton.setLayoutParams(params);
+        newButton.setTag(buttonData.getTag());
+        newButton.setOnClickListener(v -> replaceWithNewFragment(buttonData.getName()));
+
+        buttons.add(newButton);
+        buttonMap.put(buttonData.getTag(), newButton);
+        relativeLayout.addView(newButton);
+
+
+
+        // Обработчик в режиме редактирования
+        if (isInEditMode) {
+            newButton.setOnClickListener(v -> {
+                selectedButtonForEdit = (Button) v;
+                showEditObjectDialog();
+            });
+        } else {
+            // Обычный режим — просто показываем информацию
+            newButton.setOnClickListener(v -> replaceWithNewFragment(buttonData.getName()));
+        }
+    }
+    private void createButtonFromData(ButtonData buttonData) {
+        Button newButton = new Button(requireContext());
+        newButton.setText(buttonData.getName());
+        newButton.setBackgroundColor(buttonData.getColor());
+        newButton.setTextColor(ContextCompat.getColor(requireContext(), R.color.navbar));
+        newButton.setTextSize(18);
+        newButton.setAllCaps(false);
+
+        // Убираем стандартные отступы кнопки
+        newButton.setMinWidth(0);
+        newButton.setMinHeight(0);
+        newButton.setPadding(0, 0, 0, 0);
+
+        float density = getResources().getDisplayMetrics().density;
+        int widthPx = (int) (buttonData.getWidth() * density);
+        int heightPx = (int) (buttonData.getHeight() * density);
+
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(widthPx, heightPx);
+
+        // Устанавливаем позицию из данных
+        params.leftMargin = buttonData.getPositionX();
+        params.topMargin = buttonData.getPositionY();
+
+        newButton.setLayoutParams(params);
+        newButton.setTag(buttonData.getTag());
+        newButton.setOnClickListener(v -> replaceWithNewFragment(buttonData.getName()));
+
+        buttons.add(newButton);
+        buttonMap.put(buttonData.getTag(), newButton);
+        relativeLayout.addView(newButton);
+    }
+
     /**
      * Конфигурация для создания кнопки
      */
@@ -388,6 +449,7 @@ public class InteractiveMapFragment extends Fragment implements OnObjectAddedLis
         params.leftMargin = finalX;
         params.topMargin = finalY;
 
+
         newButton.setLayoutParams(params);
         buttonCounter++;
         newButton.setId(View.generateViewId());
@@ -397,7 +459,20 @@ public class InteractiveMapFragment extends Fragment implements OnObjectAddedLis
         int originalWidth = (int) (widthPx / getResources().getDisplayMetrics().density);
         int originalHeight = (int) (heightPx / getResources().getDisplayMetrics().density);
 
+        Object tag = buttonCounter;
+        ButtonData buttonData = new ButtonData(
+                (pendingButtonConfig.text),
+                tag,
+                (int) (widthPx / getResources().getDisplayMetrics().density),
+                (int) (heightPx / getResources().getDisplayMetrics().density),
+                pendingButtonConfig.color
+        );
+        buttonData.setPositionX(finalX);
+        buttonData.setPositionY(finalY);
+// Сохраняем в ViewModel
+        viewModel.addButton(buttonData);
         buttons.add(newButton);
+        buttonMap.put(buttonData.getTag(), newButton);
         relativeLayout.addView(newButton);
         return true;
     }
@@ -553,6 +628,9 @@ public class InteractiveMapFragment extends Fragment implements OnObjectAddedLis
             params.width = widthPx;
             params.height = heightPx;
             targetButton.setLayoutParams(params);
+
+            // Обновляем данные в ViewModel
+            viewModel.updateButtonPosition(buttonTag.toString(), params.leftMargin, params.topMargin);
 
             relativeLayout.requestLayout();
             relativeLayout.invalidate();

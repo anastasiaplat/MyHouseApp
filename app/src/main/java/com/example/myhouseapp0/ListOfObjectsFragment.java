@@ -35,6 +35,7 @@ public class ListOfObjectsFragment extends Fragment{
     private int buttonCounter = 0;
     private TextView textInfo;
     private List<Button> listButtons = new ArrayList<>();
+    private boolean isInEditMode = false; // Флаг режима редактирования
     private SharedViewModel viewModel;
 
     private int getListButtonCount() {
@@ -58,11 +59,12 @@ public class ListOfObjectsFragment extends Fragment{
     public void addButtonToList(String name) {
 
         // Создаём данные кнопки
-        Object tag = "btn_" + System.currentTimeMillis(); // уникальный тег
-        ButtonData buttonData = new ButtonData(name, tag, 330, 65, ContextCompat.getColor(requireContext(), R.color.navbar));
-
+//        Object tag = "btn_" + System.currentTimeMillis(); // уникальный тег
+//        ButtonData buttonData = new ButtonData(name, tag, 330, 65, ContextCompat.getColor(requireContext(), R.color.navbar));
+//        buttonData.setPositionX(0); // По умолчанию
+//        buttonData.setPositionY(0);
         // Сохраняем в ViewModel
-        viewModel.addButton(buttonData);
+//        viewModel.addButton(buttonData);
 
         // Создаём кнопку
 //        createButtonFromData(buttonData, listButtons.size());
@@ -112,6 +114,7 @@ public class ListOfObjectsFragment extends Fragment{
 //        // Обновляем видимость textInfo
 //        updateTextInfoVisibility();
     }
+
     private void initializeTextInfo() {
         textInfo = new TextView(requireContext());
         textInfo.setId(View.generateViewId());
@@ -137,7 +140,7 @@ public class ListOfObjectsFragment extends Fragment{
         textInfo.setTextColor(ContextCompat.getColor(requireContext(), R.color.navbar));
     }
     private void updateTextInfoVisibility() {
-        if (getListButtonCount() == 0) {
+        if (listButtons.isEmpty()) {
             textInfo.setVisibility(View.VISIBLE);
         } else {
             textInfo.setVisibility(View.GONE);
@@ -244,8 +247,7 @@ public class ListOfObjectsFragment extends Fragment{
 
         // Создаём кнопки заново
         for (int i = 0; i < buttonsData.size(); i++) {
-            ButtonData buttonData = buttonsData.get(i);
-            createButtonFromData(buttonData, i);
+            createButtonFromData(buttonsData.get(i), i);
         }
 
         updateTextInfoVisibility();
@@ -275,29 +277,89 @@ public class ListOfObjectsFragment extends Fragment{
 
         constraintSet.applyTo(constraintLayout);
 
-        // Обработчик клика
-        newButton.setOnClickListener(v -> replaceWithNewFragment(buttonData.getName()));
+        setupButtonClickListener(newButton, buttonData);
 
         listButtons.add(newButton);
     }
+    private void setupButtonClickListener(Button button, ButtonData buttonData) {
+        if (isInEditMode) {
+            // В режиме редактирования — открываем диалог редактирования
+            button.setOnClickListener(v -> showEditDialog(buttonData));
+        } else {
+            // В обычном режиме — переходим на CustomFragment
+            button.setOnClickListener(v ->
+                    replaceWithNewFragment(buttonData.getName()));
+        }
+    }
+    private void showEditDialog(ButtonData buttonData) {
+        EditObjectDialog editDialog = new EditObjectDialog(
+                buttonData.getName(),
+                buttonData.getWidth(),
+                buttonData.getHeight(),
+                new EditObjectDialog.OnObjectEditedListener() {
+                    @Override
+                    public void onObjectEdited(String newName, int newWidth, int newLength, List<String> selectedDevices) {
+                        // Обновляем данные в ViewModel
+                        List<ButtonData> currentData = new ArrayList<>(viewModel.getButtonsData().getValue());
+                        for (ButtonData data : currentData) {
+                            if (data.getTag().equals(buttonData.getTag())) {
+                                data.setName(newName);
+                                data.setWidth(newWidth);
+                                data.setHeight(newLength);
+                                break;
+                            }
+                        }
+                        viewModel.buttonsData.setValue(currentData);
+                    }
 
+                    @Override
+                    public void onObjectDeleted() {
+                        viewModel.removeButton(buttonData.getTag());
+                    }
+                }
+        );
+
+        editDialog.show(getParentFragmentManager(), "EDIT_OBJECT_DIALOG");
+    }
+
+    public void enterEditMode() {
+        isInEditMode = true;
+        Toast.makeText(requireContext(), "Выберите объект для редактирования", Toast.LENGTH_SHORT).show();
+        // Обновляем обработчики всех кнопок
+        for (int i = 0; i < listButtons.size(); i++) {
+            Button button = listButtons.get(i);
+            ButtonData buttonData = viewModel.getButtonsData().getValue().get(i);
+            setupButtonClickListener(button, buttonData);
+        }
+    }
+
+    public void exitEditMode() {
+        isInEditMode = false;
+        Toast.makeText(requireContext(), "Режим редактирования завершён", Toast.LENGTH_SHORT).show();
+        // Возвращаем обычные обработчики
+        for (int i = 0; i < listButtons.size(); i++) {
+            Button button = listButtons.get(i);
+            ButtonData buttonData = viewModel.getButtonsData().getValue().get(i);
+            setupButtonClickListener(button, buttonData);
+        }
+    }
     public void removeButtonFromList(Object buttonTag) {
         viewModel.removeButton(buttonTag);
         // Удаляем кнопку из интерфейса
-        Button buttonToRemove = null;
-        for (Button button : listButtons) {
-            if (button.getTag() != null && button.getTag().equals(buttonTag)) {
-                buttonToRemove = button;
-                break;
-            }
-        }
-
-        if (buttonToRemove != null) {
-            constraintLayout.removeView(buttonToRemove);
-            listButtons.remove(buttonToRemove);
-            updateTextInfoVisibility();
-            repositionButtons();
-        }
+//        Button buttonToRemove = null;
+//        for (Button button : listButtons) {
+//            if (button.getTag() != null && button.getTag().equals(buttonTag)) {
+//                buttonToRemove = button;
+//                break;
+//            }
+//        }
+//
+//        if (buttonToRemove != null) {
+//            constraintLayout.removeView(buttonToRemove);
+//            listButtons.remove(buttonToRemove);
+//            updateTextInfoVisibility();
+//            repositionButtons();
+//        }
 
 
 //        boolean buttonFound = false;
@@ -352,22 +414,16 @@ public class ListOfObjectsFragment extends Fragment{
         constraintSet.applyTo(constraintLayout);
     }
     public void updateButtonInList(Object buttonTag, String newName) {
-        boolean buttonFound = false;
-        for (Button listButton : listButtons) {
-            if (listButton.getTag() != null && listButton.getTag().equals(buttonTag)) {
-                listButton.setText(newName);
-                buttonFound = true;
-                Toast.makeText(requireContext(), "Название обновлено: " + newName, Toast.LENGTH_SHORT).show();
+// Обновляем данные в ViewModel
+        List<ButtonData> currentData = new ArrayList<>(viewModel.getButtonsData().getValue());
+        for (ButtonData data : currentData) {
+            if (data.getTag().equals(buttonTag)) {
+                data.setName(newName);
                 break;
             }
         }
-
-        if (!buttonFound) {
-            Toast.makeText(requireContext(), "Кнопка для редактирования не найдена", Toast.LENGTH_SHORT).show();
-        }
-
-        constraintLayout.requestLayout();
-        constraintLayout.invalidate();
+        viewModel.buttonsData.setValue(currentData);
+        // Кнопки автоматически обновятся через restoreButtons()
     }
     private void replaceFragment(Fragment fragment){
         FragmentManager fragmentManager = getParentFragmentManager();

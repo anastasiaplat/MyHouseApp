@@ -21,6 +21,7 @@ public class MajorActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityMajorBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             replaceFragment(new HomeFragment());
         }

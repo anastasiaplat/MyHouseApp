@@ -8,26 +8,28 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SharedViewModel extends ViewModel {
-    private final MutableLiveData<List<ButtonData>> buttonsData = new MutableLiveData<>();
+    public final MutableLiveData<List<ButtonData>> buttonsData = new MutableLiveData<>(new ArrayList<>());
+    private boolean isInitializing = true; // Флаг инициализации
 
-    public LiveData<List<ButtonData>> getButtonsData() { return buttonsData; }
-    public void setButtonsData(List<ButtonData> data) { buttonsData.setValue(data); }
+    public LiveData<List<ButtonData>> getButtonsData() {
+        return buttonsData;
+    }
 
-    // Методы для добавления и удаления кнопок
     public void addButton(ButtonData button) {
-        List<ButtonData> current = buttonsData.getValue();
-        if (current == null) current = new ArrayList<>();
+        List<ButtonData> current = new ArrayList<>(buttonsData.getValue());
         current.add(button);
         buttonsData.setValue(current);
+        isInitializing = false; // Сбрасываем флаг после первого добавления
     }
 
     public void removeButton(Object tag) {
         List<ButtonData> current = buttonsData.getValue();
         if (current != null) {
             current.removeIf(button -> button.getTag().equals(tag));
-            buttonsData.setValue(current);
+            buttonsData.setValue(new ArrayList<>(current));
         }
     }
+
     public void updateButtonPosition(String tag, int x, int y) {
         List<ButtonData> current = buttonsData.getValue();
         if (current != null) {
@@ -38,8 +40,12 @@ public class SharedViewModel extends ViewModel {
                     break;
                 }
             }
-            buttonsData.setValue(current);
+            buttonsData.setValue(new ArrayList<>(current));
         }
+    }
+
+    public boolean isInitializing() {
+        return isInitializing;
     }
 }
 
