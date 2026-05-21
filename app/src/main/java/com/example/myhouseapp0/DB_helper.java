@@ -5,7 +5,9 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
 
@@ -17,17 +19,18 @@ public class DB_helper extends SQLiteOpenHelper{
     public static final String DBName="myhouse.db";
 
     public static final String TABLE_OBJECTS = "Objects";
-    public static final String TABLE_DEVICES = "Devices";
+    public static final String TABLE_DEVICES = "devices";
+    private static final String COLUMN_BUTTON_TAG = "button_tag";
 
     // Поля таблицы Objects
     public static final String COLUMN_ID = "id";
-    public static final String COLUMN_NAME = "name";
+    public static final String COLUMN_NAME = "object_name";
     public static final String COLUMN_SIZEX = "sizeX";
     public static final String COLUMN_SIZEY = "sizeY";
 
     // Поля таблицы Devices
     public static final String COLUMN_DEVICE_ID = "id";
-    public static final String COLUMN_DEVICE_NAME = "name";
+    public static final String COLUMN_DEVICE_NAME = "device_name";
 
 
     public DB_helper(@Nullable Context context) {
@@ -46,8 +49,7 @@ public class DB_helper extends SQLiteOpenHelper{
 
         // Создание таблицы Devices
         String createDevicesTable = "CREATE TABLE " + TABLE_DEVICES + " (" +
-                COLUMN_DEVICE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                COLUMN_DEVICE_NAME + " TEXT NOT NULL" +
+                COLUMN_BUTTON_TAG +" TEXT,"  + COLUMN_DEVICE_NAME + " TEXT" +
                 ")";
 
         sqLiteDatabase.execSQL(createObjectsTable);
@@ -90,14 +92,58 @@ public class DB_helper extends SQLiteOpenHelper{
         }
         cursor.close();
         return devices;
-
-
-
-
-
-
-
     }
+
+    // Сохранение устройств для кнопки
+    public void saveDevicesForButton(Object buttonTag, List<String> deviceNames) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        try {
+            // Удаляем старые записи для этого тега
+            db.delete(TABLE_DEVICES, COLUMN_BUTTON_TAG + " = ?",
+                    new String[]{String.valueOf(buttonTag)});
+
+            // Вставляем новые записи
+            ContentValues values = new ContentValues();
+            for (String device : deviceNames) {
+                values.put(COLUMN_BUTTON_TAG, String.valueOf(buttonTag));
+                values.put(COLUMN_DEVICE_NAME, device);
+                db.insert(TABLE_DEVICES, null, values);
+            }
+        } catch (SQLiteException e) {
+            Log.e("DB_helper", "Ошибка при сохранении устройств: " + e.getMessage());
+        } finally {
+            db.close();
+        }
+    }
+    // Получение устройств для кнопки
+    public List<String> getDevicesForButton(Object buttonTag) {
+        List<String> devices = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(TABLE_DEVICES,
+                new String[]{COLUMN_DEVICE_NAME},
+                COLUMN_BUTTON_TAG + " = ?",
+                new String[]{String.valueOf(buttonTag)},
+                null, null, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                devices.add(cursor.getString(0));
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+        return devices;
+    }
+
+
+
+
+
+
+
+
+
+
     public boolean insertData(String username, String password){
         SQLiteDatabase myDB = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();

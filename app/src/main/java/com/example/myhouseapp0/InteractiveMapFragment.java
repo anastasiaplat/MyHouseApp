@@ -50,6 +50,7 @@ public class InteractiveMapFragment extends Fragment implements OnObjectAddedLis
     private boolean isInEditMode = false; // флаг режима редактирования
     private Button selectedButtonForEdit; //выбранная для редактирования кнопка
     private boolean isInPositionEditMode = false;
+    DB_helper dbHelper;
     public void enterEditMode() {
         if (buttons.isEmpty()) {
             Toast.makeText(requireContext(), "Нет объектов для редактирования", Toast.LENGTH_SHORT).show();
@@ -72,13 +73,20 @@ public class InteractiveMapFragment extends Fragment implements OnObjectAddedLis
         }
 
     }
+    public Object getLastButtonTag() {
+        return buttonCounter; // или последний сгенерированный тег
+    }
     private void showEditObjectDialog() {
         if (selectedButtonForEdit == null) return;
         String name = selectedButtonForEdit.getText().toString();
         int width = selectedButtonForEdit.getWidth();
         int height = selectedButtonForEdit.getHeight();
+        // Получаем устройства из БД
+
+        dbHelper = new DB_helper(requireContext());
+        List<String> devicesForButton = dbHelper.getDevicesForButton(selectedButtonForEdit.getTag());
         EditObjectDialog dialog = new EditObjectDialog(
-                name, width, height,
+                name, width, height, devicesForButton,
                 new EditObjectDialog.OnObjectEditedListener() {
                     @Override
                     public void onObjectEdited(String newName, int newWidth, int newHeight,  List<String> selectedDevices) {
@@ -88,6 +96,8 @@ public class InteractiveMapFragment extends Fragment implements OnObjectAddedLis
                         // Передаём данные в HomeFragment для синхронизации с ListOfObjectsFragment
                         HomeFragment homeFragment = (HomeFragment) requireParentFragment();
                         homeFragment.onObjectEditedInDialog(selectedButtonForEdit.getTag(), newName, newOriginalWidth, newOriginalHeight);
+                        // Обновляем устройства в БД
+                        dbHelper.saveDevicesForButton(selectedButtonForEdit.getTag(), selectedDevices);
                         // Выходим из режима редактирования
                         exitEditMode();
                     }

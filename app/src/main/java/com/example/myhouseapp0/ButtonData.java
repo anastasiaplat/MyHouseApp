@@ -1,11 +1,14 @@
 package com.example.myhouseapp0;
 
+import java.util.List;
+
 // Класс для хранения данных кнопки
 public class ButtonData {
     private String name;
     private Object tag;
     private int width;
     private int height;
+    private List<String> existingDevices;
     private int color;
     private int positionX; // для карты — координата X
     private int positionY; // для карты — координата Y
@@ -16,6 +19,7 @@ public class ButtonData {
         this.width = width;
         this.height = height;
         this.color = color;
+        this.existingDevices = existingDevices;
         this.positionX = positionX;
         this.positionY = positionY;
     }
@@ -23,6 +27,9 @@ public class ButtonData {
     // Геттеры
     public String getName() {
         return name;
+    }
+    public List<String> getExistingDevices() {
+        return existingDevices;
     }
 
     public Object getTag() {

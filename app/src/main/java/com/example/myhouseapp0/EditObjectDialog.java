@@ -30,14 +30,15 @@ void onObjectDeleted(); // Новый метод для обработки уд�
         private int initialWidth;
         private int initialLength;
     private boolean[] checkedDevices;
-    private List<String> initialDevices; // Список устройств для редактирования
+    private List<String> existingDevices; // Список устройств для редактирования
         private OnObjectEditedListener listener;
 
-    public EditObjectDialog(String initialName, int initialWidth, int initialLength, OnObjectEditedListener listener) {
+    public EditObjectDialog(String initialName, int initialWidth, int initialLength, List<String> existingDevices, OnObjectEditedListener listener) {
         this.initialName = initialName;
         this.initialWidth = initialWidth;
         this.initialLength = initialLength;
-        this.initialDevices = initialDevices != null ? initialDevices : new ArrayList<>();
+        this.existingDevices = existingDevices != null ?
+                new ArrayList<>(existingDevices) : new ArrayList<>();
         this.listener = listener;
     }
 
@@ -64,12 +65,9 @@ void onObjectDeleted(); // Новый метод для обработки уд�
             devices.setAdapter(arrayAdapter);
             devices.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
 
-// Выделяем ранее выбранные устройства
-            for (String device : initialDevices) {
-                int position = arrayAdapter.getPosition(device);
-                if (position != -1) {
-                    devices.setItemChecked(position, true);
-                }
+// Устанавливаем флажки для существующих устройств
+            for (int i = 0; i < arrayAdapter.getCount(); i++) {
+                devices.setItemChecked(i, getAvailableDevices().contains(arrayAdapter.getItem(i)));
             }
 
             // Заполняем поля текущими значениями

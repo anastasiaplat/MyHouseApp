@@ -34,17 +34,17 @@
 
     <TextView
         android:id="@+id/tv_temp_custom"
-        android:layout_width="186dp"
-        android:layout_height="49dp"
-        android:layout_marginTop="80dp"
+        android:layout_width="245dp"
+        android:layout_height="72dp"
+        android:text="0.0°     0%"
         android:textColor="#073509"
         android:textSize="50sp"
         app:layout_constraintBottom_toBottomOf="@+id/view_rectangle_for_temp_bedroom"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.551"
+        app:layout_constraintHorizontal_bias="0.56"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/title_object_name"
-        app:layout_constraintVertical_bias="0.254" />
+        app:layout_constraintTop_toTopOf="@+id/view_rectangle_for_temp_bedroom"
+        app:layout_constraintVertical_bias="0.507" />
 
     <View
         android:id="@+id/view_temp_custom"
@@ -158,5 +158,18 @@
         app:layout_constraintEnd_toEndOf="@+id/btn_back_custom"
         app:layout_constraintStart_toStartOf="@+id/btn_back_custom"
         app:layout_constraintTop_toTopOf="@+id/btn_back_custom" />
+
+    <LinearLayout
+        android:id="@+id/devices_container"
+        android:layout_width="322dp"
+        android:layout_height="204dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.505"
+        android:gravity="center"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/view_device_bedroom"
+        app:layout_constraintVertical_bias="0.248"></LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

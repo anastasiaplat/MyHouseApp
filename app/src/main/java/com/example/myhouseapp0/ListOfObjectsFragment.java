@@ -258,7 +258,7 @@ public class ListOfObjectsFragment extends Fragment{
         newButton.setText(buttonData.getName());
         newButton.setTag(buttonData.getTag());
         newButton.setWidth(330);
-        newButton.setHeight(65);
+        newButton.setHeight(45);
         newButton.setBackgroundResource(R.drawable.btn_rectangle);
         newButton.setTextColor(ContextCompat.getColor(requireContext(), R.color.navbar));
         newButton.setTextSize(18);
@@ -295,7 +295,7 @@ public class ListOfObjectsFragment extends Fragment{
         EditObjectDialog editDialog = new EditObjectDialog(
                 buttonData.getName(),
                 buttonData.getWidth(),
-                buttonData.getHeight(),
+                buttonData.getHeight(), buttonData.getExistingDevices(),
                 new EditObjectDialog.OnObjectEditedListener() {
                     @Override
                     public void onObjectEdited(String newName, int newWidth, int newLength, List<String> selectedDevices) {

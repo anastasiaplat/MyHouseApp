@@ -198,8 +198,6 @@ public class HomeFragment extends Fragment {
     private void setupButtonListeners() {
                 // Кнопка "Редактировать"
         btn_edit.setOnClickListener(v -> {
-            Toast.makeText(requireContext(), "кнопка ред нажата", Toast.LENGTH_SHORT).show();
-
             getInteractiveMapFragment().enterEditMode();
 //            getListOfObjectsFragment().editButtonOnList();
         });
@@ -326,7 +324,17 @@ public class HomeFragment extends Fragment {
                 if (viewPager2.getCurrentItem() != 1) {viewPager2.setCurrentItem(1, true);}
 
                 handleSelectedDevices(String.valueOf(editName), selectedDevices);
-                passNameToCurrentFragment(name, finalSizeX, finalSizeY);
+
+
+                ListOfObjectsFragment listFragment = getListOfObjectsFragment();
+                listFragment.addButtonToList(name);
+
+                InteractiveMapFragment mapFragment = getInteractiveMapFragment();
+                mapFragment.createButton(name, finalSizeX, finalSizeY, ContextCompat.getColor(requireContext(), R.color.white_green));
+                Object buttonTag = mapFragment.getLastButtonTag();
+
+                // Сохраняем устройства в БД
+                dbHelper.saveDevicesForButton(buttonTag, selectedDevices);
                 dialog.dismiss();
 
             }
@@ -426,11 +434,7 @@ public class HomeFragment extends Fragment {
 
     private void passNameToCurrentFragment(String name, int sizeX, int sizeY) {
 
-        ListOfObjectsFragment listFragment = getListOfObjectsFragment();
-        listFragment.addButtonToList(name);
 
-        InteractiveMapFragment mapFragment = getInteractiveMapFragment();
-        mapFragment.createButton(name, sizeX, sizeY, ContextCompat.getColor(requireContext(), R.color.white_green));
 
 //        Fragment currentFragment = getChildFragmentManager().findFragmentByTag(
 //                "android:switcher:" + viewPager2.getId() + ":" + "0");
