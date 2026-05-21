@@ -110,6 +110,7 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+
         tabLayout = view.findViewById(R.id.switch_mode);
         viewPager2 = view.findViewById(R.id.view_mode);
         viewPager2.setUserInputEnabled(false);
@@ -149,6 +150,10 @@ public class HomeFragment extends Fragment {
 // Инициализируем массив здесь — после загрузки разметки
         checkedDevices = new boolean[deviceList.length];
         Arrays.fill(checkedDevices, false); // Явно задаём все значения как false
+
+        setupButtonListeners();
+
+
         TextView temptext = view.findViewById(R.id.textview_temp);
         TextView datetext = view.findViewById(R.id.textview_date);
         datetext.setText(day + " " + month + " " + year);
@@ -193,6 +198,8 @@ public class HomeFragment extends Fragment {
     private void setupButtonListeners() {
                 // Кнопка "Редактировать"
         btn_edit.setOnClickListener(v -> {
+            Toast.makeText(requireContext(), "кнопка ред нажата", Toast.LENGTH_SHORT).show();
+
             getInteractiveMapFragment().enterEditMode();
 //            getListOfObjectsFragment().editButtonOnList();
         });
@@ -206,7 +213,6 @@ public class HomeFragment extends Fragment {
         }
 
         // Обработчики кнопок
-        setupButtonListeners();
         Dialog dialog = new Dialog(requireContext());
         dialog.setContentView(R.layout.dialog_add_object);
         dialog.setTitle("Добавление объекта");
