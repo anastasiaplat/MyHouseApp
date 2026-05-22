@@ -81,12 +81,13 @@ public class InteractiveMapFragment extends Fragment implements OnObjectAddedLis
         String name = selectedButtonForEdit.getText().toString();
         int width = selectedButtonForEdit.getWidth();
         int height = selectedButtonForEdit.getHeight();
-        // Получаем устройства из БД
 
-        dbHelper = new DB_helper(requireContext());
+        List<String> allDevices = dbHelper.getDevices();
+        // Получаем устройства, привязанные к этой кнопке
         List<String> devicesForButton = dbHelper.getDevicesForButton(selectedButtonForEdit.getTag());
+
         EditObjectDialog dialog = new EditObjectDialog(
-                name, width, height, devicesForButton,
+                name, width, height, allDevices, devicesForButton,
                 new EditObjectDialog.OnObjectEditedListener() {
                     @Override
                     public void onObjectEdited(String newName, int newWidth, int newHeight,  List<String> selectedDevices) {
@@ -142,7 +143,7 @@ public class InteractiveMapFragment extends Fragment implements OnObjectAddedLis
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_interactive_map, container, false);
         relativeLayout = view.findViewById(R.id.map_view);
-
+        dbHelper = new DB_helper(requireContext()); // Инициализируем БД
         viewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
         viewModel.getButtonsData().observe(getViewLifecycleOwner(), this::restoreButtonsOnMap);
 

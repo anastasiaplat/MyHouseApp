@@ -36,6 +36,7 @@ public class ListOfObjectsFragment extends Fragment{
     private TextView textInfo;
     private List<Button> listButtons = new ArrayList<>();
     private boolean isInEditMode = false; // Флаг режима редактирования
+    private DB_helper dbHelper;
     private SharedViewModel viewModel;
 
     private int getListButtonCount() {
@@ -47,7 +48,7 @@ public class ListOfObjectsFragment extends Fragment{
         // Inflate the layout for this fragment
 
         View view = inflater.inflate(R.layout.fragment_list_of_objects, container, false);
-
+        dbHelper = new DB_helper(requireContext()); // Инициализируем БД
         return view;
 
     }
@@ -292,13 +293,21 @@ public class ListOfObjectsFragment extends Fragment{
         }
     }
     private void showEditDialog(ButtonData buttonData) {
+        // Получаем все доступные устройства из БД
+        List<String> allDevices = dbHelper.getDevices();
+
+        // Получаем устройства, привязанные к этой кнопке
+        List<String> selectedDevices = dbHelper.getDevicesForButton(buttonData.getTag());
+
         EditObjectDialog editDialog = new EditObjectDialog(
                 buttonData.getName(),
                 buttonData.getWidth(),
-                buttonData.getHeight(), buttonData.getExistingDevices(),
+                buttonData.getHeight(),
+                allDevices, // все доступные устройства
+                selectedDevices, // выбранные устройства для этой кнопки
                 new EditObjectDialog.OnObjectEditedListener() {
                     @Override
-                    public void onObjectEdited(String newName, int newWidth, int newLength, List<String> selectedDevices) {
+                    public void onObjectEdited(String newName, int newWidth, int newLength, List<String> finalSelectedDevices) {
                         // Обновляем данные в ViewModel
                         List<ButtonData> currentData = new ArrayList<>(viewModel.getButtonsData().getValue());
                         for (ButtonData data : currentData) {

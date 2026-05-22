@@ -28,17 +28,20 @@ void onObjectDeleted(); // Новый метод для обработки уд�
 
         private String initialName;
         private int initialWidth;
-        private int initialLength;
+        private int initialHeight;
     private boolean[] checkedDevices;
-    private List<String> existingDevices; // Список устройств для редактирования
+    private List<String> allDevices;
+    private List<String> selectedDevices; // Список устройств для редактирования
         private OnObjectEditedListener listener;
 
-    public EditObjectDialog(String initialName, int initialWidth, int initialLength, List<String> existingDevices, OnObjectEditedListener listener) {
+    public EditObjectDialog(String initialName, int initialWidth, int initialHeight,
+                            List<String> allDevices, List<String> selectedDevices,
+                            OnObjectEditedListener listener) {
         this.initialName = initialName;
         this.initialWidth = initialWidth;
-        this.initialLength = initialLength;
-        this.existingDevices = existingDevices != null ?
-                new ArrayList<>(existingDevices) : new ArrayList<>();
+        this.initialHeight = initialHeight;
+        this.allDevices = allDevices != null ? new ArrayList<>(allDevices) : new ArrayList<>();
+        this.selectedDevices = selectedDevices != null ? new ArrayList<>(selectedDevices) : new ArrayList<>();
         this.listener = listener;
     }
 
@@ -60,19 +63,22 @@ void onObjectDeleted(); // Новый метод для обработки уд�
             ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(
                     requireContext(),
                     android.R.layout.simple_list_item_multiple_choice,
-                    getAvailableDevices()
+                    allDevices
             );
             devices.setAdapter(arrayAdapter);
             devices.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
 
-// Устанавливаем флажки для существующих устройств
-            for (int i = 0; i < arrayAdapter.getCount(); i++) {
-                devices.setItemChecked(i, getAvailableDevices().contains(arrayAdapter.getItem(i)));
+// Отмечаем устройства, которые были выбраны ранее
+            for (int i = 0; i < allDevices.size(); i++) {
+                String device = allDevices.get(i);
+                if (selectedDevices.contains(device)) {
+                    devices.setItemChecked(i, true);
+                }
             }
 
             // Заполняем поля текущими значениями
             etName.setText(initialName);
-            etLength.setText(String.valueOf(initialLength));
+            etLength.setText(String.valueOf(initialHeight));
             etWidth.setText(String.valueOf(initialWidth));
 
 //            btnChangePosition.setOnClickListener(v -> {
@@ -143,16 +149,24 @@ void onObjectDeleted(); // Новый метод для обработки уд�
                     }
                 }
                 // Получаем выбранные устройства
-                SparseBooleanArray checkedItems = devices.getCheckedItemPositions();
-                List<String> selectedDevices = new ArrayList<>();
-                for (int i = 0; i < arrayAdapter.getCount(); i++) {
-                    if (checkedItems.get(i)) {
-                        selectedDevices.add(arrayAdapter.getItem(i));
+//                SparseBooleanArray checkedItems = devices.getCheckedItemPositions();
+//                List<String> selectedDevices = new ArrayList<>();
+//                for (int i = 0; i < arrayAdapter.getCount(); i++) {
+//                    if (checkedItems.get(i)) {
+//                        selectedDevices.add(arrayAdapter.getItem(i));
+//                    }
+//                }
+
+// Получаем выбранные устройства
+                List<String> finalSelectedDevices = new ArrayList<>();
+                for (int i = 0; i < allDevices.size(); i++) {
+                    if (devices.isItemChecked(i)) {
+                        finalSelectedDevices.add(allDevices.get(i));
                     }
                 }
 
 
-                if (selectedDevices.isEmpty()) {
+                if (finalSelectedDevices.isEmpty()) {
                     Toast.makeText(requireContext(), "Выберите хотя бы одно устройство", Toast.LENGTH_SHORT).show();
                     isValid = false;
                 }
@@ -161,7 +175,7 @@ void onObjectDeleted(); // Новый метод для обработки уд�
                 if (isValid) {
                     // Все проверки пройдены — выполняем основное действие
                     if (listener != null) {
-                        listener.onObjectEdited(newName, newFinalSizeX, newFinalSizeY, selectedDevices);
+                        listener.onObjectEdited(newName, newFinalSizeX, newFinalSizeY, finalSelectedDevices);
 
                     }
                     dialog.dismiss();

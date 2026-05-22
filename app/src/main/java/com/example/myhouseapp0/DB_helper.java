@@ -34,7 +34,7 @@ public class DB_helper extends SQLiteOpenHelper{
 
 
     public DB_helper(@Nullable Context context) {
-        super(context, DBName, null, 1);
+        super(context, DBName, null, 2);
     }
 
     @Override
@@ -48,8 +48,10 @@ public class DB_helper extends SQLiteOpenHelper{
                 ")";
 
         // Создание таблицы Devices
+
         String createDevicesTable = "CREATE TABLE " + TABLE_DEVICES + " (" +
-                COLUMN_BUTTON_TAG +" TEXT,"  + COLUMN_DEVICE_NAME + " TEXT" +
+                COLUMN_BUTTON_TAG + " TEXT, " +
+                COLUMN_DEVICE_NAME + " TEXT " +
                 ")";
 
         sqLiteDatabase.execSQL(createObjectsTable);
@@ -82,7 +84,7 @@ public class DB_helper extends SQLiteOpenHelper{
     public List<String> getDevices() {
         List<String> devices = new ArrayList<>();
         SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
-        Cursor cursor = sqLiteDatabase.query(TABLE_DEVICES, new String[]{COLUMN_NAME},
+        Cursor cursor = sqLiteDatabase.query(TABLE_DEVICES, new String[]{COLUMN_DEVICE_NAME},
                 null, null, null, null, null);
 
         if (cursor.moveToFirst()) {
