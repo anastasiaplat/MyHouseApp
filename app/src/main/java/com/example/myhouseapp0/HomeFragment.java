@@ -365,9 +365,18 @@ public class HomeFragment extends Fragment {
         String message = String.format("Объект: %s\nУстройства: %s",
                 name, String.join(", ", selectedDevices));
 //        Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show();
-        // Здесь можно добавить логику сохранения данных
+
+
+        CustomFragment customFragment = (CustomFragment) getParentFragmentManager().findFragmentByTag("CUSTOM_FRAGMENT_TAG");
+        if (customFragment != null && customFragment.isAdded()) {
+            customFragment.setObjectName(name);
+        } else {
+            Log.w("FragmentA", "FragmentB не найден или не добавлен");
+        }
     }
-    public void showEditDialog(Button buttonToEdit) {
+
+
+    public void showEditDialog(Button  buttonToEdit) {
         Dialog dialog_edit = new Dialog(requireContext());
         dialog_edit.setTitle("Редактирование кнопки");
         dialog_edit.setContentView(R.layout.dialog_edit_object);
