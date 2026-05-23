@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:id="@+id/custom_container"
     android:tag="CUSTOM_FRAGMENT_TAG"
     android:layout_height="match_parent">
 
@@ -81,45 +82,45 @@
         app:layout_constraintVertical_bias="0.043" />
 
 
-    <View
-        android:id="@+id/view_device_bedroom"
-        android:layout_width="327dp"
-        android:layout_height="61dp"
-        android:layout_gravity="clip_horizontal|center_horizontal"
-        android:layout_marginBottom="256dp"
-        android:background="@drawable/view_rectangle_object"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.488"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view_devices_bedroom"
-        app:layout_constraintVertical_bias="0.183" />
+<!--    <View-->
+<!--        android:id="@+id/view_device_bedroom"-->
+<!--        android:layout_width="327dp"-->
+<!--        android:layout_height="61dp"-->
+<!--        android:layout_gravity="clip_horizontal|center_horizontal"-->
+<!--        android:layout_marginBottom="256dp"-->
+<!--        android:background="@drawable/view_rectangle_object"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintHorizontal_bias="0.488"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/view_devices_bedroom"-->
+<!--        app:layout_constraintVertical_bias="0.183" />-->
 
-    <TextView
-        android:id="@+id/title_device"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Устройство"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="@+id/view_device_bedroom"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.102"
-        app:layout_constraintStart_toStartOf="@+id/view_device_bedroom"
-        app:layout_constraintTop_toTopOf="@+id/view_device_bedroom"
-        app:layout_constraintVertical_bias="0.461"
-        tools:ignore="MissingConstraints" />
+<!--    <TextView-->
+<!--        android:id="@+id/title_device"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="Устройство"-->
+<!--        android:textSize="16sp"-->
+<!--        app:layout_constraintBottom_toBottomOf="@+id/view_device_bedroom"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintHorizontal_bias="0.102"-->
+<!--        app:layout_constraintStart_toStartOf="@+id/view_device_bedroom"-->
+<!--        app:layout_constraintTop_toTopOf="@+id/view_device_bedroom"-->
+<!--        app:layout_constraintVertical_bias="0.461"-->
+<!--        tools:ignore="MissingConstraints" />-->
 
-    <Switch
-        android:id="@+id/switch_light_bedroom"
-        android:layout_width="82dp"
-        android:layout_height="53dp"
-        android:text=""
-        app:layout_constraintBottom_toBottomOf="@+id/view_device_bedroom"
-        app:layout_constraintEnd_toEndOf="@+id/view_device_bedroom"
-        app:layout_constraintHorizontal_bias="0.865"
-        app:layout_constraintStart_toStartOf="@+id/view_device_bedroom"
-        app:layout_constraintTop_toTopOf="@+id/view_device_bedroom"
-        tools:ignore="UseSwitchCompatOrMaterialXml" />
+<!--    <Switch-->
+<!--        android:id="@+id/switch_light_bedroom"-->
+<!--        android:layout_width="82dp"-->
+<!--        android:layout_height="53dp"-->
+<!--        android:text=""-->
+<!--        app:layout_constraintBottom_toBottomOf="@+id/view_device_bedroom"-->
+<!--        app:layout_constraintEnd_toEndOf="@+id/view_device_bedroom"-->
+<!--        app:layout_constraintHorizontal_bias="0.865"-->
+<!--        app:layout_constraintStart_toStartOf="@+id/view_device_bedroom"-->
+<!--        app:layout_constraintTop_toTopOf="@+id/view_device_bedroom"-->
+<!--        tools:ignore="UseSwitchCompatOrMaterialXml" />-->
 
     <TextView
         android:id="@+id/title_text"
@@ -160,17 +161,5 @@
         app:layout_constraintStart_toStartOf="@+id/btn_back_custom"
         app:layout_constraintTop_toTopOf="@+id/btn_back_custom" />
 
-    <LinearLayout
-        android:id="@+id/devices_container"
-        android:layout_width="322dp"
-        android:layout_height="204dp"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.505"
-        android:gravity="center"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view_device_bedroom"
-        app:layout_constraintVertical_bias="0.248"></LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
