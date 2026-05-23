@@ -60,6 +60,24 @@ public class DB_helper extends SQLiteOpenHelper{
         // Добавляем тестовые устройства
         insertTestDevices(sqLiteDatabase);
     }
+    public void clearAllData() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        try {
+            db.beginTransaction();
+
+            // Очищаем каждую таблицу по отдельности
+            db.delete(TABLE_OBJECTS, null, null);
+            db.delete(TABLE_DEVICES, null, null);
+            // Добавьте другие таблицы по необходимости
+
+            db.setTransactionSuccessful();
+        } catch (SQLiteException e) {
+            Log.e("DB_helper", "Ошибка при очистке данных: " + e.getMessage());
+        } finally {
+            db.endTransaction();
+            db.close();
+        }
+    }
     private void insertTestDevices(SQLiteDatabase db) {
         ContentValues values = new ContentValues();
         values.put(COLUMN_DEVICE_NAME, "Устройство 1");
@@ -71,6 +89,14 @@ public class DB_helper extends SQLiteOpenHelper{
 
         values.clear();
         values.put(COLUMN_DEVICE_NAME, "Устройство 3");
+        db.insert(TABLE_DEVICES, null, values);
+
+        values.clear();
+        values.put(COLUMN_DEVICE_NAME, "Устройство 4");
+        db.insert(TABLE_DEVICES, null, values);
+
+        values.clear();
+        values.put(COLUMN_DEVICE_NAME, "Устройство 5");
         db.insert(TABLE_DEVICES, null, values);
     }
     @Override
@@ -99,21 +125,39 @@ public class DB_helper extends SQLiteOpenHelper{
     // Сохранение устройств для кнопки
     public void saveDevicesForButton(Object buttonTag, List<String> deviceNames) {
         SQLiteDatabase db = this.getWritableDatabase();
+        String tagValue = String.valueOf(buttonTag);
         try {
-            // Удаляем старые записи для этого тега
-            db.delete(TABLE_DEVICES, COLUMN_BUTTON_TAG + " = ?",
-                    new String[]{String.valueOf(buttonTag)});
+            db.beginTransaction();
 
-            // Вставляем новые записи
-            ContentValues values = new ContentValues();
+            // Шаг 1. Очищаем тег у всех записей, где он был равен текущему buttonTag
+            ContentValues clearValues = new ContentValues();
+            clearValues.put(COLUMN_BUTTON_TAG, (String) null); // Устанавливаем NULL
+
+            db.update(
+                    TABLE_DEVICES,
+                    clearValues,
+                    COLUMN_BUTTON_TAG + " = ?",
+                    new String[]{tagValue}
+            );
+
+            // Шаг 2. Для каждого устройства из списка устанавливаем новый тег
+            ContentValues updateValues = new ContentValues();
+            updateValues.put(COLUMN_BUTTON_TAG, tagValue);
+
             for (String device : deviceNames) {
-                values.put(COLUMN_BUTTON_TAG, String.valueOf(buttonTag));
-                values.put(COLUMN_DEVICE_NAME, device);
-                db.insert(TABLE_DEVICES, null, values);
+                db.update(
+                        TABLE_DEVICES,
+                        updateValues,
+                        COLUMN_DEVICE_NAME + " = ?",
+                        new String[]{device}
+                );
             }
+
+            db.setTransactionSuccessful();
         } catch (SQLiteException e) {
             Log.e("DB_helper", "Ошибка при сохранении устройств: " + e.getMessage());
         } finally {
+            db.endTransaction();
             db.close();
         }
     }
