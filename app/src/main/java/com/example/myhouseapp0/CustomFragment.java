@@ -110,97 +110,188 @@ public class CustomFragment extends Fragment {
 
         List<String> devices = dbHelper.getDevicesForButton(buttonTag);
 
-        if (devices.isEmpty()) {
-            // Если устройств нет, добавляем один TextView с сообщением
-            addDeviceTextView("Устройства не выбраны", constraintLayout.getId());
-        } else {
+//        if (devices.isEmpty()) {
+//            // Если устройств нет, добавляем один TextView с сообщением
+//            addDeviceTextView("Устройства не выбраны", constraintLayout.getId());
+//        } else {
             // Создаём TextView для каждого устройства
             int previousId = R.id.view_devices_bedroom; // Начинаем от view_device_bedroom
             for (String device : devices) {
                 previousId = addDeviceTextView(device, previousId);
-            }
+//            }
         }
     }
     public void setObjectName (String name) {
 //        objectName.setText(name);
     }
     private int addDeviceTextView(String deviceName, int anchorId) {
+
+
         TextView textView = new TextView(requireContext());
         int newId = View.generateViewId();
         textView.setId(newId);
-
-// 1. Создаём фоновый View (прямоугольник)
-        View backgroundView = new View(requireContext());
-        int bgId = View.generateViewId();
-        backgroundView.setId(bgId);
-        backgroundView.setBackgroundResource(R.drawable.view_rectangle_object);
-
-        // Устанавливаем фиксированные размеры: 330 пикселей на 60 пикселей
-        ConstraintLayout.LayoutParams layoutParams = new ConstraintLayout.LayoutParams(330, 60);
-        backgroundView.setLayoutParams(layoutParams);
-        // 3. Создаём Switch (переключатель)
-        @SuppressLint("UseSwitchCompatOrMaterialCode") Switch switchView = new Switch(requireContext());
-        int switchId = View.generateViewId();
-        switchView.setId(switchId);
-
-
         // Настройки TextView
         textView.setText(deviceName);
         textView.setTextSize(16);
         textView.setTextColor(ContextCompat.getColor(requireContext(), R.color.navbar));
-        textView.setPadding(16, 12, 16, 12); // внутренние отступы
+        textView.setPadding(16, 16, 16, 12); // внутренние отступы
+// Размеры wrap_content
+        ViewGroup.LayoutParams textParams = new ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+        );
+        textView.setLayoutParams(textParams);
 
 
+
+
+// 1. Создаём фоновый View (прямоугольник)
+        View backgroundView = new View(requireContext());
+        int bgId = View.generateViewId();
+        int widthDp = 330;
+        int heightDp = 60;
+        int marginBottomDp = 256;
+        backgroundView.setId(bgId);
+        backgroundView.setBackgroundResource(R.drawable.view_rectangle_object);
+
+        float density = getResources().getDisplayMetrics().density;
+        int widthPx = (int) (widthDp * density);
+        int heightPx = (int) (heightDp * density);
+        int marginBottomPx = (int) (marginBottomDp * density);
+
+        ViewGroup.LayoutParams viewParams = new ViewGroup.LayoutParams(widthPx, heightPx);
+        backgroundView.setLayoutParams(viewParams);
+        constraintLayout.addView(backgroundView);
         // Добавляем в контейнер
         constraintLayout.addView(textView);
-        constraintLayout.addView(backgroundView);
-        constraintLayout.addView(switchView);
-        deviceTextViewIds.add(newId);
 
-        // Настраиваем ограничения через ConstraintSet
+
+
+        // 3. Создаём Switch (переключатель)
+        @SuppressLint("UseSwitchCompatOrMaterialCode") Switch switchView = new Switch(requireContext());
+        int switchId = View.generateViewId();
+        switchView.setId(switchId);
+// Конвертируем размеры для Switch
+        int switchWidthDp = 82;
+        int switchHeightDp = 53;
+        int switchWidthPx = (int) (switchWidthDp * density);
+        int switchHeightPx = (int) (switchHeightDp * density);
+
+        ViewGroup.LayoutParams switchParams = new ViewGroup.LayoutParams(switchWidthPx, switchHeightPx);
+        switchView.setLayoutParams(switchParams);
+
+// Очищаем текст (по умолчанию может быть что‑то установлено)
+        switchView.setText("");
+
+// Добавляем Switch в контейнер
+        constraintLayout.addView(switchView);
+
+// --- Настраиваем ограничения для всех элементов ---
         ConstraintSet constraintSet = new ConstraintSet();
         constraintSet.clone(constraintLayout);
 
-        // Горизонтальное позиционирование: по центру родителя
+// Настройки для backgroundView
+//        if (anchorId != -1) {
+            // Если есть предыдущий элемент — привязываемся к его низу
+            constraintSet.connect(
+                    bgId,
+                    ConstraintSet.TOP,
+                    anchorId,
+                    ConstraintSet.BOTTOM
+            );
+//        } else {
+//            // Иначе привязываемся к низу заголовка
+//            constraintSet.connect(
+//                    bgId,
+//                    ConstraintSet.TOP,
+//                    R.id.title_object_name,
+//                    ConstraintSet.BOTTOM
+//            );
+//        }
+
         constraintSet.connect(
-                newId, ConstraintSet.START,
-                ConstraintSet.PARENT_ID, ConstraintSet.START, 32
+                bgId,
+                ConstraintSet.START,
+                ConstraintSet.PARENT_ID,
+                ConstraintSet.START
         );
         constraintSet.connect(
-                newId, ConstraintSet.END,
-                ConstraintSet.PARENT_ID, ConstraintSet.END, 32
+                bgId,
+                ConstraintSet.END,
+                ConstraintSet.PARENT_ID,
+                ConstraintSet.END
         );
-// Позиционирование фонового View
-        constraintSet.connect(bgId, ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START, 32);
-        constraintSet.connect(bgId, ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END, 32);
-        int verticalMargin = (anchorId == R.id.view_device_bedroom) ? 24 : 16;
-        constraintSet.connect(bgId, ConstraintSet.TOP, anchorId, ConstraintSet.BOTTOM, verticalMargin);
-        constraintSet.constrainPercentHeight(bgId, 0.1f); // Высота фона — 10 % от родителя
+        constraintSet.setVerticalBias(bgId, 0.03f);
+        constraintSet.setHorizontalBias(bgId, 0.5f); // Центрирование
+        int horizontalMarginPxView = (int) (1 * density);
+        constraintSet.setMargin(bgId, ConstraintSet.START, horizontalMarginPxView);
 
-        // Позиционирование Switch
-            constraintSet.connect(switchId, ConstraintSet.END, bgId, ConstraintSet.END, -16);
-            constraintSet.centerVertically(switchId, bgId);
-            // Отступ между TextView и Switch
-            constraintSet.connect(newId, ConstraintSet.END, switchId, ConstraintSet.START, 16);
+        // Вертикальные привязки для backgroundView (чтобы элемент не «исчез»)
+        constraintSet.connect(
+                bgId,
+                ConstraintSet.BOTTOM,
+                ConstraintSet.PARENT_ID,
+                ConstraintSet.BOTTOM
+        );
 
+        // Настройки для TextView
+        constraintSet.connect(
+                newId,
+                ConstraintSet.START,
+                bgId,
+                ConstraintSet.START
+        );
+        constraintSet.connect(
+                newId,
+                ConstraintSet.END,
+                switchId,
+                ConstraintSet.START
+        );
+        constraintSet.connect(
+                newId,
+                ConstraintSet.TOP,
+                bgId,
+                ConstraintSet.TOP
+        );
+        constraintSet.connect(
+                newId,
+                ConstraintSet.BOTTOM,
+                bgId,
+                ConstraintSet.BOTTOM
+        );
+        constraintSet.setVerticalBias(newId, 0.5f);
+        constraintSet.setHorizontalBias(newId, 0.0f);
+        int horizontalMarginPx = (int) (8 * density);
+        constraintSet.setMargin(newId, ConstraintSet.START, horizontalMarginPx);
+        constraintSet.setMargin(newId, ConstraintSet.END, horizontalMarginPx);
+//        constraintSet.setMargin(newId, ConstraintSet.TOP, horizontalMarginPx);
 
-        // Вертикальное позиционирование
-        if (anchorId == constraintLayout.getId()) {
-            // Для первого элемента — позиционируем относительно view_device_bedroom
-            constraintSet.connect(
-                    newId, ConstraintSet.TOP,
-                    R.id.view_device_bedroom, ConstraintSet.BOTTOM, 24
-            );
-        } else {
-            // Для последующих — относительно предыдущего TextView
-            constraintSet.connect(
-                    newId, ConstraintSet.TOP,
-                    anchorId, ConstraintSet.BOTTOM, 16
-            );
-        }
+        // Настройки для Switch
+        constraintSet.connect(
+                switchId,
+                ConstraintSet.TOP,
+                bgId,
+                ConstraintSet.TOP
+        );
+        constraintSet.connect(
+                switchId,
+                ConstraintSet.BOTTOM,
+                bgId,
+                ConstraintSet.BOTTOM
+        );
+        constraintSet.connect(
+                switchId,
+                ConstraintSet.END,
+                bgId,
+                ConstraintSet.END
+        );
+        constraintSet.setHorizontalBias(switchId, 1.0f); // Прижатие к правому краю
 
+// Применяем все настройки ограничений к контейнеру
         constraintSet.applyTo(constraintLayout);
-        return newId;
+
+        deviceTextViewIds.add(bgId);
+        return bgId;
     }
     // Метод для возврата к HomeFragment
     private void goBackToHome() {
@@ -208,9 +299,5 @@ public class CustomFragment extends Fragment {
         if (getActivity() instanceof MajorActivity) {
             ((MajorActivity) getActivity()).replaceFragment(new HomeFragment());
         }
-    }
-    private void displayDevices(ArrayList<String> devices, View rootView) {
-        TextView tvDevices = rootView.findViewById(R.id.title_text);
-            tvDevices.setText(devices.toString());
     }
 }

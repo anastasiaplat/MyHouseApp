@@ -318,8 +318,9 @@ public class InteractiveMapFragment extends Fragment implements OnObjectAddedLis
         }
     }
     public void createButton(String text, int width, int height, int color) {
-
-        textInfo.setVisibility(View.GONE);
+        if (textInfo != null && textInfo.getVisibility() != View.GONE) {
+            textInfo.setVisibility(View.GONE);
+        }
         pendingButtonConfig = new ButtonConfig(text, width, height, color);
         isWaitingForPosition = true;
 

@@ -79,7 +79,8 @@
         app:layout_constraintHorizontal_bias="0.127"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/view_rectangle_for_temp_bedroom"
-        app:layout_constraintVertical_bias="0.043" />
+        app:layout_constraintVertical_bias="0.043"
+        />
 
 
 <!--    <View-->
@@ -122,19 +123,19 @@
 <!--        app:layout_constraintTop_toTopOf="@+id/view_device_bedroom"-->
 <!--        tools:ignore="UseSwitchCompatOrMaterialXml" />-->
 
-    <TextView
-        android:id="@+id/title_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.226"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.935"
-        tools:ignore="MissingConstraints" />
+<!--    <TextView-->
+<!--        android:id="@+id/title_text"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:textSize="24sp"-->
+<!--        android:textStyle="bold"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintHorizontal_bias="0.226"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--        app:layout_constraintVertical_bias="0.935"-->
+<!--        tools:ignore="MissingConstraints" />-->
 
     <Button
         android:id="@+id/btn_back_custom"
