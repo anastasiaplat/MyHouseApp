@@ -158,7 +158,6 @@ public class DB_helper extends SQLiteOpenHelper{
             Log.e("DB_helper", "Ошибка при сохранении устройств: " + e.getMessage());
         } finally {
             db.endTransaction();
-            db.close();
         }
     }
     // Получение устройств для кнопки
@@ -177,7 +176,6 @@ public class DB_helper extends SQLiteOpenHelper{
             } while (cursor.moveToNext());
         }
         cursor.close();
-        db.close();
         return devices;
     }
 

@@ -1,5 +1,6 @@
 package com.example.myhouseapp0;
 
+import java.util.ArrayList;
 import java.util.List;
 
 // Класс для хранения данных кнопки
@@ -16,12 +17,12 @@ public class ButtonData {
     public ButtonData(String name, Object tag, int width, int height, int color) {
         this.name = name;
         this.tag = tag;
-        this.width = width;
-        this.height = height;
+        this.width = Math.max(width, 1); // Минимальная ширина 1 dp
+        this.height = Math.max(height, 1); // Минимальная высота 1 dp
         this.color = color;
-        this.existingDevices = existingDevices;
-        this.positionX = positionX;
-        this.positionY = positionY;
+        this.existingDevices = new ArrayList<>(); // Инициализируем пустой список
+        this.positionX = 0; // Инициализируем нулями
+        this.positionY = 0;
     }
 
     // Геттеры

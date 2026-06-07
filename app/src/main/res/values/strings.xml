@@ -10,7 +10,7 @@
     <string name="password">Пароль</string>
     <string name="home">Главная</string>
     <string name="bluetooth">Bluetooth</string>
-    <string name="temp">XX°</string>
+    <string name="temp">22.24°</string>
     <string name="date">21 марта, 2026</string>
     <string name="city">Казань</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>

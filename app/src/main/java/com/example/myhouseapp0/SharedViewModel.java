@@ -44,6 +44,20 @@ public class SharedViewModel extends ViewModel {
         }
     }
 
+    public void updateButtonSize(String tag, int width, int height) {
+        List<ButtonData> currentButtons = buttonsData.getValue();
+        if (currentButtons != null) {
+            for (ButtonData buttonData : currentButtons) {
+                if (buttonData.getTag().toString().equals(tag)) {
+                    buttonData.setWidth(width);
+                    buttonData.setHeight(height);
+                    break;
+                }
+            }
+            buttonsData.setValue(currentButtons);
+        }
+    }
+
     public boolean isInitializing() {
         return isInitializing;
     }

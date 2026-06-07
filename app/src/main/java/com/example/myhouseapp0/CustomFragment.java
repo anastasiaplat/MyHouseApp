@@ -27,8 +27,8 @@ public class CustomFragment extends Fragment {
     private TextView titleObjectNameTextView;
     private TextView deviceListTextView;
     private ConstraintLayout constraintLayout;
-    private List<Integer> deviceTextViewIds = new ArrayList<>(); // Храним ID созданных TextView
-    private List<Integer> deviceRowIds = new ArrayList<>(); // Храним ID строк (каждая строка — 3 элемента)
+    private List<Integer> deviceTextViewIds = new ArrayList<>();
+    private List<Integer> deviceRowIds = new ArrayList<>();
     private DB_helper dbHelper;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -109,20 +109,12 @@ public class CustomFragment extends Fragment {
         deviceTextViewIds.clear();
 
         List<String> devices = dbHelper.getDevicesForButton(buttonTag);
-
-//        if (devices.isEmpty()) {
-//            // Если устройств нет, добавляем один TextView с сообщением
-//            addDeviceTextView("Устройства не выбраны", constraintLayout.getId());
-//        } else {
-            // Создаём TextView для каждого устройства
             int previousId = R.id.view_devices_bedroom; // Начинаем от view_device_bedroom
             for (String device : devices) {
                 previousId = addDeviceTextView(device, previousId);
-//            }
         }
     }
     public void setObjectName (String name) {
-//        objectName.setText(name);
     }
     private int addDeviceTextView(String deviceName, int anchorId) {
 
@@ -141,9 +133,6 @@ public class CustomFragment extends Fragment {
                 ViewGroup.LayoutParams.WRAP_CONTENT
         );
         textView.setLayoutParams(textParams);
-
-
-
 
 // 1. Создаём фоновый View (прямоугольник)
         View backgroundView = new View(requireContext());
@@ -164,8 +153,6 @@ public class CustomFragment extends Fragment {
         constraintLayout.addView(backgroundView);
         // Добавляем в контейнер
         constraintLayout.addView(textView);
-
-
 
         // 3. Создаём Switch (переключатель)
         @SuppressLint("UseSwitchCompatOrMaterialCode") Switch switchView = new Switch(requireContext());
@@ -199,15 +186,6 @@ public class CustomFragment extends Fragment {
                     anchorId,
                     ConstraintSet.BOTTOM
             );
-//        } else {
-//            // Иначе привязываемся к низу заголовка
-//            constraintSet.connect(
-//                    bgId,
-//                    ConstraintSet.TOP,
-//                    R.id.title_object_name,
-//                    ConstraintSet.BOTTOM
-//            );
-//        }
 
         constraintSet.connect(
                 bgId,

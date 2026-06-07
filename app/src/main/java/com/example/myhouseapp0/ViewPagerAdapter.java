@@ -47,19 +47,5 @@ public class ViewPagerAdapter extends FragmentStateAdapter {
     }
 
 
-    // Метод для получения Tab1Fragment
-//    public ListOfObjectsFragment getTab1Fragment() {
-//        FragmentManager fm = requireActivity().getSupportFragmentManager();
-//
-//        List<Fragment> fragments = fm.getFragments();
-//
-//        for (Fragment fragment : fragments) {
-//            if (fragment instanceof ListOfObjectsFragment) {
-//                return (ListOfObjectsFragment) fragment;
-//            }
-//        }
-//        return null;
-//    }
-
 
 }

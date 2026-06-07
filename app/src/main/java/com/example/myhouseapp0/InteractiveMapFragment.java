@@ -92,14 +92,23 @@ public class InteractiveMapFragment extends Fragment implements OnObjectAddedLis
                     @Override
                     public void onObjectEdited(String newName, int newWidth, int newHeight,  List<String> selectedDevices) {
                         newButtonName = newName;
-                        int newOriginalWidth = newWidth; // конвертируем обратно в исходные размеры
+                        // 1. Обновляем кнопку на карте
+                        updateButtonInMap(selectedButtonForEdit.getTag(), newName, newWidth, newHeight);
+                        int newOriginalWidth = newWidth;
                         int newOriginalHeight = newHeight;
-                        // Передаём данные в HomeFragment для синхронизации с ListOfObjectsFragment
                         HomeFragment homeFragment = (HomeFragment) requireParentFragment();
                         homeFragment.onObjectEditedInDialog(selectedButtonForEdit.getTag(), newName, newOriginalWidth, newOriginalHeight);
-                        // Обновляем устройства в БД
+                        // 2. Сохраняем новые размеры в ViewModel
+                        viewModel.updateButtonSize(
+                                selectedButtonForEdit.getTag().toString(),
+                                newWidth,
+                                newHeight
+                        );
+
+                        // 3. Обновляем устройства в БД
                         dbHelper.saveDevicesForButton(selectedButtonForEdit.getTag(), selectedDevices);
-                        // Выходим из режима редактирования
+
+                        // 4. Выходим из режима редактирования
                         exitEditMode();
                     }
                     @Override
@@ -158,16 +167,13 @@ public class InteractiveMapFragment extends Fragment implements OnObjectAddedLis
 
         // Устанавливаем атрибут для центрирования по горизонтали и вертикали относительно родителя
         params.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
-
         // Применяем параметры к TextView
         textInfo.setLayoutParams(params);
 
-        // Дополнительно можно настроить внешний вид TextView
         textInfo.setGravity(Gravity.CENTER); // центрирование текста внутри TextView
         textInfo.setTextSize(16); // размер текста
         textInfo.setTextColor(ContextCompat.getColor(requireContext(), R.color.navbar)); // цвет текста
 
-        // Добавляем TextView в родительский RelativeLayout
         relativeLayout.addView(textInfo);
 
         // Обработчик касаний по контейнеру
@@ -216,47 +222,25 @@ public class InteractiveMapFragment extends Fragment implements OnObjectAddedLis
         updateTextInfoVisibility();
     }
     private void createButtonOnMap(ButtonData buttonData) {
-
-
-
-
-
-
-
         Button newButton = new Button(requireContext());
         newButton.setId(View.generateViewId());
         newButton.setText(buttonData.getName());
         newButton.setTag(buttonData.getTag());
-        newButton.setLayoutParams(new RelativeLayout.LayoutParams(buttonData.getWidth(), buttonData.getHeight()));
-        newButton.setBackgroundColor(buttonData.getColor());
-        newButton.setTextSize(18);
-        newButton.setAllCaps(false);
-        // Убираем стандартные отступы кнопки
-        newButton.setMinWidth(0);
-        newButton.setMinHeight(0);
-        newButton.setPadding(0, 0, 0, 0);
-
-
-
         float density = getResources().getDisplayMetrics().density;
         int widthPx = (int) (buttonData.getWidth() * density);
         int heightPx = (int) (buttonData.getHeight() * density);
 
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(widthPx, heightPx);
-
-        // Устанавливаем позицию из данных
         params.leftMargin = buttonData.getPositionX();
         params.topMargin = buttonData.getPositionY();
 
         newButton.setLayoutParams(params);
-        newButton.setTag(buttonData.getTag());
-        newButton.setOnClickListener(v -> replaceWithNewFragment(buttonData.getName()));
-
-        buttons.add(newButton);
-        buttonMap.put(buttonData.getTag(), newButton);
-        relativeLayout.addView(newButton);
-
-
+        newButton.setBackgroundColor(buttonData.getColor());
+        newButton.setTextSize(18);
+        newButton.setAllCaps(false);
+        newButton.setMinWidth(0);
+        newButton.setMinHeight(0);
+        newButton.setPadding(0, 0, 0, 0);
 
         // Обработчик в режиме редактирования
         if (isInEditMode) {
@@ -268,38 +252,41 @@ public class InteractiveMapFragment extends Fragment implements OnObjectAddedLis
             // Обычный режим — просто показываем информацию
             newButton.setOnClickListener(v -> replaceWithNewFragment(buttonData.getName()));
         }
-    }
-    private void createButtonFromData(ButtonData buttonData) {
-        Button newButton = new Button(requireContext());
-        newButton.setText(buttonData.getName());
-        newButton.setBackgroundColor(buttonData.getColor());
-        newButton.setTextColor(ContextCompat.getColor(requireContext(), R.color.navbar));
-        newButton.setTextSize(18);
-        newButton.setAllCaps(false);
-
-        // Убираем стандартные отступы кнопки
-        newButton.setMinWidth(0);
-        newButton.setMinHeight(0);
-        newButton.setPadding(0, 0, 0, 0);
-
-        float density = getResources().getDisplayMetrics().density;
-        int widthPx = (int) (buttonData.getWidth() * density);
-        int heightPx = (int) (buttonData.getHeight() * density);
-
-        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(widthPx, heightPx);
-
-        // Устанавливаем позицию из данных
-        params.leftMargin = buttonData.getPositionX();
-        params.topMargin = buttonData.getPositionY();
-
-        newButton.setLayoutParams(params);
-        newButton.setTag(buttonData.getTag());
-        newButton.setOnClickListener(v -> replaceWithNewFragment(buttonData.getName()));
-
         buttons.add(newButton);
         buttonMap.put(buttonData.getTag(), newButton);
         relativeLayout.addView(newButton);
     }
+//    private void createButtonFromData(ButtonData buttonData) {
+//        Button newButton = new Button(requireContext());
+//        newButton.setText(buttonData.getName());
+//        newButton.setBackgroundColor(buttonData.getColor());
+//        newButton.setTextColor(ContextCompat.getColor(requireContext(), R.color.navbar));
+//        newButton.setTextSize(18);
+//        newButton.setAllCaps(false);
+//
+//        // Убираем стандартные отступы кнопки
+//        newButton.setMinWidth(0);
+//        newButton.setMinHeight(0);
+//        newButton.setPadding(0, 0, 0, 0);
+//
+//        float density = getResources().getDisplayMetrics().density;
+//        int widthPx = (int) (buttonData.getWidth() * density);
+//        int heightPx = (int) (buttonData.getHeight() * density);
+//
+//        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(widthPx, heightPx);
+//
+//        // Устанавливаем позицию из данных
+//        params.leftMargin = buttonData.getPositionX();
+//        params.topMargin = buttonData.getPositionY();
+//
+//        newButton.setLayoutParams(params);
+//        newButton.setTag(buttonData.getTag());
+//        newButton.setOnClickListener(v -> replaceWithNewFragment(buttonData.getName()));
+//
+//        buttons.add(newButton);
+//        buttonMap.put(buttonData.getTag(), newButton);
+//        relativeLayout.addView(newButton);
+//    }
 
     /**
      * Конфигурация для создания кнопки
@@ -321,6 +308,7 @@ public class InteractiveMapFragment extends Fragment implements OnObjectAddedLis
         if (textInfo != null && textInfo.getVisibility() != View.GONE) {
             textInfo.setVisibility(View.GONE);
         }
+        textInfo.setVisibility(View.GONE);
         pendingButtonConfig = new ButtonConfig(text, width, height, color);
         isWaitingForPosition = true;
 
@@ -341,7 +329,7 @@ public class InteractiveMapFragment extends Fragment implements OnObjectAddedLis
         // Создаём предварительный просмотр только если его ещё нет
         if (previewOverlay == null) {
             previewOverlay = new View(requireContext());
-            previewOverlay.setBackgroundColor(0x80C0C0C0); // Полупрозрачный серый
+            previewOverlay.setBackgroundColor(0x80808080); // Полупрозрачный серый
 
             RelativeLayout.LayoutParams previewParams = new RelativeLayout.LayoutParams(widthPx, heightPx);
             previewParams.leftMargin = (int) x - widthPx / 2;
@@ -554,17 +542,6 @@ public class InteractiveMapFragment extends Fragment implements OnObjectAddedLis
     }
 
     /**
-     * Подсвечивает все кнопки рамкой для выбора
-     */
-//    public void highlightAllButtons() {
-//        isInEditMode = true;
-//        for (Button button : buttons) {
-//            // Или простой вариант — изменить цвет фона с прозрачностью
-//            button.setBackgroundColor(0x80ADD8E6); // Полупрозрачный голубой
-//        }
-//    }
-
-    /**
      * Снимает подсветку со всех кнопок
      */
     private void removeButtonHighlights() {
@@ -577,8 +554,6 @@ public class InteractiveMapFragment extends Fragment implements OnObjectAddedLis
      * Получает исходный цвет кнопки (реализуйте хранение цветов)
      */
     private int getOriginalButtonColor(Button button) {
-        // Здесь должна быть логика получения исходного цвета
-        // Например, можно хранить цвета в Map<Button, Integer>
         return 0xFF90EE90; // Возвращаем светло‑зелёный по умолчанию
     }
 
@@ -601,10 +576,15 @@ public class InteractiveMapFragment extends Fragment implements OnObjectAddedLis
      */
     public void applyButtonEdit(Button button, String newName, int newOriginalWidth, int newOriginalHeight) {
         button.setText(newName);
+        float density = getResources().getDisplayMetrics().density;
+        int widthPx = (int) (newOriginalWidth * density);
+        int heightPx = (int) (newOriginalHeight * density);
+
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) button.getLayoutParams();
-        params.width = newOriginalWidth;
-        params.height = newOriginalHeight;
+        params.width = widthPx;
+        params.height = heightPx;
         button.setLayoutParams(params);
+
         isInEditMode = false;
         removeButtonHighlights();
     }
@@ -633,8 +613,8 @@ public class InteractiveMapFragment extends Fragment implements OnObjectAddedLis
             targetButton.setText(newName);
 
             float density = getResources().getDisplayMetrics().density;
-            int widthPx = (int) (newOriginalWidth * density);
-            int heightPx = (int) (newOriginalHeight * density);
+            int widthPx = newOriginalWidth;
+            int heightPx = newOriginalHeight;
 
             RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) targetButton.getLayoutParams();
             params.width = widthPx;
